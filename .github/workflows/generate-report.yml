@@ -1,0 +1,46 @@
+name: Generate Report
+
+on:
+  schedule:
+    # Fortnightly: 1st and 15th of each month at 08:00 UTC
+    - cron: '0 8 1,15 * *'
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Run SOLIS pipeline
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          HELIUS_API_KEY: ${{ secrets.HELIUS_API_KEY }}
+          COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+        run: pnpm agent
+
+      - name: Commit and push report
+        run: |
+          git config user.name "SOLIS Bot"
+          git config user.email "solis@rectorspace.com"
+          git add reports/
+          DATE=$(date +%Y-%m-%d)
+          git commit -m "report: ${DATE} fortnightly intelligence" || echo "No changes to commit"
+          git push

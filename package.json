@@ -1,0 +1,17 @@
+{
+  "name": "solis",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "test:run": "pnpm -r test:run",
+    "lint": "pnpm -r lint",
+    "dev": "pnpm --filter @solis/web dev",
+    "agent": "pnpm --filter @solis/agent start"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@10.6.2"
+}
