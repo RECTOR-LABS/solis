@@ -29,6 +29,9 @@ export default function RootLayout({
               <a href="/archive" className="text-sol-muted hover:text-white transition-colors">
                 Archive
               </a>
+              <a href="/compare" className="text-sol-muted hover:text-white transition-colors">
+                Compare
+              </a>
               <a href="/methodology" className="text-sol-muted hover:text-white transition-colors">
                 Methodology
               </a>

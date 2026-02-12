@@ -9,7 +9,14 @@ export default async function ArchivePage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Report Archive</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Report Archive</h1>
+        {summaries.length >= 2 && (
+          <a href="/compare" className="text-sol-muted hover:text-white text-sm transition-colors">
+            Compare reports
+          </a>
+        )}
+      </div>
 
       {summaries.length === 0 ? (
         <p className="text-sol-muted">No reports generated yet.</p>
