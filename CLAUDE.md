@@ -8,6 +8,7 @@ Solana Onchain & Landscape Intelligence Signal. Detects emerging Solana ecosyste
 - **Agent**: TypeScript pipeline orchestration, GLM-4.7 (via OpenRouter) for LLM analysis
 - **Web**: Next.js 15 + Tailwind v4, static report rendering with temporal UX
 - **Reports**: Git-committed JSON/MD artifacts in `reports/`
+- **API Guard**: Route-level rate limiting (in-memory sliding window) + optional x402 micropayments for paid tier bypass
 
 ## Pipeline
 - TypeScript orchestration — direct function calls, no LLM needed for pipeline control
@@ -36,7 +37,7 @@ Solana Onchain & Landscape Intelligence Signal. Detects emerging Solana ecosyste
 ```bash
 pnpm dev          # Start web dev server (port 3001)
 pnpm agent        # Run analysis pipeline
-pnpm test:run     # Run all tests (~173 tests across agent + web)
+pnpm test:run     # Run all tests (~200 tests across agent + web)
 pnpm typecheck    # TypeScript check
 pnpm build        # Build all packages
 ```
@@ -63,6 +64,12 @@ Optional config (all have sensible defaults in `config.ts`):
 - `LUNARCRUSH_API_KEY` — LunarCrush v4 Bearer token (required when social signals enabled)
 - `LUNARCRUSH_THROTTLE_MS` (1000) — delay between LunarCrush API requests
 - `LLM_TOP_SOCIAL_COINS` (20) — max social coins sent to LLM for clustering
+- `API_RATE_LIMIT` (30) — default requests per window per IP (web API routes)
+- `API_RATE_WINDOW_MS` (3600000) — rate limit window duration in ms (default: 1 hour)
+- `ENABLE_X402` (false) — enable x402 micropayment paid tier (returns 402 instead of 429)
+- `X402_RECEIVER_ADDRESS` — Solana wallet for USDC payments (required when x402 enabled)
+- `X402_PRICE_CENTS` (1) — price per API request in USD cents
+- `X402_FACILITATOR_URL` (https://x402.org/facilitator) — x402 payment verification endpoint
 
 ## Deployment
 - **VPS**: `solis.rectorspace.com` → `176.222.53.185:8001`
@@ -84,6 +91,9 @@ Optional config (all have sensible defaults in `config.ts`):
 - `packages/web/src/lib/temporal.ts` — Date utilities (freshness, countdown, relative labels)
 - `packages/web/src/components/countdown-timer.tsx` — Live countdown to next 08:00 UTC report
 - `packages/web/src/components/report-timestamp.tsx` — Freshness-coded relative timestamps
+- `packages/web/src/lib/rate-limit.ts` — In-memory sliding window rate limiter
+- `packages/web/src/lib/x402.ts` — x402 payment protocol (402 responses, proof verification)
+- `packages/web/src/lib/api-guard.ts` — Composable guard combining rate limiting + x402
 - `packages/web/src/app/layout.tsx` — App shell
 - `Dockerfile` — Multi-stage build (deps → build → standalone)
 - `docker-compose.yml` — Production container config (port 8001)
@@ -95,3 +105,5 @@ Optional config (all have sensible defaults in `config.ts`):
 - One commit per feature/fix
 - Client components use `mounted` state guard for SSR hydration safety
 - Alert errors never crash the pipeline (graceful failure)
+- API routes use route-level `apiGuard()` — not Next.js middleware (routes use Node.js APIs)
+- x402 is fully opt-in — rate limiting is always-on, payment bypass requires `ENABLE_X402=true`
