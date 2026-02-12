@@ -12,9 +12,12 @@ jobs:
     timeout-minutes: 30
     permissions:
       contents: write
+      issues: write
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
 
       - uses: pnpm/action-setup@v4
 
@@ -31,6 +34,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           HELIUS_API_KEY: ${{ secrets.HELIUS_API_KEY }}
           COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+          ENABLE_REPO_DISCOVERY: 'true'
         run: pnpm agent
 
       - name: Commit and push report
@@ -39,5 +43,17 @@ jobs:
           git config user.email "solis@rectorspace.com"
           git add reports/
           DATE=$(date +%Y-%m-%d)
-          git commit -m "report: ${DATE} fortnightly intelligence" || echo "No changes to commit"
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          git commit -m "report: ${DATE} fortnightly intelligence"
           git push
+
+      - name: Create issue on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          DATE=$(date +%Y-%m-%d)
+          gh issue create \
+            --title "Pipeline failure: ${DATE}" \
+            --body "The fortnightly report pipeline failed on ${DATE}. Check [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})." \
+            --label "bug,agent"
