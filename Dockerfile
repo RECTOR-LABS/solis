@@ -4,17 +4,20 @@
 FROM node:22-alpine AS base
 RUN corepack enable && corepack prepare pnpm@10.6.2 --activate
 
-# --- Install dependencies ---
+# --- Install dependencies (hoisted for standalone compatibility) ---
 FROM base AS deps
 WORKDIR /app
+# Use hoisted node_modules so standalone output gets real files, not pnpm symlinks
+RUN echo "node-linker=hoisted" > .npmrc
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
 COPY shared/package.json shared/
 COPY packages/web/package.json packages/web/
-RUN pnpm install --frozen-lockfile --filter @solis/web...
+RUN pnpm install --filter @solis/web...
 
 # --- Build ---
 FROM base AS builder
 WORKDIR /app
+COPY --from=deps /app/.npmrc ./
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/shared/node_modules ./shared/node_modules
 COPY --from=deps /app/packages/web/node_modules ./packages/web/node_modules
@@ -42,4 +45,4 @@ EXPOSE 3001
 ENV PORT=3001
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+CMD ["node", "packages/web/server.js"]
