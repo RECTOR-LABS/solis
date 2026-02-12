@@ -4,26 +4,22 @@
 FROM node:22-alpine AS base
 RUN corepack enable && corepack prepare pnpm@10.6.2 --activate
 
-# --- Install all dependencies ---
-FROM base AS deps
-WORKDIR /app
-# Use hoisted node_modules so standalone output gets real files, not pnpm symlinks
-RUN echo "node-linker=hoisted" > .npmrc
-COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
-COPY shared/package.json shared/
-COPY packages/web/package.json packages/web/
-RUN pnpm install
-
-# --- Build ---
+# --- Install + Build ---
 FROM base AS builder
 WORKDIR /app
-COPY --from=deps /app/.npmrc ./
-COPY --from=deps /app/node_modules ./node_modules
-COPY pnpm-workspace.yaml package.json tsconfig.json ./
+
+# Use hoisted node_modules so standalone output gets real files, not pnpm symlinks
+RUN echo "node-linker=hoisted" > .npmrc
+
+# Copy everything needed for install + build
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml tsconfig.json ./
 COPY shared/ shared/
 COPY packages/web/ packages/web/
 COPY reports/ reports/
-RUN mkdir -p packages/web/public && \
+
+# Install deps and build in one stage to preserve workspace links
+RUN pnpm install && \
+    mkdir -p packages/web/public && \
     pnpm --filter @solis/web build
 
 # --- Production ---
