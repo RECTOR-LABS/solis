@@ -197,6 +197,7 @@ export interface FortnightlyReport {
 
 export interface ReportSummary {
   date: string;
+  generatedAt: string; // ISO 8601
   period: { start: string; end: string };
   narrativeCount: number;
   topNarratives: Array<{ name: string; stage: SignalStage; momentum: MomentumDirection }>;

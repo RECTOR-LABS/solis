@@ -42,6 +42,7 @@ export async function getReportSummaries(): Promise<ReportSummary[]> {
 
     summaries.push({
       date,
+      generatedAt: report.generatedAt,
       period: report.period,
       narrativeCount: report.narratives.length,
       topNarratives: report.narratives.slice(0, 3).map(n => ({
