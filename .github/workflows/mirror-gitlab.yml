@@ -22,5 +22,5 @@ jobs:
           ssh-keyscan -t ed25519 gitlab.com >> ~/.ssh/known_hosts 2>/dev/null
 
           # Rename .github to dot-github for GitLab
-          git remote add gitlab git@gitlab.com:RECTOR-LABS/solis.git || true
+          git remote add gitlab git@gitlab.com:rector-labs/solis.git || true
           git push gitlab main --force
