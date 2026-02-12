@@ -9,6 +9,8 @@ import { scoreSignals } from './analysis/scoring.js';
 import { clusterNarratives } from './analysis/clustering.js';
 import { generateBuildIdeas } from './analysis/ideas.js';
 import { env } from './config.js';
+import { loadPreviousReport } from './utils/reports.js';
+import { applyDeltas } from './utils/deltas.js';
 import type { FortnightlyReport, CoincidentSignals } from '@solis/shared';
 
 const startTime = Date.now();
@@ -34,6 +36,11 @@ async function main() {
       ...defiLlamaData,
       onchain: onchainSignals,
     };
+
+    // === Phase 1.5: Calculate deltas from previous report ===
+    const todayDate = new Date().toISOString().split('T')[0];
+    const previousReport = await loadPreviousReport(todayDate);
+    applyDeltas(leading, coincident, confirming, previousReport);
 
     // === Phase 2: Score signals with z-scores ===
     logger.info({ phase: 'score' }, 'Phase 2: Scoring signals...');
