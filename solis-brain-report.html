@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOLIS Agent — Brain Architecture Report</title>
+<style>
+  :root {
+    --bg: #0a0e17;
+    --bg-card: #111827;
+    --bg-card-hover: #1a2332;
+    --border: #1e293b;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+    --text-muted: #64748b;
+    --green: #34d399;
+    --green-dim: rgba(52,211,153,0.15);
+    --blue: #60a5fa;
+    --blue-dim: rgba(96,165,250,0.15);
+    --purple: #a78bfa;
+    --purple-dim: rgba(167,139,250,0.15);
+    --orange: #fb923c;
+    --orange-dim: rgba(251,146,60,0.15);
+    --red: #f87171;
+    --red-dim: rgba(248,113,113,0.15);
+    --yellow: #fbbf24;
+    --yellow-dim: rgba(251,191,36,0.15);
+    --cyan: #22d3ee;
+    --cyan-dim: rgba(34,211,238,0.15);
+    --pink: #f472b6;
+    --pink-dim: rgba(244,114,182,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 80px 24px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(96,165,250,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    background: var(--blue-dim);
+    border: 1px solid rgba(96,165,250,0.3);
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--blue);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-size: 48px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--green), var(--blue), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+  }
+  .hero p {
+    font-size: 18px;
+    color: var(--text-dim);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Section */
+  section {
+    padding: 60px 0;
+  }
+  .section-label {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--purple-dim);
+    border: 1px solid rgba(167,139,250,0.3);
+    border-radius: 12px;
+    font-size: 12px;
+    color: var(--purple);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .section-desc {
+    font-size: 16px;
+    color: var(--text-dim);
+    max-width: 700px;
+    margin-bottom: 40px;
+  }
+
+  /* Pipeline Flow */
+  .pipeline {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    overflow-x: auto;
+    padding: 20px 0;
+  }
+  .pipeline-step {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+    text-align: center;
+  }
+  .pipeline-step .step-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 16px;
+    margin: 0 8px;
+    position: relative;
+    transition: all 0.3s;
+  }
+  .pipeline-step .step-box:hover {
+    background: var(--bg-card-hover);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .step-number {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .step-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+  .step-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .step-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  .step-tech {
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+  .pipeline-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    color: var(--text-muted);
+    font-size: 24px;
+  }
+
+  /* Layer Cards */
+  .layers-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .layer-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+  .layer-card:hover {
+    background: var(--bg-card-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .layer-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+  }
+  .layer-card.leading::before { background: var(--green); }
+  .layer-card.coincident::before { background: var(--blue); }
+  .layer-card.confirming::before { background: var(--orange); }
+  .layer-card.social::before { background: var(--pink); }
+
+  .layer-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .layer-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+  .layer-icon.leading { background: var(--green-dim); }
+  .layer-icon.coincident { background: var(--blue-dim); }
+  .layer-icon.confirming { background: var(--orange-dim); }
+
+  .layer-name {
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .layer-tag {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-weight: 500;
+  }
+  .layer-tag.leading { background: var(--green-dim); color: var(--green); }
+  .layer-tag.coincident { background: var(--blue-dim); color: var(--blue); }
+  .layer-tag.confirming { background: var(--orange-dim); color: var(--orange); }
+
+  .layer-thesis {
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-bottom: 20px;
+    font-style: italic;
+    padding-left: 16px;
+    border-left: 2px solid var(--border);
+  }
+
+  .source-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .source-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .source-name {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .source-endpoint {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    margin-bottom: 10px;
+  }
+  .metric-list {
+    list-style: none;
+    padding: 0;
+  }
+  .metric-list li {
+    font-size: 13px;
+    color: var(--text-dim);
+    padding: 3px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .metric-list li::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .leading .metric-list li::before { background: var(--green); }
+  .coincident .metric-list li::before { background: var(--blue); }
+  .confirming .metric-list li::before { background: var(--orange); }
+  .social .metric-list li::before { background: var(--pink); }
+
+  /* Analysis diagram */
+  .analysis-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .analysis-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 32px;
+    transition: all 0.3s;
+  }
+  .analysis-card:hover {
+    background: var(--bg-card-hover);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .analysis-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .analysis-emoji {
+    font-size: 48px;
+    margin-bottom: 12px;
+  }
+  .analysis-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--purple);
+  }
+  .analysis-content h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .analysis-content p {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+
+  /* Code block */
+  .code-block {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--text-dim);
+    overflow-x: auto;
+  }
+  .code-block .keyword { color: var(--purple); }
+  .code-block .string { color: var(--green); }
+  .code-block .comment { color: var(--text-muted); font-style: italic; }
+  .code-block .number { color: var(--orange); }
+  .code-block .type { color: var(--cyan); }
+
+  /* Stage pipeline */
+  .stages {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+    margin: 32px 0;
+  }
+  .stages::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    width: 90%;
+    height: 3px;
+    background: linear-gradient(to right, var(--blue), var(--cyan), var(--yellow), var(--red));
+    transform: translateY(-50%);
+    z-index: 0;
+    border-radius: 2px;
+  }
+  .stage-item {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    padding: 16px 8px;
+  }
+  .stage-dot {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    border: 3px solid;
+  }
+  .stage-dot.early { background: var(--blue-dim); border-color: var(--blue); }
+  .stage-dot.emerging { background: var(--cyan-dim); border-color: var(--cyan); }
+  .stage-dot.growing { background: var(--yellow-dim); border-color: var(--yellow); }
+  .stage-dot.mainstream { background: var(--red-dim); border-color: var(--red); }
+
+  .stage-name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .stage-name.early { color: var(--blue); }
+  .stage-name.emerging { color: var(--cyan); }
+  .stage-name.growing { color: var(--yellow); }
+  .stage-name.mainstream { color: var(--red); }
+  .stage-layers { font-size: 12px; color: var(--text-dim); }
+  .stage-alpha { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  /* Repo chart */
+  .repo-chart {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .repo-bar {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .repo-bar-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    border-radius: 0 0 10px 10px;
+    transition: width 0.5s;
+  }
+  .repo-bar-name {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  .repo-bar-count {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin: 32px 0;
+  }
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+  .stat-value {
+    font-size: 32px;
+    font-weight: 700;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+  }
+
+  /* Output section */
+  .output-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .output-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+    transition: all 0.3s;
+  }
+  .output-card:hover {
+    background: var(--bg-card-hover);
+    transform: translateY(-2px);
+  }
+  .output-icon { font-size: 36px; margin-bottom: 12px; }
+  .output-name { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .output-file {
+    font-size: 12px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+  .output-desc { font-size: 13px; color: var(--text-dim); }
+
+  /* Limitations */
+  .limits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+  }
+  .limit-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .limit-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .limit-text { font-size: 14px; }
+  .limit-title { font-weight: 600; margin-bottom: 2px; }
+  .limit-desc { color: var(--text-dim); font-size: 13px; }
+
+  /* Cost breakdown */
+  .cost-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 24px;
+  }
+  .cost-table th, .cost-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .cost-table th {
+    color: var(--text-muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+  }
+  .cost-table td:last-child {
+    text-align: right;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+  .cost-total td {
+    font-weight: 700;
+    border-bottom: none;
+    border-top: 2px solid var(--border);
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--text-muted);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* Connector arrows (vertical) */
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0;
+    color: var(--text-muted);
+    font-size: 20px;
+  }
+
+  /* Data flow SVG */
+  .dataflow-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 32px;
+    margin: 32px 0;
+    overflow-x: auto;
+  }
+  .dataflow-svg {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: block;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 32px; }
+    .pipeline { flex-direction: column; }
+    .pipeline-arrow { transform: rotate(90deg); min-height: 30px; }
+    .stages { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .stages::before { display: none; }
+    .analysis-card { grid-template-columns: 1fr; }
+    .output-grid { grid-template-columns: 1fr; }
+    .source-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-badge">Architecture Report</div>
+  <h1>SOLIS Agent Brain</h1>
+  <p>How SOLIS detects emerging Solana narratives by fusing social sentiment, developer activity, onchain metrics, and market signals</p>
+</div>
+
+<div class="container">
+
+  <!-- Quick Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-value" style="color: var(--green)">122</div>
+      <div class="stat-label">Repos Tracked</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color: var(--blue)">18</div>
+      <div class="stat-label">Onchain Programs</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color: var(--orange)">5</div>
+      <div class="stat-label">API Sources</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color: var(--purple)">5</div>
+      <div class="stat-label">Pipeline Phases</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color: var(--cyan)">2</div>
+      <div class="stat-label">LLM Calls</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color: var(--yellow)">~$0.01</div>
+      <div class="stat-label">Cost / Report</div>
+    </div>
+  </div>
+
+  <!-- Pipeline Section -->
+  <section>
+    <div class="section-label">Pipeline</div>
+    <div class="section-title">5-Phase Sequential Pipeline</div>
+    <div class="section-desc">Each report runs through 5 distinct phases. Data flows left to right &mdash; collection feeds scoring, scoring feeds LLM analysis, analysis produces the final report.</div>
+
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <div class="step-box" style="border-color: rgba(52,211,153,0.3)">
+          <div class="step-number" style="background: var(--green-dim); color: var(--green);">1</div>
+          <div class="step-icon">📡</div>
+          <div class="step-title">Collect</div>
+          <div class="step-desc">Parallel fetch from up to 5 APIs across 4 signal layers</div>
+          <div class="step-tech">Promise.allSettled() &bull; 14-day window</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">&rarr;</div>
+      <div class="pipeline-step">
+        <div class="step-box" style="border-color: rgba(96,165,250,0.3)">
+          <div class="step-number" style="background: var(--blue-dim); color: var(--blue);">2</div>
+          <div class="step-icon">📊</div>
+          <div class="step-title">Score</div>
+          <div class="step-desc">Z-score anomaly detection across all metrics</div>
+          <div class="step-tech">Pure math &bull; threshold &ge; 2.0</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">&rarr;</div>
+      <div class="pipeline-step">
+        <div class="step-box" style="border-color: rgba(167,139,250,0.3)">
+          <div class="step-number" style="background: var(--purple-dim); color: var(--purple);">3</div>
+          <div class="step-icon">🧠</div>
+          <div class="step-title">Cluster</div>
+          <div class="step-desc">LLM identifies 3-10 narratives from scored signals</div>
+          <div class="step-tech">GLM-4.7 &bull; temp 0.3</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">&rarr;</div>
+      <div class="pipeline-step">
+        <div class="step-box" style="border-color: rgba(251,191,36,0.3)">
+          <div class="step-number" style="background: var(--yellow-dim); color: var(--yellow);">4</div>
+          <div class="step-icon">💡</div>
+          <div class="step-title">Ideate</div>
+          <div class="step-desc">LLM generates 1-3 build ideas per narrative</div>
+          <div class="step-tech">GLM-4.7 &bull; max 15 ideas</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">&rarr;</div>
+      <div class="pipeline-step">
+        <div class="step-box" style="border-color: rgba(34,211,238,0.3)">
+          <div class="step-number" style="background: var(--cyan-dim); color: var(--cyan);">5</div>
+          <div class="step-icon">📄</div>
+          <div class="step-title">Output</div>
+          <div class="step-desc">Write JSON + Markdown reports to disk</div>
+          <div class="step-tech">3 files &bull; reports/ dir</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Data Flow Diagram -->
+  <section>
+    <div class="section-label">Data Flow</div>
+    <div class="section-title">End-to-End Signal Flow</div>
+    <div class="section-desc">From raw API data to published intelligence &mdash; this is how signals transform through each pipeline phase.</div>
+
+    <div class="dataflow-container">
+      <svg class="dataflow-svg" viewBox="0 0 1100 600" xmlns="http://www.w3.org/2000/svg">
+        <!-- Background grid -->
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#64748b"/>
+          </marker>
+          <marker id="arrow-green" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#34d399"/>
+          </marker>
+          <marker id="arrow-blue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#60a5fa"/>
+          </marker>
+          <marker id="arrow-orange" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#fb923c"/>
+          </marker>
+          <marker id="arrow-purple" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#a78bfa"/>
+          </marker>
+          <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#34d399;stop-opacity:0.2"/>
+            <stop offset="100%" style="stop-color:#34d399;stop-opacity:0.05"/>
+          </linearGradient>
+          <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:0.2"/>
+            <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:0.05"/>
+          </linearGradient>
+          <linearGradient id="grad-orange" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#fb923c;stop-opacity:0.2"/>
+            <stop offset="100%" style="stop-color:#fb923c;stop-opacity:0.05"/>
+          </linearGradient>
+          <linearGradient id="grad-pink" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#f472b6;stop-opacity:0.2"/>
+            <stop offset="100%" style="stop-color:#f472b6;stop-opacity:0.05"/>
+          </linearGradient>
+          <marker id="arrow-pink" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#f472b6"/>
+          </marker>
+        </defs>
+
+        <!-- Layer 1: Sources (left) -->
+        <rect x="10" y="30" width="170" height="60" rx="10" fill="url(#grad-green)" stroke="#34d399" stroke-opacity="0.4"/>
+        <text x="95" y="55" text-anchor="middle" fill="#34d399" font-size="13" font-weight="600">GitHub API</text>
+        <text x="95" y="73" text-anchor="middle" fill="#94a3b8" font-size="10">122 repos &bull; stars/commits/forks</text>
+
+        <rect x="10" y="120" width="170" height="60" rx="10" fill="url(#grad-blue)" stroke="#60a5fa" stroke-opacity="0.4"/>
+        <text x="95" y="145" text-anchor="middle" fill="#60a5fa" font-size="13" font-weight="600">DeFi Llama</text>
+        <text x="95" y="163" text-anchor="middle" fill="#94a3b8" font-size="10">TVL &bull; DEX volumes &bull; stables</text>
+
+        <rect x="10" y="210" width="170" height="60" rx="10" fill="url(#grad-blue)" stroke="#60a5fa" stroke-opacity="0.4"/>
+        <text x="95" y="235" text-anchor="middle" fill="#60a5fa" font-size="13" font-weight="600">Helius RPC</text>
+        <text x="95" y="253" text-anchor="middle" fill="#94a3b8" font-size="10">18 programs &bull; tx counts</text>
+
+        <rect x="10" y="300" width="170" height="60" rx="10" fill="url(#grad-orange)" stroke="#fb923c" stroke-opacity="0.4"/>
+        <text x="95" y="325" text-anchor="middle" fill="#fb923c" font-size="13" font-weight="600">CoinGecko</text>
+        <text x="95" y="343" text-anchor="middle" fill="#94a3b8" font-size="10">200 tokens &bull; prices/volume</text>
+
+        <!-- Layer 0: LunarCrush (opt-in) -->
+        <rect x="10" y="390" width="170" height="60" rx="10" fill="url(#grad-pink)" stroke="#f472b6" stroke-opacity="0.4"/>
+        <text x="95" y="415" text-anchor="middle" fill="#f472b6" font-size="13" font-weight="600">LunarCrush</text>
+        <text x="95" y="433" text-anchor="middle" fill="#94a3b8" font-size="10">sentiment &bull; interactions &bull; opt-in</text>
+
+        <!-- Arrows: Sources → Scoring -->
+        <line x1="180" y1="60" x2="240" y2="155" stroke="#34d399" stroke-opacity="0.5" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+        <line x1="180" y1="150" x2="240" y2="170" stroke="#60a5fa" stroke-opacity="0.5" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+        <line x1="180" y1="240" x2="240" y2="190" stroke="#60a5fa" stroke-opacity="0.5" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+        <line x1="180" y1="330" x2="240" y2="210" stroke="#fb923c" stroke-opacity="0.5" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+        <line x1="180" y1="420" x2="240" y2="230" stroke="#f472b6" stroke-opacity="0.5" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow-pink)"/>
+
+        <!-- Scoring Box -->
+        <rect x="245" y="120" width="160" height="120" rx="12" fill="#111827" stroke="#1e293b" stroke-width="1.5"/>
+        <text x="325" y="150" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">Z-Score</text>
+        <text x="325" y="170" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">Scoring</text>
+        <text x="325" y="195" text-anchor="middle" fill="#94a3b8" font-size="11">anomaly detection</text>
+        <text x="325" y="212" text-anchor="middle" fill="#94a3b8" font-size="11">threshold &ge; 2.0&sigma;</text>
+        <text x="325" y="230" text-anchor="middle" fill="#64748b" font-size="10">pure math, no LLM</text>
+
+        <!-- Arrow: Scoring → Clustering -->
+        <line x1="405" y1="180" x2="470" y2="155" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Clustering Box -->
+        <rect x="475" y="80" width="190" height="150" rx="12" fill="#111827" stroke="#a78bfa" stroke-opacity="0.4" stroke-width="1.5"/>
+        <text x="570" y="108" text-anchor="middle" fill="#a78bfa" font-size="13" font-weight="600">🧠 GLM-4.7 Call #1</text>
+        <text x="570" y="130" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">Narrative Clustering</text>
+        <text x="570" y="153" text-anchor="middle" fill="#94a3b8" font-size="11">identify 3-10 narratives</text>
+        <text x="570" y="170" text-anchor="middle" fill="#94a3b8" font-size="11">assign stage + momentum</text>
+        <text x="570" y="187" text-anchor="middle" fill="#94a3b8" font-size="11">confidence 0-100%</text>
+        <text x="570" y="210" text-anchor="middle" fill="#64748b" font-size="10">condensed top signals as input</text>
+
+        <!-- Arrow: Clustering → Ideas -->
+        <line x1="665" y1="155" x2="720" y2="155" stroke="#a78bfa" stroke-opacity="0.5" stroke-width="1.5" marker-end="url(#arrow-purple)"/>
+
+        <!-- Ideas Box -->
+        <rect x="725" y="80" width="190" height="150" rx="12" fill="#111827" stroke="#fbbf24" stroke-opacity="0.4" stroke-width="1.5"/>
+        <text x="820" y="108" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="600">💡 GLM-4.7 Call #2</text>
+        <text x="820" y="130" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">Build Ideas</text>
+        <text x="820" y="153" text-anchor="middle" fill="#94a3b8" font-size="11">1-3 ideas per narrative</text>
+        <text x="820" y="170" text-anchor="middle" fill="#94a3b8" font-size="11">difficulty + timeframe</text>
+        <text x="820" y="187" text-anchor="middle" fill="#94a3b8" font-size="11">tech stack + why now</text>
+        <text x="820" y="210" text-anchor="middle" fill="#64748b" font-size="10">max 15 total ideas</text>
+
+        <!-- Arrow: Ideas → Output -->
+        <line x1="915" y1="155" x2="960" y2="120" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <line x1="915" y1="155" x2="960" y2="180" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <line x1="915" y1="155" x2="960" y2="240" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Output Files -->
+        <rect x="965" y="90" width="125" height="50" rx="8" fill="#111827" stroke="#22d3ee" stroke-opacity="0.4"/>
+        <text x="1028" y="113" text-anchor="middle" fill="#22d3ee" font-size="12" font-weight="600">Full Report</text>
+        <text x="1028" y="130" text-anchor="middle" fill="#64748b" font-size="10">{date}.json</text>
+
+        <rect x="965" y="155" width="125" height="50" rx="8" fill="#111827" stroke="#22d3ee" stroke-opacity="0.4"/>
+        <text x="1028" y="178" text-anchor="middle" fill="#22d3ee" font-size="12" font-weight="600">Markdown</text>
+        <text x="1028" y="195" text-anchor="middle" fill="#64748b" font-size="10">{date}.md</text>
+
+        <rect x="965" y="220" width="125" height="50" rx="8" fill="#111827" stroke="#22d3ee" stroke-opacity="0.4"/>
+        <text x="1028" y="243" text-anchor="middle" fill="#22d3ee" font-size="12" font-weight="600">Signals</text>
+        <text x="1028" y="260" text-anchor="middle" fill="#64748b" font-size="10">signals/{date}.json</text>
+
+        <!-- Curated list annotation -->
+        <rect x="10" y="480" width="170" height="50" rx="8" fill="rgba(167,139,250,0.08)" stroke="#a78bfa" stroke-opacity="0.3"/>
+        <text x="95" y="502" text-anchor="middle" fill="#a78bfa" font-size="12" font-weight="600">Curated List</text>
+        <text x="95" y="520" text-anchor="middle" fill="#64748b" font-size="10">122 repos &bull; 23 categories</text>
+        <line x1="95" y1="480" x2="95" y2="92" stroke="#a78bfa" stroke-opacity="0.2" stroke-width="1" stroke-dasharray="4,4"/>
+
+        <!-- Legend -->
+        <rect x="245" y="280" width="310" height="140" rx="10" fill="rgba(255,255,255,0.02)" stroke="#1e293b"/>
+        <text x="265" y="305" fill="#64748b" font-size="11" font-weight="600">SIGNAL LAYERS</text>
+        <circle cx="265" cy="325" r="5" fill="#f472b6"/>
+        <text x="280" y="329" fill="#94a3b8" font-size="11">Layer 0 &mdash; SOCIAL (LunarCrush) &mdash; earliest signal, opt-in</text>
+        <circle cx="265" cy="350" r="5" fill="#34d399"/>
+        <text x="280" y="354" fill="#94a3b8" font-size="11">Layer 1 &mdash; LEADING (GitHub) &mdash; precedes market by 2-4 weeks</text>
+        <circle cx="265" cy="375" r="5" fill="#60a5fa"/>
+        <text x="280" y="379" fill="#94a3b8" font-size="11">Layer 2 &mdash; COINCIDENT (DeFi Llama + Helius) &mdash; real-time capital</text>
+        <circle cx="265" cy="400" r="5" fill="#fb923c"/>
+        <text x="280" y="404" fill="#94a3b8" font-size="11">Layer 3 &mdash; CONFIRMING (CoinGecko) &mdash; market validation</text>
+
+        <!-- Timing annotation -->
+        <rect x="600" y="300" width="310" height="85" rx="10" fill="rgba(255,255,255,0.02)" stroke="#1e293b"/>
+        <text x="620" y="325" fill="#64748b" font-size="11" font-weight="600">PERFORMANCE (last run)</text>
+        <text x="620" y="348" fill="#94a3b8" font-size="11">Duration: 131 seconds &bull; LLM Cost: $0.0144</text>
+        <text x="620" y="368" fill="#94a3b8" font-size="11">Model: GLM-4.7 via OpenRouter &bull; Temp: 0.3</text>
+
+        <!-- No automation warning -->
+        <rect x="600" y="410" width="310" height="50" rx="10" fill="rgba(248,113,113,0.08)" stroke="#f87171" stroke-opacity="0.3"/>
+        <text x="620" y="432" fill="#f87171" font-size="12" font-weight="600">⚠ No Scheduler</text>
+        <text x="620" y="450" fill="#94a3b8" font-size="11">Stateless pipeline &mdash; designed for external cron/CI</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- 4-Layer Architecture -->
+  <section>
+    <div class="section-label">Signal Architecture</div>
+    <div class="section-title">4-Layer Signal Detection</div>
+    <div class="section-desc">The core thesis: social buzz precedes dev activity (social), developers build first (leading), capital flows in (coincident), then market prices it (confirming). Each layer has different predictive power and lead time.</div>
+
+    <div class="layers-grid">
+      <!-- Layer 0 -->
+      <div class="layer-card" style="border-left: 4px solid var(--pink);">
+        <div class="layer-header">
+          <div class="layer-icon" style="background: var(--pink-dim);">🐦</div>
+          <div>
+            <div class="layer-name">Layer 0: Social Signals</div>
+            <span class="layer-tag" style="background: var(--pink-dim); color: var(--pink);">Opt-in &bull; earliest signal</span>
+          </div>
+        </div>
+        <div class="layer-thesis">"When Crypto Twitter starts buzzing about a topic, it often precedes developer activity by days or weeks."</div>
+        <div class="source-grid">
+          <div class="source-card">
+            <div class="source-name">LunarCrush v4</div>
+            <div class="source-endpoint">GET /public/coins/list/v2?filter=solana + /public/topic/:topic/v1</div>
+            <ul class="metric-list" style="--dot-color: var(--pink);">
+              <li style="--dot-color: var(--pink);">24h social interactions + delta (z-scored)</li>
+              <li>Sentiment score (0-100)</li>
+              <li>Social dominance (% of crypto social volume)</li>
+              <li>Galaxy Score (composite 0-100)</li>
+              <li>Contributors + post counts per topic</li>
+              <li>Enabled via ENABLE_SOCIAL_SIGNALS flag</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layer 1 -->
+      <div class="layer-card leading">
+        <div class="layer-header">
+          <div class="layer-icon leading">🔭</div>
+          <div>
+            <div class="layer-name">Layer 1: Leading Signals</div>
+            <span class="layer-tag leading">2-4 weeks ahead of market</span>
+          </div>
+        </div>
+        <div class="layer-thesis">"When devs start building, the market hasn't noticed yet."</div>
+        <div class="source-grid">
+          <div class="source-card">
+            <div class="source-name">GitHub API</div>
+            <div class="source-endpoint">GET /repos/{owner}/{repo} + /stats/commit_activity</div>
+            <ul class="metric-list">
+              <li>Star velocity &amp; delta (z-scored)</li>
+              <li>Commit frequency surges</li>
+              <li>Fork rate anomalies</li>
+              <li>Contributor count deltas</li>
+              <li>New repo clustering by topic</li>
+              <li>122 curated repos, 23 categories</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layer 2 -->
+      <div class="layer-card coincident">
+        <div class="layer-header">
+          <div class="layer-icon coincident">💰</div>
+          <div>
+            <div class="layer-name">Layer 2: Coincident Signals</div>
+            <span class="layer-tag coincident">Real-time capital &amp; onchain activity</span>
+          </div>
+        </div>
+        <div class="layer-thesis">"When TVL and transaction volume align with dev signals, the narrative is materializing."</div>
+        <div class="source-grid">
+          <div class="source-card">
+            <div class="source-name">DeFi Llama</div>
+            <div class="source-endpoint">GET /protocols + /overview/dexs/Solana + stablecoins.llama.fi</div>
+            <ul class="metric-list">
+              <li>Solana chain TVL + protocol-level changes</li>
+              <li>DEX volumes &amp; fees (top 10)</li>
+              <li>Stablecoin flows (net inflows/outflows)</li>
+              <li>TVL anomaly detection (z-score)</li>
+            </ul>
+          </div>
+          <div class="source-card">
+            <div class="source-name">Helius RPC</div>
+            <div class="source-endpoint">getSignaturesForAddress &bull; 18 programs</div>
+            <ul class="metric-list">
+              <li>Transaction count per program</li>
+              <li>Jupiter, Orca, Raydium, Drift, Pyth</li>
+              <li>Marginfi, Solend, Phoenix, Tensor</li>
+              <li>Magic Eden, Jito, WNS + more</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layer 3 -->
+      <div class="layer-card confirming">
+        <div class="layer-header">
+          <div class="layer-icon confirming">📈</div>
+          <div>
+            <div class="layer-name">Layer 3: Confirming Signals</div>
+            <span class="layer-tag confirming">Market price validation</span>
+          </div>
+        </div>
+        <div class="layer-thesis">"When tokens in a narrative cluster start moving, the signal is confirmed but alpha is diminishing."</div>
+        <div class="source-grid">
+          <div class="source-card">
+            <div class="source-name">CoinGecko</div>
+            <div class="source-endpoint">GET /coins/markets?category=solana-ecosystem + /search/trending</div>
+            <ul class="metric-list">
+              <li>Top 200 Solana ecosystem token prices</li>
+              <li>7-day and 14-day price deltas</li>
+              <li>24h volume + volume delta (z-scored)</li>
+              <li>Category market cap movements</li>
+              <li>Trending tokens (Solana-filtered)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Signal Stage Classification -->
+  <section>
+    <div class="section-label">Classification</div>
+    <div class="section-title">Narrative Stage Lifecycle</div>
+    <div class="section-desc">The LLM classifies each detected narrative into one of 4 stages based on which signal layers are active. Alpha potential decreases as narratives mature.</div>
+
+    <div class="stages">
+      <div class="stage-item">
+        <div class="stage-dot early">🔵</div>
+        <div class="stage-name early">EARLY</div>
+        <div class="stage-layers">Layer 0-1 only</div>
+        <div class="stage-alpha">Highest alpha &mdash; social buzz and/or devs building</div>
+      </div>
+      <div class="stage-item">
+        <div class="stage-dot emerging">🟢</div>
+        <div class="stage-name emerging">EMERGING</div>
+        <div class="stage-layers">Layer 1 + 2</div>
+        <div class="stage-alpha">High alpha &mdash; builders and capital moving together</div>
+      </div>
+      <div class="stage-item">
+        <div class="stage-dot growing">🟡</div>
+        <div class="stage-name growing">GROWING</div>
+        <div class="stage-layers">All layers align</div>
+        <div class="stage-alpha">Moderate &mdash; gaining mainstream traction</div>
+      </div>
+      <div class="stage-item">
+        <div class="stage-dot mainstream">🔴</div>
+        <div class="stage-name mainstream">MAINSTREAM</div>
+        <div class="stage-layers">All layers, high confidence</div>
+        <div class="stage-alpha">Low alpha &mdash; likely already priced in</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Analysis Layer -->
+  <section>
+    <div class="section-label">LLM Analysis</div>
+    <div class="section-title">Two-Phase LLM Intelligence</div>
+    <div class="section-desc">SOLIS makes exactly 2 LLM calls per report. Both use GLM-4.7 via OpenRouter at temperature 0.3 with JSON schema enforcement for deterministic, parseable output.</div>
+
+    <div class="analysis-flow">
+      <div class="analysis-card">
+        <div class="analysis-visual">
+          <div class="analysis-emoji">🧠</div>
+          <div class="analysis-label">LLM Call #1</div>
+        </div>
+        <div class="analysis-content">
+          <h3>Narrative Clustering</h3>
+          <p>Receives condensed scored signals (top 20 social coins if enabled, top 30 repos by commits, top 15 programs by tx count, top 20 tokens by 14d price change, all anomalies, stablecoin flows). Identifies 3-10 distinct narratives with cross-layer signal attribution.</p>
+          <div class="code-block">
+<span class="comment">// Input (condensed)</span>
+{
+  <span class="string">"social"</span>: { topByInteractions[], anomalies[], topBySentiment[] }, <span class="comment">// if enabled</span>
+  <span class="string">"github"</span>: { anomalies[], newRepoClusters[], top30Repos[] },
+  <span class="string">"defi"</span>: { tvlTotal, tvlDelta, tvlAnomalies[], top10Dex[], stablecoinFlows },
+  <span class="string">"onchain"</span>: { top15Programs[] },
+  <span class="string">"market"</span>: { top20Tokens[], trending[], categoryPerformance[] }
+}
+
+<span class="comment">// Output per narrative</span>
+{
+  <span class="string">"name"</span>: <span class="string">"Meme-Centric DEX Dominance"</span>,
+  <span class="string">"stage"</span>: <span class="string">"GROWING"</span>,
+  <span class="string">"momentum"</span>: <span class="string">"accelerating"</span>,
+  <span class="string">"confidence"</span>: <span class="number">92</span>,
+  <span class="string">"social_signals"</span>: [...],
+  <span class="string">"leading_signals"</span>: [...],
+  <span class="string">"coincident_signals"</span>: [...],
+  <span class="string">"confirming_signals"</span>: [...],
+  <span class="string">"related_repos"</span>: [...],
+  <span class="string">"related_tokens"</span>: [...],
+  <span class="string">"related_protocols"</span>: [...]
+}
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow">⬇</div>
+
+      <div class="analysis-card">
+        <div class="analysis-visual">
+          <div class="analysis-emoji">💡</div>
+          <div class="analysis-label">LLM Call #2</div>
+        </div>
+        <div class="analysis-content">
+          <h3>Build Idea Generation</h3>
+          <p>Takes the narrative output from Call #1 and generates 1-3 specific, actionable project ideas per narrative. Each idea includes difficulty level, realistic timeframe, required tech stack, and a "why now" section explaining the timing opportunity.</p>
+          <div class="code-block">
+<span class="comment">// Output per build idea</span>
+{
+  <span class="string">"title"</span>: <span class="string">"Meme-Launch Safety Scanner"</span>,
+  <span class="string">"narrative"</span>: <span class="string">"Meme-Centric DEX Dominance"</span>,
+  <span class="string">"difficulty"</span>: <span class="string">"beginner"</span>,      <span class="comment">// 2-3 days</span>
+  <span class="string">"difficulty"</span>: <span class="string">"intermediate"</span>,  <span class="comment">// 2-4 weeks</span>
+  <span class="string">"difficulty"</span>: <span class="string">"advanced"</span>,      <span class="comment">// 1-3 months</span>
+  <span class="string">"timeframe"</span>: <span class="string">"2-3 days"</span>,
+  <span class="string">"tech_stack"</span>: [<span class="string">"TypeScript"</span>, <span class="string">"Helius Webhooks"</span>, <span class="string">"Metaplex JS SDK"</span>],
+  <span class="string">"why_now"</span>: <span class="string">"Trading volume aggressively shifting to meme DEXs..."</span>
+}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Curated Repos -->
+  <section>
+    <div class="section-label">Knowledge Base</div>
+    <div class="section-title">122 Curated Solana Repositories</div>
+    <div class="section-desc">Hand-picked repos across 23 categories with importance weights (1-3). Higher weight repos have more influence on narrative detection.</div>
+
+    <div class="repo-chart">
+      <div class="repo-bar">
+        <div class="repo-bar-fill" style="width: 100%; background: var(--green)"></div>
+        <div class="repo-bar-name">DeFi DEXs</div>
+        <div class="repo-bar-count">8 repos &bull; Jupiter, Orca, Raydium, Phoenix...</div>
+      </div>
+      <div class="repo-bar">
+        <div class="repo-bar-fill" style="width: 75%; background: var(--green)"></div>
+        <div class="repo-bar-name">Core</div>
+        <div class="repo-bar-count">6 repos &bull; Solana, Agave, Firedancer, Anchor</div>
+      </div>
+      <div class="repo-bar">
+        <div class="repo-bar-fill" style="width: 62%; background: var(--blue)"></div>
+        <div class="repo-bar-name">DePIN</div>
+        <div class="repo-bar-count">5 repos &bull; Helium, Hivemapper, Nosana</div>
+      </div>
+      <div class="repo-bar">
+        <div class="repo-bar-fill" style="width: 50%; background: var(--blue)"></div>
+        <div class="repo-bar-name">DeFi Lending</div>
+        <div class="repo-bar-count">4 repos &bull; Marginfi, Solend, Kamino, Drift</div>
+      </div>
+      <div class="repo-bar">
+        <div class="repo-bar-fill" style="width: 50%; background: var(--purple)"></div>
+        <div class="repo-bar-name">NFT / Marketplace</div>
+        <div class="repo-bar-count">4 repos &bull; Metaplex, Tensor, Magic Eden</div>
+      </div>
+      <div class="repo-bar">
+        <div class="repo-bar-fill" style="width: 38%; background: var(--orange)"></div>
+        <div class="repo-bar-name">Bridges</div>
+        <div class="repo-bar-count">3 repos &bull; Wormhole, LayerZero, deBridge</div>
+      </div>
+      <div class="repo-bar">
+        <div class="repo-bar-fill" style="width: 38%; background: var(--orange)"></div>
+        <div class="repo-bar-name">Liquid Staking</div>
+        <div class="repo-bar-count">3 repos &bull; Jito, Sanctum, Marinade</div>
+      </div>
+      <div class="repo-bar">
+        <div class="repo-bar-fill" style="width: 38%; background: var(--cyan)"></div>
+        <div class="repo-bar-name">Oracle</div>
+        <div class="repo-bar-count">3 repos &bull; Pyth, Switchboard</div>
+      </div>
+      <div class="repo-bar">
+        <div class="repo-bar-fill" style="width: 38%; background: var(--cyan)"></div>
+        <div class="repo-bar-name">Social</div>
+        <div class="repo-bar-count">3 repos &bull; Dialect, Bonfida</div>
+      </div>
+      <div class="repo-bar">
+        <div class="repo-bar-fill" style="width: 38%; background: var(--yellow)"></div>
+        <div class="repo-bar-name">DevTools</div>
+        <div class="repo-bar-count">3 repos &bull; Helius SDK, Clockwork</div>
+      </div>
+      <div class="repo-bar">
+        <div class="repo-bar-fill" style="width: 38%; background: var(--yellow)"></div>
+        <div class="repo-bar-name">Wallets</div>
+        <div class="repo-bar-count">3 repos &bull; Wallet Adapter, Phantom, Solflare</div>
+      </div>
+      <div class="repo-bar">
+        <div class="repo-bar-fill" style="width: 25%; background: var(--pink)"></div>
+        <div class="repo-bar-name">Gaming</div>
+        <div class="repo-bar-count">2 repos &bull; Magic Block (Bolt, Ephemeral)</div>
+      </div>
+      <div class="repo-bar">
+        <div class="repo-bar-fill" style="width: 25%; background: var(--pink)"></div>
+        <div class="repo-bar-name">DeFi Perps</div>
+        <div class="repo-bar-count">2 repos &bull; Drift, Zeta</div>
+      </div>
+      <div class="repo-bar">
+        <div class="repo-bar-fill" style="width: 25%; background: var(--pink)"></div>
+        <div class="repo-bar-name">DeFi Yield</div>
+        <div class="repo-bar-count">2 repos &bull; Kamino</div>
+      </div>
+      <div class="repo-bar">
+        <div class="repo-bar-fill" style="width: 25%; background: var(--red)"></div>
+        <div class="repo-bar-name">MEV / Trading</div>
+        <div class="repo-bar-count">2 repos &bull; Jito, MEV Protos</div>
+      </div>
+      <div class="repo-bar">
+        <div class="repo-bar-fill" style="width: 12%; background: var(--text-muted)"></div>
+        <div class="repo-bar-name">Others</div>
+        <div class="repo-bar-count">8 categories &bull; 1 repo each (Privacy, SVM, Mobile...)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Output -->
+  <section>
+    <div class="section-label">Output</div>
+    <div class="section-title">What Gets Generated</div>
+    <div class="section-desc">Each pipeline run produces 3 artifacts written to the <code>reports/</code> directory. The web app reads these directly &mdash; no database needed.</div>
+
+    <div class="output-grid">
+      <div class="output-card">
+        <div class="output-icon">📋</div>
+        <div class="output-name">Full Report JSON</div>
+        <div class="output-file">reports/{date}.json</div>
+        <div class="output-desc">Complete FortnightlyReport with all signals, narratives, build ideas, metadata, and pipeline stats. ~200KB.</div>
+      </div>
+      <div class="output-card">
+        <div class="output-icon">📝</div>
+        <div class="output-name">Markdown Report</div>
+        <div class="output-file">reports/{date}.md</div>
+        <div class="output-desc">Human-readable format with emoji stage indicators, tables, and organized sections. ~10KB.</div>
+      </div>
+      <div class="output-card">
+        <div class="output-icon">⚡</div>
+        <div class="output-name">Signals Extract</div>
+        <div class="output-file">reports/signals/{date}.json</div>
+        <div class="output-desc">Lighter payload with raw signals only (no narratives/ideas). Used by the API for data access. ~190KB.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cost -->
+  <section>
+    <div class="section-label">Economics</div>
+    <div class="section-title">Cost Per Report</div>
+    <div class="section-desc">Total estimated cost to run the full pipeline once, assuming free API tiers.</div>
+
+    <table class="cost-table">
+      <thead>
+        <tr><th>Component</th><th>Service</th><th>Notes</th><th>Cost</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>GitHub API</td><td>REST API v3</td><td>Free (PAT) &bull; 5,000 req/hr</td><td>$0.00</td></tr>
+        <tr><td>DeFi Llama</td><td>Public API</td><td>Free (no key) &bull; no hard limit</td><td>$0.00</td></tr>
+        <tr><td>Helius RPC</td><td>Free tier</td><td>1M credits/month</td><td>$0.00</td></tr>
+        <tr><td>CoinGecko</td><td>Demo API</td><td>Free (10K/mo) &bull; ~330 calls/day</td><td>$0.00</td></tr>
+        <tr><td>LunarCrush</td><td>v4 API</td><td>Free tier (opt-in) &bull; Bearer token auth</td><td>$0.00</td></tr>
+        <tr><td>LLM Call #1</td><td>GLM-4.7 (OpenRouter)</td><td>Narrative clustering</td><td>~$0.008</td></tr>
+        <tr><td>LLM Call #2</td><td>GLM-4.7 (OpenRouter)</td><td>Build idea generation</td><td>~$0.006</td></tr>
+        <tr class="cost-total"><td colspan="3">Total per report</td><td>~$0.014</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 16px; font-size: 13px; color: var(--text-muted);">GLM-4.7 pricing: $0.40/M input tokens, $1.50/M output tokens. At biweekly cadence = ~$0.36/year.</p>
+  </section>
+
+  <!-- Limitations -->
+  <section>
+    <div class="section-label">Gaps</div>
+    <div class="section-title">Current Limitations</div>
+    <div class="section-desc">What the agent cannot do today.</div>
+
+    <div class="limits-grid">
+      <div class="limit-card">
+        <div class="limit-icon">⏰</div>
+        <div class="limit-text">
+          <div class="limit-title">No Scheduler</div>
+          <div class="limit-desc">Stateless pipeline. Must be triggered externally via cron, CI, or manual run. No built-in automation.</div>
+        </div>
+      </div>
+      <div class="limit-card">
+        <div class="limit-icon">🔄</div>
+        <div class="limit-text">
+          <div class="limit-title">No Auto-Commit</div>
+          <div class="limit-desc">Reports are written to disk only. Requires manual git commit + push to trigger deployment.</div>
+        </div>
+      </div>
+      <div class="limit-card">
+        <div class="limit-icon">🏗️</div>
+        <div class="limit-text">
+          <div class="limit-title">Static Repo List</div>
+          <div class="limit-desc">122 curated repos don't auto-discover new projects. New ecosystems require manual addition.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  SOLIS Brain Architecture Report &mdash; Generated by CIPHER for RECTOR &mdash; February 2026
+</footer>
+
+</body>
+</html>
