@@ -83,6 +83,7 @@ async function getProgramTxCount(
 
   return {
     txCount: recentSigs.length,
+    // TODO(#5): uniqueSigners requires batch getTransaction — deferred for RPC budget
     uniqueSigners: 0,
   };
 }

@@ -128,7 +128,7 @@ export async function collectDefiLlama(
     .map(p => ({
       protocol: p.name,
       volume24h: p.total24h ?? 0,
-      volumeDelta: p.change_1d ?? 0,
+      volumeDelta: 0, // delta calculated from previous report in applyDeltas()
       volumeZScore: 0,
     }))
     .sort((a, b) => b.volume24h - a.volume24h) ?? [];
