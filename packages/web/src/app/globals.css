@@ -13,4 +13,15 @@
 
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  --animate-glow-pulse: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 4px var(--color-sol-green);
+  }
+  50% {
+    box-shadow: 0 0 12px var(--color-sol-green);
+  }
 }

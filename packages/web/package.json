@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start --port 3001",
     "typecheck": "tsc --noEmit",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest",
+    "test:run": "vitest run"
   },
   "dependencies": {
     "@solis/shared": "workspace:*",
@@ -23,6 +25,7 @@
     "@types/react-dom": "^19.1.0",
     "postcss": "^8.5.4",
     "tailwindcss": "^4.1.7",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.0"
   }
 }
