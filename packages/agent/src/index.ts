@@ -5,15 +5,33 @@ import { collectDefiLlama } from './tools/defillama.js';
 import { collectCoinGecko } from './tools/coingecko.js';
 import { collectHelius } from './tools/helius.js';
 import { getAllRepoNames } from './repos/curated.js';
-import { scoreSignals } from './analysis/scoring.js';
+import { scoreSignals, type ScoredSignals } from './analysis/scoring.js';
 import { clusterNarratives } from './analysis/clustering.js';
 import { generateBuildIdeas } from './analysis/ideas.js';
 import { env } from './config.js';
 import { loadPreviousReport } from './utils/reports.js';
 import { applyDeltas } from './utils/deltas.js';
-import type { FortnightlyReport, CoincidentSignals } from '@solis/shared';
+import {
+  emptyGitHubSignals,
+  emptyCoincidentSignals,
+  emptyOnchainSignals,
+  emptyConfirmingSignals,
+} from './utils/empty-signals.js';
+import type {
+  FortnightlyReport,
+  CoincidentSignals,
+  DataSourceStatus,
+  GitHubSignals,
+  ConfirmingSignals,
+  OnchainSignal,
+} from '@solis/shared';
 
 const startTime = Date.now();
+
+interface SourceResult {
+  status: DataSourceStatus;
+  error?: string;
+}
 
 async function main() {
   logger.info('SOLIS pipeline starting');
@@ -25,12 +43,56 @@ async function main() {
     const repos = getAllRepoNames();
     logger.info({ repoCount: repos.length }, 'Tracking repos');
 
-    const [leading, defiLlamaData, onchainSignals, confirming] = await Promise.all([
+    const [githubResult, defiLlamaResult, heliusResult, coingeckoResult] = await Promise.allSettled([
       collectGitHub(repos, 2),
       collectDefiLlama(14),
       collectHelius(14),
       collectCoinGecko(2),
     ]);
+
+    // Track source results for report metadata
+    const sourceResults: Record<string, SourceResult> = {};
+
+    // Unwrap results with empty fallbacks
+    let leading: GitHubSignals;
+    if (githubResult.status === 'fulfilled') {
+      leading = githubResult.value;
+      sourceResults['GitHub API'] = { status: 'success' };
+    } else {
+      logger.error({ error: githubResult.reason }, 'GitHub collection failed — using empty signals');
+      leading = emptyGitHubSignals();
+      sourceResults['GitHub API'] = { status: 'failed', error: String(githubResult.reason) };
+    }
+
+    let defiLlamaData: Omit<CoincidentSignals, 'onchain'>;
+    if (defiLlamaResult.status === 'fulfilled') {
+      defiLlamaData = defiLlamaResult.value;
+      sourceResults['DeFi Llama'] = { status: 'success' };
+    } else {
+      logger.error({ error: defiLlamaResult.reason }, 'DeFi Llama collection failed — using empty signals');
+      defiLlamaData = emptyCoincidentSignals();
+      sourceResults['DeFi Llama'] = { status: 'failed', error: String(defiLlamaResult.reason) };
+    }
+
+    let onchainSignals: OnchainSignal[];
+    if (heliusResult.status === 'fulfilled') {
+      onchainSignals = heliusResult.value;
+      sourceResults['Helius'] = { status: 'success' };
+    } else {
+      logger.error({ error: heliusResult.reason }, 'Helius collection failed — using empty signals');
+      onchainSignals = emptyOnchainSignals();
+      sourceResults['Helius'] = { status: 'failed', error: String(heliusResult.reason) };
+    }
+
+    let confirming: ConfirmingSignals;
+    if (coingeckoResult.status === 'fulfilled') {
+      confirming = coingeckoResult.value;
+      sourceResults['CoinGecko'] = { status: 'success' };
+    } else {
+      logger.error({ error: coingeckoResult.reason }, 'CoinGecko collection failed — using empty signals');
+      confirming = emptyConfirmingSignals();
+      sourceResults['CoinGecko'] = { status: 'failed', error: String(coingeckoResult.reason) };
+    }
 
     const coincident: CoincidentSignals = {
       ...defiLlamaData,
@@ -44,8 +106,19 @@ async function main() {
 
     // === Phase 2: Score signals with z-scores ===
     logger.info({ phase: 'score' }, 'Phase 2: Scoring signals...');
-    const scored = scoreSignals(leading, coincident, confirming, env.ANOMALY_THRESHOLD);
-    logger.info({ summary: scored.summary }, 'Scoring complete');
+    let scored: ScoredSignals;
+    try {
+      scored = scoreSignals(leading, coincident, confirming, env.ANOMALY_THRESHOLD);
+      logger.info({ summary: scored.summary }, 'Scoring complete');
+    } catch (err) {
+      logger.error({ error: err instanceof Error ? err.message : err }, 'Scoring failed — proceeding with unscored signals');
+      scored = {
+        leading,
+        coincident,
+        confirming,
+        summary: { leadingAnomalies: 0, coincidentAnomalies: 0, confirmingAnomalies: 0, totalAnomalies: 0 },
+      };
+    }
 
     // === Phase 3: Cluster narratives via LLM ===
     logger.info({ phase: 'cluster' }, 'Phase 3: Clustering narratives...');
@@ -74,10 +147,10 @@ async function main() {
         end: now.toISOString(),
       },
       sources: [
-        { name: 'GitHub API', layer: 'LEADING', fetchedAt: now.toISOString(), dataPoints: leading.repos.length },
-        { name: 'DeFi Llama', layer: 'COINCIDENT', fetchedAt: now.toISOString(), dataPoints: coincident.tvl.protocols.length },
-        { name: 'Helius', layer: 'COINCIDENT', fetchedAt: now.toISOString(), dataPoints: coincident.onchain.length },
-        { name: 'CoinGecko', layer: 'CONFIRMING', fetchedAt: now.toISOString(), dataPoints: confirming.tokens.length },
+        { name: 'GitHub API', layer: 'LEADING', fetchedAt: now.toISOString(), dataPoints: leading.repos.length, ...sourceResults['GitHub API'] },
+        { name: 'DeFi Llama', layer: 'COINCIDENT', fetchedAt: now.toISOString(), dataPoints: coincident.tvl.protocols.length, ...sourceResults['DeFi Llama'] },
+        { name: 'Helius', layer: 'COINCIDENT', fetchedAt: now.toISOString(), dataPoints: coincident.onchain.length, ...sourceResults['Helius'] },
+        { name: 'CoinGecko', layer: 'CONFIRMING', fetchedAt: now.toISOString(), dataPoints: confirming.tokens.length, ...sourceResults['CoinGecko'] },
       ],
       signals: {
         leading: scored.leading,
@@ -108,12 +181,17 @@ async function main() {
     await writeMarkdownReport(report, date);
 
     const duration = Date.now() - startTime;
+    const failedSources = Object.entries(sourceResults)
+      .filter(([, r]) => r.status === 'failed')
+      .map(([name]) => name);
+
     logger.info({
       durationMs: duration,
       narratives: narratives.length,
       buildIdeas: ideas.length,
       anomalies: scored.summary.totalAnomalies,
       llmCostUsd: (clusterCost + ideaCost).toFixed(4),
+      ...(failedSources.length > 0 ? { failedSources } : {}),
     }, 'SOLIS pipeline complete');
   } catch (error) {
     logger.error({ err: error instanceof Error ? { message: error.message, stack: error.stack, cause: error.cause } : error }, 'Pipeline failed');
