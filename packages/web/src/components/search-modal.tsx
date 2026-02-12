@@ -11,7 +11,7 @@ export function SearchModal() {
   const [items, setItems] = useState<SearchableNarrative[]>([]);
   const [loaded, setLoaded] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   const results = query.trim() ? searchNarratives(items, query) : [];
 

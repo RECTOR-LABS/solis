@@ -67,17 +67,25 @@ export function NarrativeCard({ narrative }: { narrative: Narrative }) {
         </div>
       )}
 
-      <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-sol-border">
-        {narrative.relatedTokens.slice(0, 5).map(token => (
-          <span key={token} className="text-xs px-1.5 py-0.5 bg-sol-purple/10 text-sol-purple rounded">
-            ${token}
-          </span>
-        ))}
-        {narrative.relatedProtocols.slice(0, 3).map(proto => (
-          <span key={proto} className="text-xs px-1.5 py-0.5 bg-sol-blue/10 text-sol-blue rounded">
-            {proto}
-          </span>
-        ))}
+      <div className="flex items-center justify-between mt-3 pt-3 border-t border-sol-border">
+        <div className="flex flex-wrap gap-1.5">
+          {narrative.relatedTokens.slice(0, 5).map(token => (
+            <span key={token} className="text-xs px-1.5 py-0.5 bg-sol-purple/10 text-sol-purple rounded">
+              ${token}
+            </span>
+          ))}
+          {narrative.relatedProtocols.slice(0, 3).map(proto => (
+            <span key={proto} className="text-xs px-1.5 py-0.5 bg-sol-blue/10 text-sol-blue rounded">
+              {proto}
+            </span>
+          ))}
+        </div>
+        <a
+          href={`/narrative/${narrative.slug}/timeline`}
+          className="text-xs text-sol-muted hover:text-white transition-colors shrink-0 ml-2"
+        >
+          Timeline →
+        </a>
       </div>
     </div>
   );

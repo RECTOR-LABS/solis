@@ -47,6 +47,18 @@ export async function getAllNarrativesFlat(): Promise<Array<{ date: string; narr
   return result;
 }
 
+export async function getAllReports(): Promise<Array<{ date: string; report: FortnightlyReport }>> {
+  const dates = await getReportDates();
+  const result: Array<{ date: string; report: FortnightlyReport }> = [];
+
+  for (const date of dates) {
+    const report = await getReport(date);
+    if (report) result.push({ date, report });
+  }
+
+  return result;
+}
+
 export async function getReportSummaries(): Promise<ReportSummary[]> {
   const dates = await getReportDates();
   const summaries: ReportSummary[] = [];
