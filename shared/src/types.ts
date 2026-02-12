@@ -11,11 +11,15 @@ export type SignalLayer = 'LEADING' | 'COINCIDENT' | 'CONFIRMING';
 
 export type MomentumDirection = 'accelerating' | 'stable' | 'decelerating';
 
+export type DataSourceStatus = 'success' | 'failed' | 'partial';
+
 export interface DataSource {
   name: string;
   layer: SignalLayer;
   fetchedAt: string; // ISO 8601
   dataPoints: number;
+  status?: DataSourceStatus;
+  error?: string;
 }
 
 // --- Layer 1: Leading (GitHub) ---
