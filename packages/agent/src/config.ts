@@ -33,6 +33,10 @@ export const env = cleanEnv(process.env, {
     default: 'z-ai/glm-4.7',
     desc: 'OpenRouter model ID for analysis',
   }),
+  OPENROUTER_FALLBACK_MODELS: str({
+    default: 'z-ai/glm-5,z-ai/glm-4.7-flash',
+    desc: 'Comma-separated fallback model IDs for 5xx errors',
+  }),
   ANOMALY_THRESHOLD: num({
     default: 2.0,
     desc: 'Z-score threshold for anomaly detection',

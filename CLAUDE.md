@@ -54,6 +54,7 @@ Optional config (all have sensible defaults in `config.ts`):
 - `GITHUB_THROTTLE_MS` (500), `COINGECKO_THROTTLE_MS` (2000), `HELIUS_THROTTLE_MS` (300) — API rate limiting
 - `COINGECKO_MAX_PAGES` (2), `DEFILLAMA_MIN_TVL` (100000) — data filters
 - `HELIUS_PROGRAMS_PATH` — override built-in program list with JSON file
+- `OPENROUTER_FALLBACK_MODELS` (`z-ai/glm-5,z-ai/glm-4.7-flash`) — comma-separated fallback model chain for 5xx errors
 - `ANOMALY_THRESHOLD` (2.0) — z-score threshold for anomaly detection
 - `ALERTS_ENABLED` (false) — enable post-pipeline notifications
 - `ALERT_CHANNEL` (telegram) — `telegram` or `discord`

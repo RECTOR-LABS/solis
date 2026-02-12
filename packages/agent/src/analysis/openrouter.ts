@@ -18,10 +18,11 @@ export interface LLMResponse {
   costUsd: number;
 }
 
-// GLM-4.7 pricing: $0.40/M in, $1.50/M out
-const PRICING = {
+const PRICING: Record<string, { input: number; output: number }> = {
   'z-ai/glm-4.7': { input: 0.40 / 1_000_000, output: 1.50 / 1_000_000 },
-} as Record<string, { input: number; output: number }>;
+  'z-ai/glm-5': { input: 0.80 / 1_000_000, output: 2.56 / 1_000_000 },
+  'z-ai/glm-4.7-flash': { input: 0.06 / 1_000_000, output: 0.40 / 1_000_000 },
+};
 
 function estimateCost(model: string, promptTokens: number, completionTokens: number): number {
   const pricing = PRICING[model] ?? { input: 0.001, output: 0.003 };
@@ -29,54 +30,100 @@ function estimateCost(model: string, promptTokens: number, completionTokens: num
 }
 
 /**
- * Send a prompt to GLM-4.7 via OpenRouter and get structured JSON response.
+ * Check if an error is a server-side (5xx) error — fallback may help.
+ */
+export function isServerError(err: unknown): boolean {
+  if (err && typeof err === 'object' && 'status' in err) {
+    const status = (err as { status: number }).status;
+    return status >= 500 && status < 600;
+  }
+  return false;
+}
+
+function buildModelChain(): string[] {
+  const fallbacks = env.OPENROUTER_FALLBACK_MODELS
+    .split(',')
+    .map(m => m.trim())
+    .filter(Boolean);
+  return [env.OPENROUTER_MODEL, ...fallbacks];
+}
+
+/**
+ * Send a prompt to an LLM via OpenRouter with automatic model fallback on 5xx errors.
+ * Tries each model in the chain; on 4xx/other errors throws immediately (auth/config issue).
  */
 export async function analyzeWithLLM(
   systemPrompt: string,
   userPrompt: string,
   jsonSchema?: boolean,
 ): Promise<LLMResponse> {
-  const model = env.OPENROUTER_MODEL;
-  const log = logger.child({ component: 'openrouter', model });
-  const start = Date.now();
+  const models = buildModelChain();
+  const log = logger.child({ component: 'openrouter' });
+  let lastError: unknown;
 
-  try {
-    const response = await client.chat.completions.create({
-      model,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt },
-      ],
-      ...(jsonSchema ? { response_format: { type: 'json_object' as const } } : {}),
-      temperature: 0.3,
-      max_tokens: 16_384,
-    });
+  for (let i = 0; i < models.length; i++) {
+    const model = models[i];
+    const modelLog = log.child({ model });
+    const start = Date.now();
 
-    const content = response.choices[0]?.message?.content ?? '';
-    const usage = response.usage ?? { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
-    const cost = estimateCost(model, usage.prompt_tokens, usage.completion_tokens);
+    try {
+      const response = await client.chat.completions.create({
+        model,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt },
+        ],
+        ...(jsonSchema ? { response_format: { type: 'json_object' as const } } : {}),
+        temperature: 0.3,
+        max_tokens: 16_384,
+      });
 
-    log.info({
-      latencyMs: Date.now() - start,
-      promptTokens: usage.prompt_tokens,
-      completionTokens: usage.completion_tokens,
-      costUsd: cost.toFixed(6),
-    }, 'LLM analysis complete');
+      const content = response.choices[0]?.message?.content ?? '';
+      const usage = response.usage ?? { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
+      const cost = estimateCost(model, usage.prompt_tokens, usage.completion_tokens);
 
-    return {
-      content,
-      model,
-      tokensUsed: {
-        prompt: usage.prompt_tokens,
-        completion: usage.completion_tokens,
-        total: usage.total_tokens,
-      },
-      costUsd: cost,
-    };
-  } catch (err) {
-    log.error({ error: err, latencyMs: Date.now() - start }, 'LLM analysis failed');
-    throw err;
+      if (i > 0) {
+        modelLog.info('Fallback model succeeded');
+      }
+
+      modelLog.info({
+        latencyMs: Date.now() - start,
+        promptTokens: usage.prompt_tokens,
+        completionTokens: usage.completion_tokens,
+        costUsd: cost.toFixed(6),
+      }, 'LLM analysis complete');
+
+      return {
+        content,
+        model,
+        tokensUsed: {
+          prompt: usage.prompt_tokens,
+          completion: usage.completion_tokens,
+          total: usage.total_tokens,
+        },
+        costUsd: cost,
+      };
+    } catch (err) {
+      lastError = err;
+
+      if (isServerError(err)) {
+        const remaining = models.length - i - 1;
+        modelLog.warn(
+          { error: err instanceof Error ? err.message : err, latencyMs: Date.now() - start, fallbacksRemaining: remaining },
+          `Server error (5xx) — ${remaining > 0 ? 'trying next model' : 'all models exhausted'}`,
+        );
+        continue;
+      }
+
+      // 4xx or non-HTTP error — throw immediately, fallback won't help
+      modelLog.error({ error: err, latencyMs: Date.now() - start }, 'LLM analysis failed (non-retryable)');
+      throw err;
+    }
   }
+
+  // All models exhausted with 5xx errors
+  log.error({ modelsAttempted: models.length }, 'All fallback models exhausted');
+  throw lastError;
 }
 
 /**
