@@ -1,0 +1,8 @@
+node_modules
+.next
+.git
+*.md
+!README.md
+packages/agent
+.github
+.env*

@@ -1,11 +1,11 @@
 # SOLIS Roadmap
 
-## v0.1 — Foundation (Current)
+## v0.1 — Foundation
 
 - [x] Monorepo setup (pnpm workspaces)
 - [x] Shared types contract
 - [x] Data collection tools (GitHub, DeFi Llama, CoinGecko, Helius)
-- [x] Curated Solana repo list (80+ repos)
+- [x] Curated Solana repo list (65+ verified repos)
 - [x] Z-score anomaly detection
 - [x] OpenRouter GLM-4.7 client
 - [x] Narrative clustering via LLM
@@ -18,15 +18,15 @@
 - [x] GitHub Actions cron (fortnightly)
 - [x] GitLab mirror workflow
 
-## v0.2 — First Live Report
+## v0.2 — First Live Report (Current)
 
-- [ ] Create GitHub repo (RECTOR-LABS/solis)
-- [ ] Configure repository secrets
-- [ ] First dry run: validate pipeline end-to-end
+- [x] GitHub repo (RECTOR-LABS/solis)
+- [x] Configure repository secrets
+- [x] First dry run: validate pipeline end-to-end
+- [x] First real report generated (2026-02-12)
+- [ ] Deploy website to VPS (solis.rectorspace.com)
 - [ ] Manual quality review of first 2-3 reports
-- [ ] Expand curated repo list to 200+
-- [ ] Deploy website to Vercel (solis.rectorspace.com)
-- [ ] Generate first real report
+- [ ] Expand curated repo list to 100+
 
 ## v0.3 — Monetization
 

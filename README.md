@@ -9,10 +9,10 @@ SOLIS uses a **3-layer signal architecture** to detect narratives at different s
 ```
 Layer 1 — LEADING (GitHub)           Layer 2 — COINCIDENT (Onchain)       Layer 3 — CONFIRMING (Market)
 ┌──────────────────────────┐  ┌─────────────────────────────┐  ┌──────────────────────────┐
-│ Star velocity on 200+ repos│  │ Solana TVL history           │  │ Solana ecosystem tokens   │
-│ Commit frequency surges    │  │ Protocol-level TVL changes   │  │ Price/volume movements    │
-│ New repo clusters          │  │ DEX volumes                  │  │ Category market caps      │
-│ Contributor count deltas   │  │ Program activity (Helius)    │  │ Trending coins            │
+│ Star velocity on 65+ repos│  │ Solana TVL history           │  │ Solana ecosystem tokens   │
+│ Commit frequency surges   │  │ Protocol-level TVL changes   │  │ Price/volume movements    │
+│ New repo clusters         │  │ DEX volumes                  │  │ Category market caps      │
+│ Contributor count deltas  │  │ Program activity (Helius)    │  │ Trending coins            │
 └──────────────────────────┘  └─────────────────────────────┘  └──────────────────────────┘
 ```
 
@@ -26,13 +26,13 @@ Layer 1 — LEADING (GitHub)           Layer 2 — COINCIDENT (Onchain)       La
 ## Architecture
 
 - **Monorepo**: pnpm workspaces (`@solis/agent`, `@solis/web`, `@solis/shared`)
-- **Two-LLM Pattern**: Claude (Agent SDK) orchestrates, GLM-4.7 (OpenRouter) analyzes
+- **Pipeline**: TypeScript orchestration + GLM-4.7 (OpenRouter) for LLM analysis
 - **Data sources**: GitHub API, DeFi Llama, Helius, CoinGecko
 - **Anomaly detection**: Z-score (pure math, no ML)
 - **Reports**: Git-committed JSON + Markdown artifacts
-- **Website**: Next.js 15 + Tailwind v4 on Vercel
+- **Website**: Next.js 15 + Tailwind v4 on VPS (Docker + nginx)
 - **Scheduling**: GitHub Actions cron (fortnightly)
-- **Monetization**: x402 micropayments for API access
+- **Deployment**: GitHub Actions → GHCR → VPS (solis.rectorspace.com)
 
 ## Quick Start
 
@@ -42,11 +42,8 @@ git clone https://github.com/RECTOR-LABS/solis.git
 cd solis
 pnpm install
 
-# Set up environment
-cp .env.example .env
-# Fill in API keys (see Environment section)
-
-# Run the pipeline
+# Set up environment (see Environment section)
+# Then run the pipeline
 pnpm agent
 
 # Start the website
@@ -65,12 +62,9 @@ pnpm build        # Build all packages
 
 ## Environment
 
-All secrets in `~/Documents/secret/.env`:
-
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `ANTHROPIC_API_KEY` | Yes | Claude Agent SDK |
-| `OPENROUTER_API_KEY` | Yes | GLM-4.7 analysis |
+| `OPENROUTER_API_KEY` | Yes | GLM-4.7 narrative clustering + idea generation |
 | `GITHUB_TOKEN` | Yes | GitHub API (5K req/hr) |
 | `HELIUS_API_KEY` | Yes | Onchain signals (1M credits/mo free) |
 | `COINGECKO_API_KEY` | No | Increases CoinGecko rate limit |
@@ -84,7 +78,7 @@ solis/
 │   │   ├── src/
 │   │   │   ├── tools/       # Data collection (GitHub, DeFi Llama, CoinGecko, Helius)
 │   │   │   ├── analysis/    # Anomaly detection, LLM clustering, scoring, ideas
-│   │   │   ├── repos/       # Curated Solana repo list (200+)
+│   │   │   ├── repos/       # Curated Solana repo list (65+)
 │   │   │   └── output/      # JSON + Markdown report writers
 │   │   └── tests/
 │   └── web/            # Next.js website
@@ -94,15 +88,16 @@ solis/
 │           └── lib/         # Report loading utilities
 ├── shared/             # Shared types contract
 ├── reports/            # Git-committed report artifacts
-└── .github/workflows/  # CI, report generation cron, GitLab mirror
+├── Dockerfile          # Multi-stage build for web
+├── docker-compose.yml  # Production deployment
+└── .github/workflows/  # CI, deploy, report cron, GitLab mirror
 ```
 
 ## Cost
 
 ~$5/month total:
-- Claude (orchestration): ~$3/mo (2 runs x 50K tokens)
 - GLM-4.7 (analysis): ~$2/mo (2 runs x 500K tokens)
-- Infrastructure: $0 (GitHub Actions + Vercel free tier)
+- Infrastructure: $0 (GitHub Actions free, VPS shared)
 
 ## License
 

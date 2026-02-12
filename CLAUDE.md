@@ -33,11 +33,20 @@ All secrets in `~/Documents/secret/.env`. Required:
 - `GITHUB_TOKEN` — GitHub API
 - `HELIUS_API_KEY` — Onchain data
 
+## Deployment
+- **VPS**: `solis.rectorspace.com` → `176.222.53.185:8001`
+- **User**: `solis` (SSH alias: `ssh solis`)
+- **Docker**: `ghcr.io/rector-labs/solis:latest` via `docker-compose.yml` (`name: solis`)
+- **CI/CD**: Push to `main` (web/reports/shared changes) → GHCR → VPS auto-deploy
+- **Cleanup**: Deploy workflow prunes old images aggressively (VPS at 78% disk)
+
 ## Key Files
 - `shared/src/types.ts` — Type contract between agent and web
 - `packages/agent/src/config.ts` — Environment validation (envalid)
 - `packages/agent/src/index.ts` — Pipeline entry point
 - `packages/web/src/app/layout.tsx` — App shell
+- `Dockerfile` — Multi-stage build (deps → build → standalone)
+- `docker-compose.yml` — Production container config (port 8001)
 
 ## Conventions
 - 2-space indent, TypeScript strict mode

@@ -1,0 +1,17 @@
+name: solis
+
+services:
+  web:
+    image: ghcr.io/rector-labs/solis:latest
+    container_name: solis-web
+    restart: unless-stopped
+    ports:
+      - "8001:3001"
+    environment:
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

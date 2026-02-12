@@ -1,0 +1,93 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/web/**'
+      - 'reports/**'
+      - 'shared/**'
+      - 'Dockerfile'
+      - 'docker-compose.yml'
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: rector-labs/solis
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: 176.222.53.185
+          username: solis
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+
+            # Login to GHCR
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            # Pull new image
+            docker pull ghcr.io/rector-labs/solis:latest
+
+            # Stop and remove old container
+            docker compose -f ~/docker-compose.yml down --remove-orphans 2>/dev/null || true
+
+            # Start new container
+            docker compose -f ~/docker-compose.yml up -d
+
+            # Wait for health check
+            echo "Waiting for health check..."
+            sleep 5
+            if docker inspect --format='{{.State.Health.Status}}' solis-web 2>/dev/null | grep -q healthy; then
+              echo "Container healthy"
+            else
+              echo "Waiting longer for startup..."
+              sleep 10
+              docker inspect --format='{{.State.Health.Status}}' solis-web 2>/dev/null || echo "Health check pending"
+            fi
+
+            # === AGGRESSIVE CLEANUP ===
+            # Remove all images except the one currently in use
+            CURRENT_IMAGE=$(docker inspect --format='{{.Image}}' solis-web 2>/dev/null || echo "")
+            docker images ghcr.io/rector-labs/solis --format '{{.ID}} {{.Tag}}' | while read id tag; do
+              IMG_FULL="ghcr.io/rector-labs/solis:$tag"
+              IMG_ID=$(docker inspect --format='{{.Id}}' "$IMG_FULL" 2>/dev/null || echo "")
+              if [ "$IMG_ID" != "$CURRENT_IMAGE" ] && [ "$tag" != "latest" ]; then
+                echo "Removing old image: $IMG_FULL"
+                docker rmi "$IMG_FULL" 2>/dev/null || true
+              fi
+            done
+
+            # Remove all dangling images and build cache
+            docker image prune -f
+            docker builder prune -f 2>/dev/null || true
+
+            echo "Deploy complete. Disk usage:"
+            df -h / | tail -1
