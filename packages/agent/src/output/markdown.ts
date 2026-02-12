@@ -33,9 +33,9 @@ function momentumArrow(momentum: string): string {
 
 function renderNarrative(n: Narrative, index: number): string {
   const lines = [
-    `### ${index + 1}. ${stageEmoji(n.stage)} ${n.name}`,
+    `### ${index + 1}. ${stageEmoji(n.stage)} ${n.name}${n.isNew ? ' 🆕' : ''}`,
     '',
-    `**Stage:** ${n.stage} | **Momentum:** ${momentumArrow(n.momentum)} ${n.momentum} | **Confidence:** ${n.confidence}%`,
+    `**Stage:** ${n.stage}${n.previousStage && n.previousStage !== n.stage ? ` (was ${n.previousStage})` : ''} | **Momentum:** ${momentumArrow(n.momentum)} ${n.momentum} | **Confidence:** ${n.confidence}%`,
     '',
     n.description,
     '',
@@ -101,6 +101,50 @@ function renderBuildIdea(idea: BuildIdea, index: number): string {
   ].filter(Boolean).join('\n');
 }
 
+function renderDiffSection(report: FortnightlyReport): string[] {
+  if (!report.diff) return [];
+
+  const { newNarratives, removedNarratives, stageTransitions, confidenceChanges } = report.diff;
+  const hasChanges = newNarratives.length > 0 || removedNarratives.length > 0 || stageTransitions.length > 0;
+
+  if (!hasChanges) return [];
+
+  const lines: string[] = ['## What Changed', ''];
+
+  if (stageTransitions.length > 0) {
+    lines.push('**Stage Transitions:**');
+    for (const t of stageTransitions) {
+      lines.push(`- ${stageEmoji(t.from)} ${t.from} → ${stageEmoji(t.to)} ${t.to}: **${t.name}**`);
+    }
+    lines.push('');
+  }
+
+  if (newNarratives.length > 0) {
+    lines.push(`**New Narratives:** ${newNarratives.join(', ')}`);
+    lines.push('');
+  }
+
+  if (removedNarratives.length > 0) {
+    lines.push(`**Faded Signals:** ${removedNarratives.join(', ')}`);
+    lines.push('');
+  }
+
+  if (confidenceChanges.length > 0) {
+    const significant = confidenceChanges.filter(c => Math.abs(c.delta) >= 10);
+    if (significant.length > 0) {
+      lines.push('**Notable Confidence Shifts:**');
+      for (const c of significant) {
+        const arrow = c.delta > 0 ? '↑' : '↓';
+        lines.push(`- ${c.name}: ${arrow} ${Math.abs(c.delta)} points`);
+      }
+      lines.push('');
+    }
+  }
+
+  lines.push('---', '');
+  return lines;
+}
+
 export async function writeMarkdownReport(report: FortnightlyReport, date: string): Promise<string> {
   const dir = env.REPORTS_DIR;
   await mkdir(dir, { recursive: true });
@@ -136,6 +180,7 @@ export async function writeMarkdownReport(report: FortnightlyReport, date: strin
     '',
     '---',
     '',
+    ...renderDiffSection(report),
     '## Narratives',
     '',
     ...report.narratives.map((n, i) => renderNarrative(n, i)),

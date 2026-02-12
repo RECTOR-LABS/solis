@@ -18,6 +18,7 @@ import {
   emptyOnchainSignals,
   emptyConfirmingSignals,
 } from './utils/empty-signals.js';
+import { computeReportDiff } from './utils/history.js';
 import type {
   FortnightlyReport,
   CoincidentSignals,
@@ -25,6 +26,7 @@ import type {
   GitHubSignals,
   ConfirmingSignals,
   OnchainSignal,
+  ReportDiff,
 } from '@solis/shared';
 
 const startTime = Date.now();
@@ -141,11 +143,23 @@ async function main() {
       leading: scored.leading,
       coincident: scored.coincident,
       confirming: scored.confirming,
+      previousNarratives: previousReport?.narratives,
     });
 
     // === Phase 4: Generate build ideas ===
     logger.info({ phase: 'ideas' }, 'Phase 4: Generating build ideas...');
     const { ideas, tokensUsed: ideaTokens, costUsd: ideaCost } = await generateBuildIdeas(narratives);
+
+    // === Phase 4.5: Compute report diff ===
+    let diff: ReportDiff | undefined;
+    if (previousReport) {
+      diff = computeReportDiff(narratives, previousReport.narratives);
+      logger.info({
+        newNarratives: diff.newNarratives.length,
+        removed: diff.removedNarratives.length,
+        transitions: diff.stageTransitions.length,
+      }, 'Report diff computed');
+    }
 
     // === Phase 5: Assemble and write report ===
     logger.info({ phase: 'output' }, 'Phase 5: Assembling report...');
@@ -174,6 +188,7 @@ async function main() {
       },
       narratives,
       buildIdeas: ideas,
+      diff,
       meta: {
         totalReposAnalyzed: leading.repos.length,
         totalProtocolsAnalyzed: coincident.tvl.protocols.length + coincident.dexVolumes.protocols.length,

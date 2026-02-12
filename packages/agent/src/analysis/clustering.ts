@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { analyzeWithLLM, parseLLMJson } from './openrouter.js';
 import { withRetry } from '../utils/retry.js';
 import { logger } from '../logger.js';
+import { populateHistory } from '../utils/history.js';
 import type {
   Narrative,
   SignalStage,
@@ -15,6 +16,7 @@ interface ClusteringInput {
   leading: GitHubSignals;
   coincident: CoincidentSignals;
   confirming: ConfirmingSignals;
+  previousNarratives?: Narrative[];
 }
 
 const NarrativeSchema = z.object({
@@ -60,11 +62,11 @@ Rules:
 - Focus on actionable insights builders can use
 - Output valid JSON only`;
 
-const USER_PROMPT_TEMPLATE = (data: string) => `Analyze these Solana ecosystem signals and identify emerging narratives.
+const USER_PROMPT_TEMPLATE = (data: string, previousContext: string) => `Analyze these Solana ecosystem signals and identify emerging narratives.
 
 DATA:
 ${data}
-
+${previousContext}
 Respond with a JSON object containing a "narratives" array where each narrative has:
 - name: string (concise, specific name like "Solana DePIN Expansion" not "DePIN")
 - description: string (2-3 sentences explaining the narrative)
@@ -147,11 +149,21 @@ export async function clusterNarratives(
   };
 
   const dataStr = JSON.stringify(condensed, null, 2);
-  log.info({ dataLength: dataStr.length }, 'Sending signals to LLM for clustering');
+
+  // Build previous narrative context for LLM
+  let previousContext = '';
+  if (signals.previousNarratives && signals.previousNarratives.length > 0) {
+    const prevSummary = signals.previousNarratives.map(
+      n => `- "${n.name}" (stage: ${n.stage}, momentum: ${n.momentum}, confidence: ${n.confidence}%)`,
+    ).join('\n');
+    previousContext = `\nPREVIOUS REPORT NARRATIVES (use same names where the narrative continues, so we can track stage transitions):\n${prevSummary}\n`;
+  }
+
+  log.info({ dataLength: dataStr.length, hasPrevious: !!signals.previousNarratives?.length }, 'Sending signals to LLM for clustering');
 
   try {
     const response = await withRetry(
-      () => analyzeWithLLM(SYSTEM_PROMPT, USER_PROMPT_TEMPLATE(dataStr), true),
+      () => analyzeWithLLM(SYSTEM_PROMPT, USER_PROMPT_TEMPLATE(dataStr, previousContext), true),
       'clustering-llm',
       { attempts: 2, baseDelayMs: 2000 },
     );
@@ -176,6 +188,14 @@ export async function clusterNarratives(
       relatedTokens: n.related_tokens,
       relatedProtocols: n.related_protocols,
     }));
+
+    // Populate history fields by matching against previous narratives
+    if (signals.previousNarratives && signals.previousNarratives.length > 0) {
+      populateHistory(narratives, signals.previousNarratives, new Date().toISOString());
+      const transitions = narratives.filter(n => n.previousStage && n.stage !== n.previousStage);
+      const newCount = narratives.filter(n => n.isNew).length;
+      log.info({ transitions: transitions.length, newNarratives: newCount }, 'History matching complete');
+    }
 
     log.info({
       narrativesFound: narratives.length,

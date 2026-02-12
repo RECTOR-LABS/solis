@@ -6,8 +6,23 @@ export function NarrativeCard({ narrative }: { narrative: Narrative }) {
   return (
     <div className="border border-sol-border rounded-lg p-6 bg-sol-card hover:border-sol-purple/50 transition-colors">
       <div className="flex items-start justify-between gap-4 mb-3">
-        <h3 className="text-lg font-semibold text-white">{narrative.name}</h3>
-        <StageBadge stage={narrative.stage} />
+        <div className="flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-white">{narrative.name}</h3>
+          {narrative.isNew && (
+            <span className="text-xs px-1.5 py-0.5 bg-sol-green/10 text-sol-green rounded border border-sol-green/30 font-medium">
+              New
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-1.5 shrink-0">
+          {narrative.previousStage && narrative.previousStage !== narrative.stage && (
+            <>
+              <StageBadge stage={narrative.previousStage} />
+              <span className="text-sol-muted text-xs">→</span>
+            </>
+          )}
+          <StageBadge stage={narrative.stage} />
+        </div>
       </div>
 
       <p className="text-sol-muted text-sm mb-4">{narrative.description}</p>
