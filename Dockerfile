@@ -22,7 +22,8 @@ COPY shared/ shared/
 COPY packages/web/ packages/web/
 COPY reports/ reports/
 COPY pnpm-workspace.yaml package.json tsconfig.json ./
-RUN pnpm --filter @solis/web build
+RUN mkdir -p packages/web/public && \
+    pnpm --filter @solis/web build
 
 # --- Production ---
 FROM node:22-alpine AS runner
