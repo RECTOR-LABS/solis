@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getReport, getReportDates } from '@/lib/reports';
 import { NarrativeCard } from '@/components/narrative-card';
 import { BuildIdeaCard } from '@/components/build-ideas';
+import { ReportTimestamp } from '@/components/report-timestamp';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,6 +25,7 @@ export default async function ReportPage({ params }: { params: Promise<{ date: s
           <p className="text-sol-muted text-sm">
             {new Date(report.period.start).toLocaleDateString()} — {new Date(report.period.end).toLocaleDateString()}
           </p>
+          <ReportTimestamp generatedAt={report.generatedAt} />
         </div>
         <a href="/archive" className="text-sol-muted hover:text-white text-sm transition-colors">
           View all reports

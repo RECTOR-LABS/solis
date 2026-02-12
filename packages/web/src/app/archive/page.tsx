@@ -1,5 +1,6 @@
 import { getReportSummaries } from '@/lib/reports';
 import { StageBadge } from '@/components/stage-badge';
+import { ReportTimestamp } from '@/components/report-timestamp';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,7 +22,10 @@ export default async function ArchivePage() {
               className="block border border-sol-border rounded-lg p-5 bg-sol-card hover:border-sol-purple/50 transition-colors"
             >
               <div className="flex items-center justify-between mb-3">
-                <h2 className="font-semibold text-white">{summary.date}</h2>
+                <div className="flex items-center gap-3">
+                  <h2 className="font-semibold text-white">{summary.date}</h2>
+                  <ReportTimestamp generatedAt={summary.generatedAt} />
+                </div>
                 <span className="text-sol-muted text-sm">
                   {new Date(summary.period.start).toLocaleDateString()} — {new Date(summary.period.end).toLocaleDateString()}
                 </span>

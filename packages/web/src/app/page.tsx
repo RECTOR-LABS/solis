@@ -1,6 +1,8 @@
 import { getLatestReport } from '@/lib/reports';
 import { NarrativeCard } from '@/components/narrative-card';
 import { BuildIdeaCard } from '@/components/build-ideas';
+import { CountdownTimer } from '@/components/countdown-timer';
+import { ReportTimestamp } from '@/components/report-timestamp';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,9 +18,14 @@ export default async function HomePage() {
           </span>
         </h1>
         <p className="text-sol-muted text-lg max-w-2xl mx-auto">
-          Fortnightly reports detecting emerging Solana ecosystem narratives
+          Daily reports detecting emerging Solana ecosystem narratives
           through developer activity, onchain metrics, and market signals.
         </p>
+        <div className="flex items-center justify-center gap-4 mt-4 text-sm">
+          {report && <ReportTimestamp generatedAt={report.generatedAt} />}
+          <span className="text-sol-border">|</span>
+          <CountdownTimer />
+        </div>
       </section>
 
       {!report ? (
@@ -31,7 +38,10 @@ export default async function HomePage() {
         <>
           <section className="border border-sol-border rounded-lg p-6 bg-sol-card">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">Latest Report</h2>
+              <div className="flex items-center gap-3">
+                <h2 className="text-xl font-semibold">Latest Report</h2>
+                <ReportTimestamp generatedAt={report.generatedAt} />
+              </div>
               <span className="text-sol-muted text-sm">
                 {new Date(report.period.start).toLocaleDateString()} — {new Date(report.period.end).toLocaleDateString()}
               </span>

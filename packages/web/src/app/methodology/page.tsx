@@ -117,7 +117,7 @@ export default function MethodologyPage() {
           </li>
         </ul>
         <p className="text-sol-muted text-sm">
-          Total LLM cost per report: ~$2-5. Reports are generated fortnightly.
+          Total LLM cost per report: ~$2-5. Reports are generated daily.
         </p>
       </section>
 
