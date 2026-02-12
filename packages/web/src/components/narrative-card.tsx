@@ -34,6 +34,17 @@ export function NarrativeCard({ narrative }: { narrative: Narrative }) {
         </span>
       </div>
 
+      {narrative.signals.social.length > 0 && (
+        <div className="mb-3">
+          <h4 className="text-xs font-medium text-sol-orange uppercase tracking-wide mb-1">Social</h4>
+          <ul className="text-xs text-sol-muted space-y-0.5">
+            {narrative.signals.social.slice(0, 3).map((s, i) => (
+              <li key={i}>- {s}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {narrative.signals.leading.length > 0 && (
         <div className="mb-3">
           <h4 className="text-xs font-medium text-sol-purple uppercase tracking-wide mb-1">Leading</h4>

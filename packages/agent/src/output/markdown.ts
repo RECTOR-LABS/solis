@@ -41,6 +41,14 @@ function renderNarrative(n: Narrative, index: number): string {
     '',
   ];
 
+  if (n.signals.social.length > 0) {
+    lines.push('**Social Signals (LunarCrush):**');
+    for (const s of n.signals.social) {
+      lines.push(`- ${s}`);
+    }
+    lines.push('');
+  }
+
   if (n.signals.leading.length > 0) {
     lines.push('**Leading Signals (GitHub):**');
     for (const s of n.signals.leading) {
@@ -173,9 +181,9 @@ export async function writeMarkdownReport(report: FortnightlyReport, date: strin
     '',
     '| Stage | Meaning |',
     '|-------|---------|',
-    '| 🔵 EARLY | Only dev signals fire — highest alpha, market hasn\'t noticed |',
+    '| 🔵 EARLY | Social buzz and/or dev signals — highest alpha, market hasn\'t noticed |',
     '| 🟡 EMERGING | Devs + capital moving — narrative gaining traction |',
-    '| 🟠 GROWING | All 3 layers align — mainstream adoption building |',
+    '| 🟠 GROWING | All layers align — mainstream adoption building |',
     '| 🔴 MAINSTREAM | Fully confirmed — likely already priced in |',
     '',
     '---',
