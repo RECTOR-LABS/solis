@@ -1,7 +1,7 @@
 # SOLIS — Project Guide
 
 ## Overview
-Solana Onchain & Landscape Intelligence Signal. Detects emerging Solana ecosystem narratives by fusing developer activity, onchain metrics, and market signals into daily intelligence reports.
+Solana Onchain & Landscape Intelligence Signal. Detects emerging Solana ecosystem narratives by fusing social sentiment, developer activity, onchain metrics, and market signals into daily intelligence reports.
 
 ## Architecture
 - **Monorepo**: pnpm workspaces — `packages/agent`, `packages/web`, `shared`
@@ -17,7 +17,7 @@ Solana Onchain & Landscape Intelligence Signal. Detects emerging Solana ecosyste
 
 ### Pipeline Phases
 1. **Discovery** (optional) — dynamic repo discovery via GitHub Search API
-2. **Collect** — parallel signal collection from all 3 layers
+2. **Collect** — parallel signal collection from all layers (3 base + optional Layer 0)
 3. **Deltas** — calculate changes from previous report
 4. **Score** — z-score anomaly detection
 5. **Cluster** — LLM narrative clustering with previous report context
@@ -26,7 +26,8 @@ Solana Onchain & Landscape Intelligence Signal. Detects emerging Solana ecosyste
 8. **Output** — write JSON + Markdown reports
 9. **Alerts** — send notifications via configured channel
 
-## 3-Layer Signal Detection
+## 4-Layer Signal Detection
+- Layer 0 (SOCIAL, opt-in): LunarCrush v4 — interactions, sentiment, galaxy score, social dominance
 - Layer 1 (LEADING): GitHub API — stars, commits, forks, new repos
 - Layer 2 (COINCIDENT): DeFi Llama + Helius — TVL, volumes, program activity
 - Layer 3 (CONFIRMING): CoinGecko — prices, volumes, categories
@@ -35,7 +36,7 @@ Solana Onchain & Landscape Intelligence Signal. Detects emerging Solana ecosyste
 ```bash
 pnpm dev          # Start web dev server (port 3001)
 pnpm agent        # Run analysis pipeline
-pnpm test:run     # Run all tests (~138 tests across agent + web)
+pnpm test:run     # Run all tests (~173 tests across agent + web)
 pnpm typecheck    # TypeScript check
 pnpm build        # Build all packages
 ```
@@ -58,6 +59,10 @@ Optional config (all have sensible defaults in `config.ts`):
 - `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` — Telegram bot config
 - `DISCORD_WEBHOOK_URL` — Discord webhook config
 - `ALERT_ANOMALY_THRESHOLD` (3.0) — z-score threshold for anomaly spike alerts
+- `ENABLE_SOCIAL_SIGNALS` (false) — enable Layer 0 social signal collection via LunarCrush
+- `LUNARCRUSH_API_KEY` — LunarCrush v4 Bearer token (required when social signals enabled)
+- `LUNARCRUSH_THROTTLE_MS` (1000) — delay between LunarCrush API requests
+- `LLM_TOP_SOCIAL_COINS` (20) — max social coins sent to LLM for clustering
 
 ## Deployment
 - **VPS**: `solis.rectorspace.com` → `176.222.53.185:8001`
@@ -69,7 +74,8 @@ Optional config (all have sensible defaults in `config.ts`):
 - **Cleanup**: Deploy workflow prunes old images aggressively (VPS at 78% disk)
 
 ## Key Files
-- `shared/src/types.ts` — Type contract between agent and web (Narrative, ReportDiff, FortnightlyReport)
+- `shared/src/types.ts` — Type contract between agent and web (Narrative, ReportDiff, FortnightlyReport, SocialSignals)
+- `packages/agent/src/tools/lunarcrush.ts` — LunarCrush v4 API collector (Layer 0 social signals)
 - `packages/agent/src/config.ts` — Environment validation (envalid, 20+ vars)
 - `packages/agent/src/index.ts` — Pipeline entry point (9 phases)
 - `packages/agent/src/utils/history.ts` — Narrative matching, history population, report diffing
