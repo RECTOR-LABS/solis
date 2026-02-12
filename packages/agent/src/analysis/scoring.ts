@@ -2,9 +2,11 @@ import type {
   GitHubSignals,
   CoincidentSignals,
   ConfirmingSignals,
+  SocialSignals,
   GitHubRepoSignal,
   TVLSignal,
   OnchainSignal,
+  SocialSignal,
 } from '@solis/shared';
 import {
   detectAnomalies,
@@ -17,7 +19,9 @@ export interface ScoredSignals {
   leading: GitHubSignals;
   coincident: CoincidentSignals;
   confirming: ConfirmingSignals;
+  social?: SocialSignals;
   summary: {
+    socialAnomalies: number;
     leadingAnomalies: number;
     coincidentAnomalies: number;
     confirmingAnomalies: number;
@@ -34,8 +38,37 @@ export function scoreSignals(
   coincident: CoincidentSignals,
   confirming: ConfirmingSignals,
   threshold: number = 2.0,
+  social?: SocialSignals,
 ): ScoredSignals {
   const log = logger.child({ component: 'scoring' });
+
+  // === Layer 0: Social z-scores (optional) ===
+  let socialAnomalies = 0;
+  if (social && social.coins.length > 0) {
+    enrichWithZScores(
+      social.coins,
+      s => s.interactionsDelta,
+      (s, z) => { s.interactionsZScore = z; },
+    );
+
+    const interactionAnomalies: AnomalyResult<SocialSignal>[] = detectAnomalies(
+      social.coins,
+      s => s.interactionsDelta,
+      'social_interactions',
+      threshold,
+    );
+
+    const uniqueAnomalyTopics = new Map<string, SocialSignal>();
+    for (const a of interactionAnomalies) {
+      uniqueAnomalyTopics.set(a.item.topic, a.item);
+    }
+    social.anomalies = [...uniqueAnomalyTopics.values()];
+    socialAnomalies = social.anomalies.length;
+
+    log.info({
+      socialAnomalies,
+    }, 'Layer 0 scored');
+  }
 
   // === Layer 1: GitHub z-scores ===
   enrichWithZScores(
@@ -145,6 +178,7 @@ export function scoreSignals(
   }, 'Layer 3 scored');
 
   const totalAnomalies =
+    socialAnomalies +
     leading.anomalies.length +
     tvlAnomalies.length +
     onchainAnomalies.length +
@@ -156,7 +190,9 @@ export function scoreSignals(
     leading,
     coincident,
     confirming,
+    ...(social ? { social } : {}),
     summary: {
+      socialAnomalies,
       leadingAnomalies: leading.anomalies.length,
       coincidentAnomalies: tvlAnomalies.length + onchainAnomalies.length,
       confirmingAnomalies: tokenVolumeAnomalies.length,

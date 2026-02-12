@@ -145,7 +145,7 @@ async function main() {
         leading,
         coincident,
         confirming,
-        summary: { leadingAnomalies: 0, coincidentAnomalies: 0, confirmingAnomalies: 0, totalAnomalies: 0 },
+        summary: { socialAnomalies: 0, leadingAnomalies: 0, coincidentAnomalies: 0, confirmingAnomalies: 0, totalAnomalies: 0 },
       };
     }
 

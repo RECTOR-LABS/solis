@@ -3,6 +3,7 @@ import type {
   CoincidentSignals,
   ConfirmingSignals,
   OnchainSignal,
+  SocialSignals,
 } from '@solis/shared';
 
 /** Valid GitHubSignals with empty arrays — safe for scoring/clustering. */
@@ -34,6 +35,19 @@ export function emptyCoincidentSignals(): Omit<CoincidentSignals, 'onchain'> {
 /** Empty onchain signals array. */
 export function emptyOnchainSignals(): OnchainSignal[] {
   return [];
+}
+
+/** Valid SocialSignals with empty arrays. */
+export function emptySocialSignals(): SocialSignals {
+  const now = new Date();
+  const start = new Date();
+  start.setDate(now.getDate() - 14);
+  return {
+    period: { start: start.toISOString(), end: now.toISOString() },
+    coins: [],
+    anomalies: [],
+    topBySentiment: [],
+  };
 }
 
 /** Valid ConfirmingSignals with empty arrays. */

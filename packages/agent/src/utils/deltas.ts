@@ -4,6 +4,7 @@ import type {
   GitHubSignals,
   CoincidentSignals,
   ConfirmingSignals,
+  SocialSignals,
 } from '@solis/shared';
 
 /**
@@ -16,6 +17,7 @@ export function applyDeltas(
   coincident: CoincidentSignals,
   confirming: ConfirmingSignals,
   previousReport: FortnightlyReport | null,
+  social?: SocialSignals,
 ): void {
   if (!previousReport) {
     logger.child({ component: 'deltas' }).info('No previous report — skipping delta calculation');
@@ -66,10 +68,23 @@ export function applyDeltas(
     token.volumeDelta = ((token.volume24h - prev.volume24h) / prev.volume24h) * 100;
   }
 
+  // Social interaction deltas
+  if (social && previousReport?.signals.social) {
+    const prevSocialMap = new Map(
+      previousReport.signals.social.coins.map(s => [s.topic, s]),
+    );
+    for (const signal of social.coins) {
+      const prev = prevSocialMap.get(signal.topic);
+      if (!prev || prev.interactions24h === 0) continue;
+      signal.interactionsDelta = signal.interactions24h - prev.interactions24h;
+    }
+  }
+
   log.info({
     repos: leading.repos.length,
     onchain: coincident.onchain.length,
     dex: coincident.dexVolumes.protocols.length,
     tokens: confirming.tokens.length,
+    ...(social ? { social: social.coins.length } : {}),
   }, 'Delta calculation complete');
 }

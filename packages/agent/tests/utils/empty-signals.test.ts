@@ -4,6 +4,7 @@ import {
   emptyCoincidentSignals,
   emptyOnchainSignals,
   emptyConfirmingSignals,
+  emptySocialSignals,
 } from '../../src/utils/empty-signals.js';
 
 describe('emptyGitHubSignals', () => {
@@ -37,6 +38,21 @@ describe('emptyOnchainSignals', () => {
     const result = emptyOnchainSignals();
     expect(result).toEqual([]);
     expect(Array.isArray(result)).toBe(true);
+  });
+});
+
+describe('emptySocialSignals', () => {
+  it('should return valid structure with empty arrays and ISO period', () => {
+    const result = emptySocialSignals();
+
+    expect(result.coins).toEqual([]);
+    expect(result.anomalies).toEqual([]);
+    expect(result.topBySentiment).toEqual([]);
+    expect(() => new Date(result.period.start).toISOString()).not.toThrow();
+    expect(() => new Date(result.period.end).toISOString()).not.toThrow();
+    expect(new Date(result.period.end).getTime()).toBeGreaterThan(
+      new Date(result.period.start).getTime(),
+    );
   });
 });
 
