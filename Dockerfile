@@ -19,8 +19,6 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/.npmrc ./
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/shared/node_modules ./shared/node_modules
-COPY --from=deps /app/packages/web/node_modules ./packages/web/node_modules
 COPY shared/ shared/
 COPY packages/web/ packages/web/
 COPY reports/ reports/
