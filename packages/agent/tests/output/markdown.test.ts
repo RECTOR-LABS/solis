@@ -39,6 +39,7 @@ function makeNarrative(overrides: Partial<Narrative> = {}): Narrative {
       leading: ['GitHub signal 1'],
       coincident: ['TVL signal 1'],
       confirming: ['Price signal 1'],
+      social: [],
     },
     relatedRepos: ['owner/repo1'],
     relatedTokens: ['SOL'],

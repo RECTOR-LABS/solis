@@ -10,7 +10,7 @@ const mockNarrative: Narrative = {
   stage: 'EMERGING',
   momentum: 'accelerating',
   confidence: 78,
-  signals: { leading: ['stars up'], coincident: ['TVL up'], confirming: ['price up'] },
+  signals: { leading: ['stars up'], coincident: ['TVL up'], confirming: ['price up'], social: [] },
   relatedRepos: ['helium/gateway-rs'],
   relatedTokens: ['HNT', 'MOBILE'],
   relatedProtocols: ['Helium', 'Hivemapper'],

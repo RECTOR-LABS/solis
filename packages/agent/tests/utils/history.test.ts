@@ -11,7 +11,7 @@ function makeNarrative(overrides: Partial<Narrative> = {}): Narrative {
     stage: 'EMERGING' as SignalStage,
     momentum: 'stable' as MomentumDirection,
     confidence: 75,
-    signals: { leading: [], coincident: [], confirming: [] },
+    signals: { leading: [], coincident: [], confirming: [], social: [] },
     relatedRepos: [],
     relatedTokens: [],
     relatedProtocols: [],

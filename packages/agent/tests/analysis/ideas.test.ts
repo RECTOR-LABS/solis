@@ -42,7 +42,7 @@ function makeNarratives(): Narrative[] {
     stage: 'EARLY',
     momentum: 'accelerating',
     confidence: 85,
-    signals: { leading: [], coincident: [], confirming: [] },
+    signals: { leading: [], coincident: [], confirming: [], social: [] },
     relatedRepos: [],
     relatedTokens: [],
     relatedProtocols: [],

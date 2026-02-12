@@ -10,7 +10,7 @@ const base: Narrative = {
   stage: 'EMERGING',
   momentum: 'accelerating',
   confidence: 78,
-  signals: { leading: [], coincident: [], confirming: [] },
+  signals: { leading: [], coincident: [], confirming: [], social: [] },
   relatedRepos: ['helium/gateway-rs'],
   relatedTokens: ['HNT', 'MOBILE'],
   relatedProtocols: ['Helium'],

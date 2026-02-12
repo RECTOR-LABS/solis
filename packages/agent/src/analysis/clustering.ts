@@ -184,6 +184,7 @@ export async function clusterNarratives(
         leading: n.leading_signals,
         coincident: n.coincident_signals,
         confirming: n.confirming_signals,
+        social: [],
       },
       relatedRepos: n.related_repos,
       relatedTokens: n.related_tokens,

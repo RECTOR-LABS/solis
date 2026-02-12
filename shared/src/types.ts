@@ -7,7 +7,7 @@ export type SignalStage =
   | 'GROWING'     // All 3 layers — gaining mainstream traction
   | 'MAINSTREAM'; // All 3 layers, high confidence — already priced in
 
-export type SignalLayer = 'LEADING' | 'COINCIDENT' | 'CONFIRMING';
+export type SignalLayer = 'SOCIAL' | 'LEADING' | 'COINCIDENT' | 'CONFIRMING';
 
 export type MomentumDirection = 'accelerating' | 'stable' | 'decelerating';
 
@@ -20,6 +20,27 @@ export interface DataSource {
   dataPoints: number;
   status?: DataSourceStatus;
   error?: string;
+}
+
+// --- Layer 0: Social (LunarCrush) ---
+
+export interface SocialSignal {
+  topic: string;
+  interactions24h: number;
+  interactionsDelta: number;
+  interactionsZScore: number;
+  sentiment: number; // 0-100
+  socialDominance: number; // % of total crypto social volume
+  galaxyScore: number; // LunarCrush composite (0-100)
+  contributors: number;
+  posts: number;
+}
+
+export interface SocialSignals {
+  period: { start: string; end: string };
+  coins: SocialSignal[];
+  anomalies: SocialSignal[];
+  topBySentiment: SocialSignal[];
 }
 
 // --- Layer 1: Leading (GitHub) ---
@@ -142,6 +163,7 @@ export interface Narrative {
     leading: string[]; // human-readable signal descriptions
     coincident: string[];
     confirming: string[];
+    social: string[];
   };
   relatedRepos: string[]; // owner/name
   relatedTokens: string[]; // symbol
@@ -197,6 +219,7 @@ export interface FortnightlyReport {
     leading: GitHubSignals;
     coincident: CoincidentSignals;
     confirming: ConfirmingSignals;
+    social?: SocialSignals;
   };
   narratives: Narrative[];
   buildIdeas: BuildIdea[];
