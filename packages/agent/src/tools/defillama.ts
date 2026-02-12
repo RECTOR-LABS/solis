@@ -1,3 +1,4 @@
+import { env } from '../config.js';
 import { logger } from '../logger.js';
 import type { TVLSignal, DEXVolumeSignal, CoincidentSignals } from '@solis/shared';
 
@@ -112,7 +113,7 @@ export async function collectDefiLlama(
     : latestTVL;
 
   const tvlSignals: TVLSignal[] = protocols
-    .filter(p => p.tvl > 100_000)
+    .filter(p => p.tvl > env.DEFILLAMA_MIN_TVL)
     .map(p => ({
       protocol: p.name,
       category: p.category ?? 'Unknown',

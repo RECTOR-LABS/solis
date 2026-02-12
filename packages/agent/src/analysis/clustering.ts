@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { analyzeWithLLM, parseLLMJson } from './openrouter.js';
 import { withRetry } from '../utils/retry.js';
+import { env } from '../config.js';
 import { logger } from '../logger.js';
 import { populateHistory } from '../utils/history.js';
 import type {
@@ -117,7 +118,7 @@ export async function clusterNarratives(
       newRepoClusters: signals.leading.newRepoClusters,
       topByCommits: signals.leading.repos
         .sort((a, b) => b.commitsDelta - a.commitsDelta)
-        .slice(0, 30)
+        .slice(0, env.LLM_TOP_REPOS)
         .map(r => ({ repo: r.repo, commitsDelta: r.commitsDelta, topics: r.topics })),
     },
     defi: {
@@ -136,12 +137,12 @@ export async function clusterNarratives(
     onchain: signals.coincident.onchain
       .filter(s => s.txCount > 0)
       .sort((a, b) => b.txCount - a.txCount)
-      .slice(0, 15)
+      .slice(0, env.LLM_TOP_PROGRAMS)
       .map(s => ({ program: s.programName, txCount: s.txCount, txZScore: s.txZScore })),
     market: {
       topPerformers: signals.confirming.tokens
         .sort((a, b) => b.priceDelta14d - a.priceDelta14d)
-        .slice(0, 20)
+        .slice(0, env.LLM_TOP_TOKENS)
         .map(t => ({ symbol: t.symbol, priceDelta14d: t.priceDelta14d, volume24h: t.volume24h })),
       trending: signals.confirming.trending.map(t => ({ symbol: t.symbol, name: t.name })),
       categories: signals.confirming.categoryPerformance,

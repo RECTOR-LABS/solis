@@ -37,7 +37,19 @@ interface SourceResult {
 }
 
 async function main() {
-  logger.info('SOLIS pipeline starting');
+  const periodDays = env.COLLECTION_PERIOD_DAYS;
+  const periodWeeks = Math.round(periodDays / 7);
+
+  logger.info({
+    collectionPeriodDays: periodDays,
+    anomalyThreshold: env.ANOMALY_THRESHOLD,
+    llmModel: env.OPENROUTER_MODEL,
+    llmTopRepos: env.LLM_TOP_REPOS,
+    llmTopPrograms: env.LLM_TOP_PROGRAMS,
+    llmTopTokens: env.LLM_TOP_TOKENS,
+    coingeckoMaxPages: env.COINGECKO_MAX_PAGES,
+    defillamaMinTvl: env.DEFILLAMA_MIN_TVL,
+  }, 'SOLIS pipeline starting');
 
   try {
     // === Phase 0: Repo discovery (optional) ===
@@ -61,10 +73,10 @@ async function main() {
     logger.info({ repoCount: repos.length }, 'Tracking repos');
 
     const [githubResult, defiLlamaResult, heliusResult, coingeckoResult] = await Promise.allSettled([
-      collectGitHub(repos, 2),
-      collectDefiLlama(14),
-      collectHelius(14),
-      collectCoinGecko(2),
+      collectGitHub(repos, periodWeeks),
+      collectDefiLlama(periodDays),
+      collectHelius(periodDays),
+      collectCoinGecko(env.COINGECKO_MAX_PAGES),
     ]);
 
     // Track source results for report metadata
@@ -166,7 +178,7 @@ async function main() {
 
     const now = new Date();
     const periodStart = new Date();
-    periodStart.setDate(now.getDate() - 14);
+    periodStart.setDate(now.getDate() - periodDays);
 
     const report: FortnightlyReport = {
       version: '1.0',
