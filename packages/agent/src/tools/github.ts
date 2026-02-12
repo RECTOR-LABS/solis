@@ -2,7 +2,7 @@ import { env } from '../config.js';
 import { logger } from '../logger.js';
 import type { GitHubRepoSignal, GitHubSignals } from '@solis/shared';
 
-const GITHUB_API = 'https://api.github.com';
+export const GITHUB_API = 'https://api.github.com';
 
 interface GitHubApiRepo {
   full_name: string;
@@ -18,7 +18,7 @@ interface GitHubApiCommitActivity {
   week: number;
 }
 
-async function ghFetch<T>(path: string): Promise<T | null> {
+export async function ghFetch<T>(path: string): Promise<T | null> {
   const url = `${GITHUB_API}${path}`;
   const start = Date.now();
   try {
