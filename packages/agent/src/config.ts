@@ -90,6 +90,33 @@ export const env = cleanEnv(process.env, {
     desc: 'Path to JSON file with Helius programs to track (overrides built-in list)',
   }),
 
+  // Alerting
+  ALERTS_ENABLED: bool({
+    default: false,
+    desc: 'Enable post-pipeline alert notifications',
+  }),
+  ALERT_CHANNEL: str({
+    choices: ['telegram', 'discord'] as const,
+    default: 'telegram',
+    desc: 'Notification channel for alerts',
+  }),
+  TELEGRAM_BOT_TOKEN: str({
+    default: '',
+    desc: 'Telegram bot token from @BotFather',
+  }),
+  TELEGRAM_CHAT_ID: str({
+    default: '',
+    desc: 'Telegram chat/channel ID for alerts',
+  }),
+  DISCORD_WEBHOOK_URL: str({
+    default: '',
+    desc: 'Discord webhook URL for alerts',
+  }),
+  ALERT_ANOMALY_THRESHOLD: num({
+    default: 3.0,
+    desc: 'Z-score threshold to trigger anomaly spike alerts',
+  }),
+
   // Output — resolve to monorepo root (packages/agent/ → ../../reports)
   REPORTS_DIR: str({
     default: resolve(import.meta.dirname, '..', '..', '..', 'reports'),

@@ -217,10 +217,14 @@ async function main() {
 
     const { writeJsonReport } = await import('./output/json.js');
     const { writeMarkdownReport } = await import('./output/markdown.js');
+    const { sendReportAlerts } = await import('./output/alerts.js');
 
     const date = now.toISOString().split('T')[0];
     await writeJsonReport(report, date);
     await writeMarkdownReport(report, date);
+
+    // === Phase 6: Send alerts ===
+    await sendReportAlerts(report);
 
     const duration = Date.now() - startTime;
     const failedSources = Object.entries(sourceResults)
@@ -237,6 +241,8 @@ async function main() {
     }, 'SOLIS pipeline complete');
   } catch (error) {
     logger.error({ err: error instanceof Error ? { message: error.message, stack: error.stack, cause: error.cause } : error }, 'Pipeline failed');
+    const { sendFailureAlert } = await import('./output/alerts.js');
+    await sendFailureAlert(error instanceof Error ? error.message : String(error));
     process.exit(1);
   }
 }
