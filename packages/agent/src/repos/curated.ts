@@ -136,3 +136,7 @@ export function getAllRepoNames(): string[] {
 export function getCategories(): string[] {
   return [...new Set(CURATED_REPOS.map(r => r.category))];
 }
+
+export function getCuratedRepoSet(): Set<string> {
+  return new Set(CURATED_REPOS.map(r => r.repo.toLowerCase()));
+}

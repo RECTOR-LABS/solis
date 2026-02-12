@@ -1,4 +1,4 @@
-import { cleanEnv, str, num } from 'envalid';
+import { cleanEnv, str, num, bool } from 'envalid';
 import { resolve } from 'node:path';
 
 export const env = cleanEnv(process.env, {
@@ -47,5 +47,15 @@ export const env = cleanEnv(process.env, {
   LOG_LEVEL: str({
     choices: ['trace', 'debug', 'info', 'warn', 'error', 'fatal'] as const,
     default: 'info',
+  }),
+
+  // Repo discovery — opt-in dynamic GitHub Search
+  ENABLE_REPO_DISCOVERY: bool({
+    default: false,
+    desc: 'Enable dynamic Solana repo discovery via GitHub Search API',
+  }),
+  DISCOVERY_MIN_STARS: num({
+    default: 50,
+    desc: 'Minimum stars threshold for discovered repos',
   }),
 });
