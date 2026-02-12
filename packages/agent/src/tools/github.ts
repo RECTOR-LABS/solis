@@ -138,7 +138,7 @@ export async function collectGitHub(
     }
 
     if (i + BATCH_SIZE < repos.length) {
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, env.GITHUB_THROTTLE_MS));
     }
   }
 

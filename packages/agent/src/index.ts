@@ -18,6 +18,7 @@ import {
   emptyOnchainSignals,
   emptyConfirmingSignals,
 } from './utils/empty-signals.js';
+import { computeReportDiff } from './utils/history.js';
 import type {
   FortnightlyReport,
   CoincidentSignals,
@@ -25,6 +26,7 @@ import type {
   GitHubSignals,
   ConfirmingSignals,
   OnchainSignal,
+  ReportDiff,
 } from '@solis/shared';
 
 const startTime = Date.now();
@@ -35,7 +37,19 @@ interface SourceResult {
 }
 
 async function main() {
-  logger.info('SOLIS pipeline starting');
+  const periodDays = env.COLLECTION_PERIOD_DAYS;
+  const periodWeeks = Math.round(periodDays / 7);
+
+  logger.info({
+    collectionPeriodDays: periodDays,
+    anomalyThreshold: env.ANOMALY_THRESHOLD,
+    llmModel: env.OPENROUTER_MODEL,
+    llmTopRepos: env.LLM_TOP_REPOS,
+    llmTopPrograms: env.LLM_TOP_PROGRAMS,
+    llmTopTokens: env.LLM_TOP_TOKENS,
+    coingeckoMaxPages: env.COINGECKO_MAX_PAGES,
+    defillamaMinTvl: env.DEFILLAMA_MIN_TVL,
+  }, 'SOLIS pipeline starting');
 
   try {
     // === Phase 0: Repo discovery (optional) ===
@@ -59,10 +73,10 @@ async function main() {
     logger.info({ repoCount: repos.length }, 'Tracking repos');
 
     const [githubResult, defiLlamaResult, heliusResult, coingeckoResult] = await Promise.allSettled([
-      collectGitHub(repos, 2),
-      collectDefiLlama(14),
-      collectHelius(14),
-      collectCoinGecko(2),
+      collectGitHub(repos, periodWeeks),
+      collectDefiLlama(periodDays),
+      collectHelius(periodDays),
+      collectCoinGecko(env.COINGECKO_MAX_PAGES),
     ]);
 
     // Track source results for report metadata
@@ -141,18 +155,30 @@ async function main() {
       leading: scored.leading,
       coincident: scored.coincident,
       confirming: scored.confirming,
+      previousNarratives: previousReport?.narratives,
     });
 
     // === Phase 4: Generate build ideas ===
     logger.info({ phase: 'ideas' }, 'Phase 4: Generating build ideas...');
     const { ideas, tokensUsed: ideaTokens, costUsd: ideaCost } = await generateBuildIdeas(narratives);
 
+    // === Phase 4.5: Compute report diff ===
+    let diff: ReportDiff | undefined;
+    if (previousReport) {
+      diff = computeReportDiff(narratives, previousReport.narratives);
+      logger.info({
+        newNarratives: diff.newNarratives.length,
+        removed: diff.removedNarratives.length,
+        transitions: diff.stageTransitions.length,
+      }, 'Report diff computed');
+    }
+
     // === Phase 5: Assemble and write report ===
     logger.info({ phase: 'output' }, 'Phase 5: Assembling report...');
 
     const now = new Date();
     const periodStart = new Date();
-    periodStart.setDate(now.getDate() - 14);
+    periodStart.setDate(now.getDate() - periodDays);
 
     const report: FortnightlyReport = {
       version: '1.0',
@@ -174,6 +200,7 @@ async function main() {
       },
       narratives,
       buildIdeas: ideas,
+      diff,
       meta: {
         totalReposAnalyzed: leading.repos.length,
         totalProtocolsAnalyzed: coincident.tvl.protocols.length + coincident.dexVolumes.protocols.length,

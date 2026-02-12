@@ -79,7 +79,7 @@ interface CGCategory {
 
 async function getSolanaTokens(page: number = 1): Promise<CGMarketToken[]> {
   if (page > 1) {
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, env.COINGECKO_THROTTLE_MS));
   }
 
   const data = await cgFetch<CGMarketToken[]>('/coins/markets', {
@@ -136,10 +136,10 @@ export async function collectCoinGecko(
     if (tokens.length < 100) break;
   }
 
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  await new Promise(resolve => setTimeout(resolve, env.COINGECKO_THROTTLE_MS));
   const trending = await getTrending();
 
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  await new Promise(resolve => setTimeout(resolve, env.COINGECKO_THROTTLE_MS));
   const categories = await getCategories();
 
   const tokenSignals = allTokens.map(toTokenSignal);

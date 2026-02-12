@@ -38,6 +38,58 @@ export const env = cleanEnv(process.env, {
     desc: 'Z-score threshold for anomaly detection',
   }),
 
+  // Collection periods
+  COLLECTION_PERIOD_DAYS: num({
+    default: 14,
+    desc: 'Lookback period for signal collection (days)',
+  }),
+
+  // LLM signal condensation limits
+  LLM_TOP_REPOS: num({
+    default: 30,
+    desc: 'Max repos sent to LLM for clustering',
+  }),
+  LLM_TOP_PROGRAMS: num({
+    default: 15,
+    desc: 'Max onchain programs sent to LLM for clustering',
+  }),
+  LLM_TOP_TOKENS: num({
+    default: 20,
+    desc: 'Max tokens sent to LLM for clustering',
+  }),
+
+  // API throttle delays (ms)
+  GITHUB_THROTTLE_MS: num({
+    default: 500,
+    desc: 'Delay between GitHub API batch requests (ms)',
+  }),
+  COINGECKO_THROTTLE_MS: num({
+    default: 2000,
+    desc: 'Delay between CoinGecko API requests (ms)',
+  }),
+  HELIUS_THROTTLE_MS: num({
+    default: 300,
+    desc: 'Delay between Helius RPC batch requests (ms)',
+  }),
+
+  // CoinGecko pagination
+  COINGECKO_MAX_PAGES: num({
+    default: 2,
+    desc: 'Max pages of Solana tokens to fetch (100 per page)',
+  }),
+
+  // DeFi Llama filters
+  DEFILLAMA_MIN_TVL: num({
+    default: 100_000,
+    desc: 'Minimum TVL ($) to include a protocol',
+  }),
+
+  // Helius programs config (JSON file path)
+  HELIUS_PROGRAMS_PATH: str({
+    default: '',
+    desc: 'Path to JSON file with Helius programs to track (overrides built-in list)',
+  }),
+
   // Output — resolve to monorepo root (packages/agent/ → ../../reports)
   REPORTS_DIR: str({
     default: resolve(import.meta.dirname, '..', '..', '..', 'reports'),

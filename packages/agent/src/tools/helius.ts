@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { env } from '../config.js';
 import { logger } from '../logger.js';
 import type { OnchainSignal } from '@solis/shared';
@@ -39,8 +40,8 @@ async function heliusRpc<T>(method: string, params: unknown): Promise<T | null> 
   }
 }
 
-// Known Solana programs to track
-const TRACKED_PROGRAMS: Array<{ id: string; name: string }> = [
+// Known Solana programs to track (default list)
+const DEFAULT_PROGRAMS: Array<{ id: string; name: string }> = [
   { id: 'JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4', name: 'Jupiter v6' },
   { id: 'whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc', name: 'Orca Whirlpool' },
   { id: 'CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK', name: 'Raydium CLMM' },
@@ -60,6 +61,17 @@ const TRACKED_PROGRAMS: Array<{ id: string; name: string }> = [
   { id: 'stkitrT1Uoy18Dk1fTrgPw8W6MVzoCfYoAFT4MLsmhq', name: 'Jito Stake Pool' },
   { id: 'wns1t5RUSbGMDFBjkDJankyyyPkT8J2HaLLanWvk9Kz', name: 'WNS (Wen New Standard)' },
 ];
+
+function loadPrograms(): Array<{ id: string; name: string }> {
+  if (!env.HELIUS_PROGRAMS_PATH) return DEFAULT_PROGRAMS;
+  try {
+    const raw = readFileSync(env.HELIUS_PROGRAMS_PATH, 'utf-8');
+    return JSON.parse(raw) as Array<{ id: string; name: string }>;
+  } catch (err) {
+    logger.warn({ path: env.HELIUS_PROGRAMS_PATH, error: err instanceof Error ? err.message : err }, 'Failed to load custom Helius programs — using defaults');
+    return DEFAULT_PROGRAMS;
+  }
+}
 
 interface TransactionSignature {
   signature: string;
@@ -93,7 +105,7 @@ export async function collectHelius(
   programs?: Array<{ id: string; name: string }>,
 ): Promise<OnchainSignal[]> {
   const log = logger.child({ tool: 'helius' });
-  const tracked = programs ?? TRACKED_PROGRAMS;
+  const tracked = programs ?? loadPrograms();
   log.info({ programCount: tracked.length, periodDays }, 'Collecting Helius signals');
 
   const BATCH_SIZE = 5;
@@ -117,7 +129,7 @@ export async function collectHelius(
     signals.push(...results);
 
     if (i + BATCH_SIZE < tracked.length) {
-      await new Promise(resolve => setTimeout(resolve, 300));
+      await new Promise(resolve => setTimeout(resolve, env.HELIUS_THROTTLE_MS));
     }
   }
 

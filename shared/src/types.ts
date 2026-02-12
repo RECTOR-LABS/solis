@@ -148,6 +148,7 @@ export interface Narrative {
   relatedProtocols: string[];
   previousStage?: SignalStage; // from last report
   stageChangedAt?: string; // ISO 8601
+  isNew?: boolean; // narrative didn't exist in prior report
 }
 
 export interface BuildIdea {
@@ -160,6 +161,26 @@ export interface BuildIdea {
   techStack: string[];
   existingProjects: string[]; // reference repos
   whyNow: string; // timing rationale
+}
+
+// --- Report Diff ---
+
+export interface StageTransition {
+  name: string;
+  from: SignalStage;
+  to: SignalStage;
+}
+
+export interface ConfidenceChange {
+  name: string;
+  delta: number; // positive = increased, negative = decreased
+}
+
+export interface ReportDiff {
+  newNarratives: string[];
+  removedNarratives: string[];
+  stageTransitions: StageTransition[];
+  confidenceChanges: ConfidenceChange[];
 }
 
 // --- Report ---
@@ -179,6 +200,7 @@ export interface FortnightlyReport {
   };
   narratives: Narrative[];
   buildIdeas: BuildIdea[];
+  diff?: ReportDiff;
   meta: {
     totalReposAnalyzed: number;
     totalProtocolsAnalyzed: number;
