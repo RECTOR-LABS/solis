@@ -5,14 +5,14 @@ Solana Onchain & Landscape Intelligence Signal. Detects emerging Solana ecosyste
 
 ## Architecture
 - **Monorepo**: pnpm workspaces — `packages/agent`, `packages/web`, `shared`
-- **Agent**: TypeScript pipeline orchestration, GLM-4.7 (via OpenRouter) for LLM analysis
+- **Agent**: TypeScript pipeline orchestration, Claude Haiku 4.5 (via OpenRouter) for LLM analysis, GLM fallback chain
 - **Web**: Next.js 15 + Tailwind v4, static report rendering with temporal UX
 - **Reports**: Git-committed JSON/MD artifacts in `reports/`
 - **API Guard**: Route-level rate limiting (in-memory sliding window) + optional x402 micropayments for paid tier bypass
 
 ## Pipeline
 - TypeScript orchestration — direct function calls, no LLM needed for pipeline control
-- GLM-4.7 (OpenRouter) = analyst — narrative clustering, build idea generation
+- Claude Haiku 4.5 (OpenRouter) = analyst — narrative clustering, build idea generation (GLM-4.7 → GLM-4.7-flash fallback)
 - Narrative history tracking — fuzzy matching (Jaccard similarity) across reports, stage transitions, report diffing
 - Post-pipeline alerting — Telegram/Discord notifications for stage transitions, new narratives, anomaly spikes
 
@@ -44,7 +44,7 @@ pnpm build        # Build all packages
 
 ## Environment
 All secrets in `~/Documents/secret/.env`. Required:
-- `OPENROUTER_API_KEY` — GLM-4.7 (narrative clustering + idea generation)
+- `OPENROUTER_API_KEY` — LLM analysis via OpenRouter (narrative clustering + idea generation)
 - `GITHUB_TOKEN` — GitHub API
 - `HELIUS_API_KEY` — Onchain data
 
@@ -54,7 +54,7 @@ Optional config (all have sensible defaults in `config.ts`):
 - `GITHUB_THROTTLE_MS` (500), `COINGECKO_THROTTLE_MS` (2000), `HELIUS_THROTTLE_MS` (300) — API rate limiting
 - `COINGECKO_MAX_PAGES` (2), `DEFILLAMA_MIN_TVL` (100000) — data filters
 - `HELIUS_PROGRAMS_PATH` — override built-in program list with JSON file
-- `OPENROUTER_FALLBACK_MODELS` (`z-ai/glm-5,z-ai/glm-4.7-flash`) — comma-separated fallback model chain for 5xx errors
+- `OPENROUTER_FALLBACK_MODELS` (`z-ai/glm-4.7,z-ai/glm-4.7-flash`) — comma-separated fallback model chain for 5xx errors
 - `ANOMALY_THRESHOLD` (2.0) — z-score threshold for anomaly detection
 - `ALERTS_ENABLED` (false) — enable post-pipeline notifications
 - `ALERT_CHANNEL` (telegram) — `telegram` or `discord`

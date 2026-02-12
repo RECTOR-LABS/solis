@@ -19,6 +19,7 @@ export interface LLMResponse {
 }
 
 const PRICING: Record<string, { input: number; output: number }> = {
+  'anthropic/claude-haiku-4.5': { input: 1.00 / 1_000_000, output: 5.00 / 1_000_000 },
   'z-ai/glm-4.7': { input: 0.40 / 1_000_000, output: 1.50 / 1_000_000 },
   'z-ai/glm-5': { input: 0.80 / 1_000_000, output: 2.56 / 1_000_000 },
   'z-ai/glm-4.7-flash': { input: 0.06 / 1_000_000, output: 0.40 / 1_000_000 },

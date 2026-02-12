@@ -11,8 +11,8 @@ vi.mock('openai', () => ({
 vi.mock('../../src/config.js', () => ({
   env: {
     OPENROUTER_API_KEY: 'test-key',
-    OPENROUTER_MODEL: 'z-ai/glm-4.7',
-    OPENROUTER_FALLBACK_MODELS: 'z-ai/glm-5,z-ai/glm-4.7-flash',
+    OPENROUTER_MODEL: 'anthropic/claude-haiku-4.5',
+    OPENROUTER_FALLBACK_MODELS: 'z-ai/glm-4.7,z-ai/glm-4.7-flash',
     LOG_LEVEL: 'error',
     isDevelopment: false,
   },
@@ -131,11 +131,11 @@ describe('analyzeWithLLM — model fallback', () => {
     const { analyzeWithLLM } = await import('../../src/analysis/openrouter.js');
     const result = await analyzeWithLLM('system', 'user');
 
-    expect(result.model).toBe('z-ai/glm-4.7');
+    expect(result.model).toBe('anthropic/claude-haiku-4.5');
     expect(result.content).toBe('{"ok":true}');
     expect(mockCreate).toHaveBeenCalledTimes(1);
     expect(mockCreate).toHaveBeenCalledWith(
-      expect.objectContaining({ model: 'z-ai/glm-4.7' }),
+      expect.objectContaining({ model: 'anthropic/claude-haiku-4.5' }),
     );
   });
 
@@ -147,11 +147,11 @@ describe('analyzeWithLLM — model fallback', () => {
     const { analyzeWithLLM } = await import('../../src/analysis/openrouter.js');
     const result = await analyzeWithLLM('system', 'user');
 
-    expect(result.model).toBe('z-ai/glm-5');
+    expect(result.model).toBe('z-ai/glm-4.7');
     expect(result.content).toBe('{"fallback":true}');
     expect(mockCreate).toHaveBeenCalledTimes(2);
-    expect(mockCreate).toHaveBeenNthCalledWith(1, expect.objectContaining({ model: 'z-ai/glm-4.7' }));
-    expect(mockCreate).toHaveBeenNthCalledWith(2, expect.objectContaining({ model: 'z-ai/glm-5' }));
+    expect(mockCreate).toHaveBeenNthCalledWith(1, expect.objectContaining({ model: 'anthropic/claude-haiku-4.5' }));
+    expect(mockCreate).toHaveBeenNthCalledWith(2, expect.objectContaining({ model: 'z-ai/glm-4.7' }));
   });
 
   it('should fallback through entire chain on 502s', async () => {

@@ -7,9 +7,9 @@ export const env = cleanEnv(process.env, {
     default: 'development',
   }),
 
-  // OpenRouter — GLM-4.7 analysis
+  // OpenRouter — LLM analysis
   OPENROUTER_API_KEY: str({
-    desc: 'OpenRouter API key for GLM-4.7',
+    desc: 'OpenRouter API key for LLM analysis',
   }),
 
   // GitHub API — Layer 1 (Leading)
@@ -30,11 +30,11 @@ export const env = cleanEnv(process.env, {
 
   // Analysis config
   OPENROUTER_MODEL: str({
-    default: 'z-ai/glm-4.7',
+    default: 'anthropic/claude-haiku-4.5',
     desc: 'OpenRouter model ID for analysis',
   }),
   OPENROUTER_FALLBACK_MODELS: str({
-    default: 'z-ai/glm-5,z-ai/glm-4.7-flash',
+    default: 'z-ai/glm-4.7,z-ai/glm-4.7-flash',
     desc: 'Comma-separated fallback model IDs for 5xx errors',
   }),
   ANOMALY_THRESHOLD: num({
