@@ -128,6 +128,24 @@ export const env = cleanEnv(process.env, {
     default: 'info',
   }),
 
+  // Social signals — opt-in LunarCrush Layer 0
+  ENABLE_SOCIAL_SIGNALS: bool({
+    default: false,
+    desc: 'Enable social signal collection via LunarCrush API',
+  }),
+  LUNARCRUSH_API_KEY: str({
+    default: '',
+    desc: 'LunarCrush API key (v4 Bearer token)',
+  }),
+  LUNARCRUSH_THROTTLE_MS: num({
+    default: 1000,
+    desc: 'Delay between LunarCrush API requests (ms)',
+  }),
+  LLM_TOP_SOCIAL_COINS: num({
+    default: 20,
+    desc: 'Max social coins sent to LLM for clustering',
+  }),
+
   // Repo discovery — opt-in dynamic GitHub Search
   ENABLE_REPO_DISCOVERY: bool({
     default: false,
