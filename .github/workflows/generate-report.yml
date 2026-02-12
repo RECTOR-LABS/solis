@@ -2,8 +2,8 @@ name: Generate Report
 
 on:
   schedule:
-    # Fortnightly: 1st and 15th of each month at 08:00 UTC
-    - cron: '0 8 1,15 * *'
+    # Daily at 08:00 UTC
+    - cron: '0 8 * * *'
   workflow_dispatch: # Manual trigger
 
 jobs:
@@ -44,7 +44,7 @@ jobs:
           git add reports/
           DATE=$(date +%Y-%m-%d)
           git diff --cached --quiet && echo "No changes to commit" && exit 0
-          git commit -m "report: ${DATE} fortnightly intelligence"
+          git commit -m "report: ${DATE} daily intelligence"
           git push
 
       - name: Create issue on failure
@@ -55,5 +55,5 @@ jobs:
           DATE=$(date +%Y-%m-%d)
           gh issue create \
             --title "Pipeline failure: ${DATE}" \
-            --body "The fortnightly report pipeline failed on ${DATE}. Check [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})." \
+            --body "The daily report pipeline failed on ${DATE}. Check [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})." \
             --label "bug,agent"
