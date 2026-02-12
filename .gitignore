@@ -8,6 +8,9 @@ dist/
 .vercel/
 out/
 
+# Generated reports
+solis-brain-report.html
+
 # OS
 .DS_Store
 Thumbs.db
