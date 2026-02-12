@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { SearchModal } from '@/components/search-modal';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -31,6 +32,14 @@ export default function RootLayout({
               <a href="/methodology" className="text-sol-muted hover:text-white transition-colors">
                 Methodology
               </a>
+              <span className="text-sol-muted flex items-center gap-1.5">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <kbd className="hidden sm:inline text-[10px] bg-sol-card px-1 py-0.5 rounded border border-sol-border">
+                  ⌘K
+                </kbd>
+              </span>
               <a
                 href="https://github.com/RECTOR-LABS/solis"
                 target="_blank"
@@ -42,6 +51,7 @@ export default function RootLayout({
             </div>
           </nav>
         </header>
+        <SearchModal />
         <main className="mx-auto max-w-6xl px-4 py-8">
           {children}
         </main>

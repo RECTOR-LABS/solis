@@ -32,6 +32,21 @@ export async function getReportDates(): Promise<string[]> {
   }
 }
 
+export async function getAllNarrativesFlat(): Promise<Array<{ date: string; narrative: import('@solis/shared').Narrative }>> {
+  const dates = await getReportDates();
+  const result: Array<{ date: string; narrative: import('@solis/shared').Narrative }> = [];
+
+  for (const date of dates) {
+    const report = await getReport(date);
+    if (!report) continue;
+    for (const narrative of report.narratives) {
+      result.push({ date, narrative });
+    }
+  }
+
+  return result;
+}
+
 export async function getReportSummaries(): Promise<ReportSummary[]> {
   const dates = await getReportDates();
   const summaries: ReportSummary[] = [];
