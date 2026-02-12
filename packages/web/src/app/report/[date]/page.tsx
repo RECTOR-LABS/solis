@@ -4,7 +4,7 @@ import { NarrativeCard } from '@/components/narrative-card';
 import { BuildIdeaCard } from '@/components/build-ideas';
 import { ReportTimestamp } from '@/components/report-timestamp';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export async function generateStaticParams() {
   const dates = await getReportDates();

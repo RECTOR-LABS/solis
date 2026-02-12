@@ -4,7 +4,7 @@ import { BuildIdeaCard } from '@/components/build-ideas';
 import { CountdownTimer } from '@/components/countdown-timer';
 import { ReportTimestamp } from '@/components/report-timestamp';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export default async function HomePage() {
   const report = await getLatestReport();

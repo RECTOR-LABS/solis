@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getReportSummaries, getReport } from '@/lib/reports';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

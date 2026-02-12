@@ -2,7 +2,7 @@ import { getReportSummaries } from '@/lib/reports';
 import { StageBadge } from '@/components/stage-badge';
 import { ReportTimestamp } from '@/components/report-timestamp';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export default async function ArchivePage() {
   const summaries = await getReportSummaries();
