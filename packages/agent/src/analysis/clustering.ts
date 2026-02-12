@@ -11,12 +11,14 @@ import type {
   GitHubSignals,
   CoincidentSignals,
   ConfirmingSignals,
+  SocialSignals,
 } from '@solis/shared';
 
 interface ClusteringInput {
   leading: GitHubSignals;
   coincident: CoincidentSignals;
   confirming: ConfirmingSignals;
+  social?: SocialSignals;
   previousNarratives?: Narrative[];
 }
 
@@ -26,6 +28,7 @@ const NarrativeSchema = z.object({
   stage: z.string(),
   momentum: z.string(),
   confidence: z.number(),
+  social_signals: z.array(z.string()).default([]),
   leading_signals: z.array(z.string()).default([]),
   coincident_signals: z.array(z.string()).default([]),
   confirming_signals: z.array(z.string()).default([]),
@@ -38,17 +41,18 @@ const NarrativesResponseSchema = z.object({
   narratives: z.array(NarrativeSchema).default([]),
 });
 
-const SYSTEM_PROMPT = `You are SOLIS, a Solana ecosystem intelligence analyst. Your job is to identify emerging narratives by clustering signals across three layers:
+const SYSTEM_PROMPT = `You are SOLIS, a Solana ecosystem intelligence analyst. Your job is to identify emerging narratives by clustering signals across up to four layers:
 
+0. SOCIAL (LunarCrush): Social sentiment and community engagement — often the earliest signal
 1. LEADING (GitHub): Developer activity that precedes market movement by 2-4 weeks
 2. COINCIDENT (DeFi Llama + Helius): Real-time capital and onchain activity
 3. CONFIRMING (CoinGecko): Market price/volume validation
 
 Signal Stage Classification:
-- EARLY: Only Layer 1 signals fire (devs building, market hasn't noticed)
-- EMERGING: Layer 1 + 2 align (builders + capital moving together)
-- GROWING: All 3 layers align with increasing momentum
-- MAINSTREAM: All 3 layers, high confidence (likely already priced in)
+- EARLY: Only Layer 0-1 signals fire (social buzz and/or devs building, market hasn't noticed)
+- EMERGING: Layer 1 + 2 align (builders + capital moving together), social may amplify
+- GROWING: All layers align with increasing momentum
+- MAINSTREAM: All layers, high confidence (likely already priced in)
 
 Momentum:
 - accelerating: Signal strength increasing over the period
@@ -74,6 +78,7 @@ Respond with a JSON object containing a "narratives" array where each narrative 
 - stage: "EARLY" | "EMERGING" | "GROWING" | "MAINSTREAM"
 - momentum: "accelerating" | "stable" | "decelerating"
 - confidence: number (0-100)
+- social_signals: string[] (human-readable descriptions of social/sentiment signals, if social data is available)
 - leading_signals: string[] (human-readable descriptions of GitHub signals)
 - coincident_signals: string[] (TVL/volume/onchain signals)
 - confirming_signals: string[] (price/market signals)
@@ -104,7 +109,20 @@ export async function clusterNarratives(
   const log = logger.child({ component: 'clustering' });
 
   // Prepare condensed signal data for the LLM
-  const condensed = {
+  const condensed: Record<string, unknown> = {
+    ...(signals.social && signals.social.coins.length > 0 ? {
+      social: {
+        topByInteractions: signals.social.coins
+          .sort((a, b) => b.interactions24h - a.interactions24h)
+          .slice(0, env.LLM_TOP_SOCIAL_COINS)
+          .map(s => ({ topic: s.topic, interactions: s.interactions24h, sentiment: s.sentiment, galaxyScore: s.galaxyScore })),
+        anomalies: signals.social.anomalies
+          .map(a => ({ topic: a.topic, interactionsDelta: a.interactionsDelta, interactionsZScore: a.interactionsZScore })),
+        topBySentiment: signals.social.topBySentiment
+          .slice(0, 5)
+          .map(s => ({ topic: s.topic, sentiment: s.sentiment, galaxyScore: s.galaxyScore })),
+      },
+    } : {}),
     github: {
       anomalies: signals.leading.anomalies.map(a => ({
         repo: a.repo,
@@ -184,7 +202,7 @@ export async function clusterNarratives(
         leading: n.leading_signals,
         coincident: n.coincident_signals,
         confirming: n.confirming_signals,
-        social: [],
+        social: n.social_signals,
       },
       relatedRepos: n.related_repos,
       relatedTokens: n.related_tokens,

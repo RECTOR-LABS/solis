@@ -17,6 +17,7 @@ import {
   emptyCoincidentSignals,
   emptyOnchainSignals,
   emptyConfirmingSignals,
+  emptySocialSignals,
 } from './utils/empty-signals.js';
 import { computeReportDiff } from './utils/history.js';
 import type {
@@ -25,6 +26,7 @@ import type {
   DataSourceStatus,
   GitHubSignals,
   ConfirmingSignals,
+  SocialSignals,
   OnchainSignal,
   ReportDiff,
 } from '@solis/shared';
@@ -68,16 +70,27 @@ async function main() {
       repos = getAllRepoNames();
     }
 
-    // === Phase 1: Collect signals from all 3 layers ===
-    logger.info({ phase: 'collect' }, 'Phase 1: Collecting signals...');
+    // === Phase 1: Collect signals from all layers ===
+    logger.info({ phase: 'collect', socialEnabled: env.ENABLE_SOCIAL_SIGNALS }, 'Phase 1: Collecting signals...');
     logger.info({ repoCount: repos.length }, 'Tracking repos');
 
-    const [githubResult, defiLlamaResult, heliusResult, coingeckoResult] = await Promise.allSettled([
+    // Build collector promises — Layer 0 is conditional
+    const collectors: Promise<unknown>[] = [
       collectGitHub(repos, periodWeeks),
       collectDefiLlama(periodDays),
       collectHelius(periodDays),
       collectCoinGecko(env.COINGECKO_MAX_PAGES),
-    ]);
+    ];
+
+    let socialCollectorIndex = -1;
+    if (env.ENABLE_SOCIAL_SIGNALS) {
+      const { collectLunarCrush } = await import('./tools/lunarcrush.js');
+      socialCollectorIndex = collectors.length;
+      collectors.push(collectLunarCrush(periodDays));
+    }
+
+    const results = await Promise.allSettled(collectors);
+    const [githubResult, defiLlamaResult, heliusResult, coingeckoResult] = results as PromiseSettledResult<any>[];
 
     // Track source results for report metadata
     const sourceResults: Record<string, SourceResult> = {};
@@ -123,6 +136,20 @@ async function main() {
       sourceResults['CoinGecko'] = { status: 'failed', error: String(coingeckoResult.reason) };
     }
 
+    // Unwrap social signals (Layer 0) — conditional
+    let social: SocialSignals | undefined;
+    if (socialCollectorIndex >= 0) {
+      const socialResult = results[socialCollectorIndex];
+      if (socialResult.status === 'fulfilled') {
+        social = socialResult.value as SocialSignals;
+        sourceResults['LunarCrush'] = { status: 'success' };
+      } else {
+        logger.error({ error: (socialResult as PromiseRejectedResult).reason }, 'LunarCrush collection failed — using empty signals');
+        social = emptySocialSignals();
+        sourceResults['LunarCrush'] = { status: 'failed', error: String((socialResult as PromiseRejectedResult).reason) };
+      }
+    }
+
     const coincident: CoincidentSignals = {
       ...defiLlamaData,
       onchain: onchainSignals,
@@ -131,13 +158,13 @@ async function main() {
     // === Phase 1.5: Calculate deltas from previous report ===
     const todayDate = new Date().toISOString().split('T')[0];
     const previousReport = await loadPreviousReport(todayDate);
-    applyDeltas(leading, coincident, confirming, previousReport);
+    applyDeltas(leading, coincident, confirming, previousReport, social);
 
     // === Phase 2: Score signals with z-scores ===
     logger.info({ phase: 'score' }, 'Phase 2: Scoring signals...');
     let scored: ScoredSignals;
     try {
-      scored = scoreSignals(leading, coincident, confirming, env.ANOMALY_THRESHOLD);
+      scored = scoreSignals(leading, coincident, confirming, env.ANOMALY_THRESHOLD, social);
       logger.info({ summary: scored.summary }, 'Scoring complete');
     } catch (err) {
       logger.error({ error: err instanceof Error ? err.message : err }, 'Scoring failed — proceeding with unscored signals');
@@ -155,6 +182,7 @@ async function main() {
       leading: scored.leading,
       coincident: scored.coincident,
       confirming: scored.confirming,
+      social: scored.social,
       previousNarratives: previousReport?.narratives,
     });
 
@@ -188,6 +216,7 @@ async function main() {
         end: now.toISOString(),
       },
       sources: [
+        ...(social ? [{ name: 'LunarCrush', layer: 'SOCIAL' as const, fetchedAt: now.toISOString(), dataPoints: social.coins.length, ...sourceResults['LunarCrush'] }] : []),
         { name: 'GitHub API', layer: 'LEADING', fetchedAt: now.toISOString(), dataPoints: leading.repos.length, ...sourceResults['GitHub API'] },
         { name: 'DeFi Llama', layer: 'COINCIDENT', fetchedAt: now.toISOString(), dataPoints: coincident.tvl.protocols.length, ...sourceResults['DeFi Llama'] },
         { name: 'Helius', layer: 'COINCIDENT', fetchedAt: now.toISOString(), dataPoints: coincident.onchain.length, ...sourceResults['Helius'] },
@@ -197,6 +226,7 @@ async function main() {
         leading: scored.leading,
         coincident: scored.coincident,
         confirming: scored.confirming,
+        ...(scored.social ? { social: scored.social } : {}),
       },
       narratives,
       buildIdeas: ideas,
