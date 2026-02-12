@@ -3,6 +3,7 @@ import { getReport, getReportDates } from '@/lib/reports';
 import { NarrativeCard } from '@/components/narrative-card';
 import { BuildIdeaCard } from '@/components/build-ideas';
 import { ReportTimestamp } from '@/components/report-timestamp';
+import { ExportButtons } from '@/components/export-buttons';
 
 export const revalidate = 3600;
 
@@ -27,9 +28,12 @@ export default async function ReportPage({ params }: { params: Promise<{ date: s
           </p>
           <ReportTimestamp generatedAt={report.generatedAt} />
         </div>
-        <a href="/archive" className="text-sol-muted hover:text-white text-sm transition-colors">
-          View all reports
-        </a>
+        <div className="flex items-center gap-4">
+          <ExportButtons report={report} date={date} />
+          <a href="/archive" className="text-sol-muted hover:text-white text-sm transition-colors">
+            View all reports
+          </a>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
