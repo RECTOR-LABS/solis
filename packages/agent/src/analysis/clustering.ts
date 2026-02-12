@@ -1,4 +1,6 @@
+import { z } from 'zod';
 import { analyzeWithLLM, parseLLMJson } from './openrouter.js';
+import { withRetry } from '../utils/retry.js';
 import { logger } from '../logger.js';
 import type {
   Narrative,
@@ -15,19 +17,23 @@ interface ClusteringInput {
   confirming: ConfirmingSignals;
 }
 
-interface RawNarrative {
-  name: string;
-  description: string;
-  stage: string;
-  momentum: string;
-  confidence: number;
-  leading_signals: string[];
-  coincident_signals: string[];
-  confirming_signals: string[];
-  related_repos: string[];
-  related_tokens: string[];
-  related_protocols: string[];
-}
+const NarrativeSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+  stage: z.string(),
+  momentum: z.string(),
+  confidence: z.number(),
+  leading_signals: z.array(z.string()).default([]),
+  coincident_signals: z.array(z.string()).default([]),
+  confirming_signals: z.array(z.string()).default([]),
+  related_repos: z.array(z.string()).default([]),
+  related_tokens: z.array(z.string()).default([]),
+  related_protocols: z.array(z.string()).default([]),
+});
+
+const NarrativesResponseSchema = z.object({
+  narratives: z.array(NarrativeSchema).default([]),
+});
 
 const SYSTEM_PROMPT = `You are SOLIS, a Solana ecosystem intelligence analyst. Your job is to identify emerging narratives by clustering signals across three layers:
 
@@ -143,37 +149,47 @@ export async function clusterNarratives(
   const dataStr = JSON.stringify(condensed, null, 2);
   log.info({ dataLength: dataStr.length }, 'Sending signals to LLM for clustering');
 
-  const response = await analyzeWithLLM(SYSTEM_PROMPT, USER_PROMPT_TEMPLATE(dataStr), true);
+  try {
+    const response = await withRetry(
+      () => analyzeWithLLM(SYSTEM_PROMPT, USER_PROMPT_TEMPLATE(dataStr), true),
+      'clustering-llm',
+      { attempts: 2, baseDelayMs: 2000 },
+    );
 
-  const parsed = parseLLMJson<{ narratives: RawNarrative[] }>(response.content);
+    const raw = parseLLMJson<unknown>(response.content);
+    const parsed = NarrativesResponseSchema.parse(raw);
 
-  const narratives: Narrative[] = parsed.narratives.map((raw, i) => ({
-    id: `n-${i + 1}`,
-    name: raw.name,
-    slug: slugify(raw.name),
-    description: raw.description,
-    stage: validateStage(raw.stage),
-    momentum: validateMomentum(raw.momentum),
-    confidence: Math.max(0, Math.min(100, raw.confidence)),
-    signals: {
-      leading: raw.leading_signals ?? [],
-      coincident: raw.coincident_signals ?? [],
-      confirming: raw.confirming_signals ?? [],
-    },
-    relatedRepos: raw.related_repos ?? [],
-    relatedTokens: raw.related_tokens ?? [],
-    relatedProtocols: raw.related_protocols ?? [],
-  }));
+    const narratives: Narrative[] = parsed.narratives.map((n, i) => ({
+      id: `n-${i + 1}`,
+      name: n.name,
+      slug: slugify(n.name),
+      description: n.description,
+      stage: validateStage(n.stage),
+      momentum: validateMomentum(n.momentum),
+      confidence: Math.max(0, Math.min(100, n.confidence)),
+      signals: {
+        leading: n.leading_signals,
+        coincident: n.coincident_signals,
+        confirming: n.confirming_signals,
+      },
+      relatedRepos: n.related_repos,
+      relatedTokens: n.related_tokens,
+      relatedProtocols: n.related_protocols,
+    }));
 
-  log.info({
-    narrativesFound: narratives.length,
-    tokensUsed: response.tokensUsed.total,
-    costUsd: response.costUsd.toFixed(4),
-  }, 'Narrative clustering complete');
+    log.info({
+      narrativesFound: narratives.length,
+      tokensUsed: response.tokensUsed.total,
+      costUsd: response.costUsd.toFixed(4),
+    }, 'Narrative clustering complete');
 
-  return {
-    narratives,
-    tokensUsed: response.tokensUsed.total,
-    costUsd: response.costUsd,
-  };
+    return {
+      narratives,
+      tokensUsed: response.tokensUsed.total,
+      costUsd: response.costUsd,
+    };
+  } catch (err) {
+    log.error({ error: err instanceof Error ? err.message : err }, 'Narrative clustering failed — returning empty narratives');
+    return { narratives: [], tokensUsed: 0, costUsd: 0 };
+  }
 }

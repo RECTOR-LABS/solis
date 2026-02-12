@@ -1,17 +1,23 @@
+import { z } from 'zod';
 import { analyzeWithLLM, parseLLMJson } from './openrouter.js';
+import { withRetry } from '../utils/retry.js';
 import { logger } from '../logger.js';
 import type { Narrative, BuildIdea } from '@solis/shared';
 
-interface RawBuildIdea {
-  title: string;
-  narrative: string;
-  description: string;
-  difficulty: string;
-  timeframe: string;
-  tech_stack: string[];
-  existing_projects: string[];
-  why_now: string;
-}
+const BuildIdeaSchema = z.object({
+  title: z.string(),
+  narrative: z.string(),
+  description: z.string(),
+  difficulty: z.string(),
+  timeframe: z.string(),
+  tech_stack: z.array(z.string()).default([]),
+  existing_projects: z.array(z.string()).default([]),
+  why_now: z.string(),
+});
+
+const IdeasResponseSchema = z.object({
+  ideas: z.array(BuildIdeaSchema).default([]),
+});
 
 const SYSTEM_PROMPT = `You are SOLIS, a Solana ecosystem intelligence analyst. Your job is to generate actionable build ideas based on detected narratives.
 
@@ -71,33 +77,44 @@ export async function generateBuildIdeas(
   const dataStr = JSON.stringify(condensed, null, 2);
   log.info({ narrativeCount: narratives.length, dataLength: dataStr.length }, 'Generating build ideas');
 
-  const response = await analyzeWithLLM(SYSTEM_PROMPT, USER_PROMPT_TEMPLATE(dataStr), true);
-  const parsed = parseLLMJson<{ ideas: RawBuildIdea[] }>(response.content);
+  try {
+    const response = await withRetry(
+      () => analyzeWithLLM(SYSTEM_PROMPT, USER_PROMPT_TEMPLATE(dataStr), true),
+      'ideas-llm',
+      { attempts: 2, baseDelayMs: 2000 },
+    );
 
-  // Map narrative names to IDs
-  const narrativeNameToId = new Map(narratives.map(n => [n.name, n.id]));
+    const raw = parseLLMJson<unknown>(response.content);
+    const parsed = IdeasResponseSchema.parse(raw);
 
-  const ideas: BuildIdea[] = parsed.ideas.map((raw, i) => ({
-    id: `idea-${i + 1}`,
-    title: raw.title,
-    narrative: narrativeNameToId.get(raw.narrative) ?? raw.narrative,
-    description: raw.description,
-    difficulty: validateDifficulty(raw.difficulty),
-    timeframe: raw.timeframe,
-    techStack: raw.tech_stack ?? [],
-    existingProjects: raw.existing_projects ?? [],
-    whyNow: raw.why_now,
-  }));
+    // Map narrative names to IDs
+    const narrativeNameToId = new Map(narratives.map(n => [n.name, n.id]));
 
-  log.info({
-    ideasGenerated: ideas.length,
-    tokensUsed: response.tokensUsed.total,
-    costUsd: response.costUsd.toFixed(4),
-  }, 'Build idea generation complete');
+    const ideas: BuildIdea[] = parsed.ideas.map((idea, i) => ({
+      id: `idea-${i + 1}`,
+      title: idea.title,
+      narrative: narrativeNameToId.get(idea.narrative) ?? idea.narrative,
+      description: idea.description,
+      difficulty: validateDifficulty(idea.difficulty),
+      timeframe: idea.timeframe,
+      techStack: idea.tech_stack,
+      existingProjects: idea.existing_projects,
+      whyNow: idea.why_now,
+    }));
 
-  return {
-    ideas,
-    tokensUsed: response.tokensUsed.total,
-    costUsd: response.costUsd,
-  };
+    log.info({
+      ideasGenerated: ideas.length,
+      tokensUsed: response.tokensUsed.total,
+      costUsd: response.costUsd.toFixed(4),
+    }, 'Build idea generation complete');
+
+    return {
+      ideas,
+      tokensUsed: response.tokensUsed.total,
+      costUsd: response.costUsd,
+    };
+  } catch (err) {
+    log.error({ error: err instanceof Error ? err.message : err }, 'Build idea generation failed — returning empty ideas');
+    return { ideas: [], tokensUsed: 0, costUsd: 0 };
+  }
 }

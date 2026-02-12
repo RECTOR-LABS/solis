@@ -95,5 +95,10 @@ export function parseLLMJson<T>(content: string): T {
   }
   cleaned = cleaned.trim();
 
-  return JSON.parse(cleaned) as T;
+  try {
+    return JSON.parse(cleaned) as T;
+  } catch {
+    const preview = cleaned.slice(0, 200);
+    throw new Error(`Failed to parse LLM JSON response (first 200 chars): ${preview}`);
+  }
 }
