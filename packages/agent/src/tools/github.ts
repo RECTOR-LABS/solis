@@ -86,12 +86,14 @@ async function fetchRepoSignal(
 
   if (!info) return null;
 
-  const recentCommits = commitActivity
-    ?.slice(-periodWeeks)
-    .reduce((sum, w) => sum + w.total, 0) ?? 0;
-  const priorCommits = commitActivity
-    ?.slice(-(periodWeeks * 2), -periodWeeks)
-    .reduce((sum, w) => sum + w.total, 0) ?? 0;
+  // GitHub returns 202 (empty/object) when stats are being computed — guard with Array.isArray
+  const activity = Array.isArray(commitActivity) ? commitActivity : [];
+  const recentCommits = activity
+    .slice(-periodWeeks)
+    .reduce((sum, w) => sum + w.total, 0);
+  const priorCommits = activity
+    .slice(-(periodWeeks * 2), -periodWeeks)
+    .reduce((sum, w) => sum + w.total, 0);
 
   const createdAt = new Date(info.created_at);
   const periodStart = new Date();

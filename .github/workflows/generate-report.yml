@@ -27,7 +27,6 @@ jobs:
 
       - name: Run SOLIS pipeline
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           HELIUS_API_KEY: ${{ secrets.HELIUS_API_KEY }}

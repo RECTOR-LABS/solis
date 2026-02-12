@@ -68,11 +68,14 @@ async function getSolanaDEXVolumes(): Promise<LlamaDEXOverview | null> {
 }
 
 async function getSolanaStablecoinFlows(): Promise<{ netFlow: number; inflows: number; outflows: number }> {
-  const chainStables = await llamaFetch<Array<{ name: string; circulating: { peggedUSD: number }; circulatingPrevDay: { peggedUSD: number } }>>(
-    `${DEFILLAMA_API}/stablecoins?includePrices=false`,
+  const data = await llamaFetch<{ peggedAssets: Array<{ name: string; circulating: { peggedUSD: number }; circulatingPrevDay: { peggedUSD: number }; chains: string[] }> }>(
+    'https://stablecoins.llama.fi/stablecoins?includePrices=false',
   );
 
-  if (!chainStables) return { netFlow: 0, inflows: 0, outflows: 0 };
+  if (!data?.peggedAssets) return { netFlow: 0, inflows: 0, outflows: 0 };
+
+  // Filter to stablecoins present on Solana
+  const chainStables = data.peggedAssets.filter(a => a.chains?.includes('Solana'));
 
   let inflows = 0;
   let outflows = 0;

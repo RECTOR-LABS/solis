@@ -109,7 +109,7 @@ async function main() {
       llmCostUsd: (clusterCost + ideaCost).toFixed(4),
     }, 'SOLIS pipeline complete');
   } catch (error) {
-    logger.error({ error }, 'Pipeline failed');
+    logger.error({ err: error instanceof Error ? { message: error.message, stack: error.stack, cause: error.cause } : error }, 'Pipeline failed');
     process.exit(1);
   }
 }

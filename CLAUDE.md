@@ -5,13 +5,13 @@ Solana Onchain & Landscape Intelligence Signal. Detects emerging Solana ecosyste
 
 ## Architecture
 - **Monorepo**: pnpm workspaces — `packages/agent`, `packages/web`, `shared`
-- **Agent**: Claude Agent SDK orchestrates pipeline, GLM-4.7 (via OpenRouter) does bulk analysis
+- **Agent**: TypeScript pipeline orchestration, GLM-4.7 (via OpenRouter) for LLM analysis
 - **Web**: Next.js 15 + Tailwind v4, static report rendering
 - **Reports**: Git-committed JSON/MD artifacts in `reports/`
 
-## Two-LLM Pattern
-- Claude (Agent SDK) = orchestrator — uses tools, handles errors, manages pipeline
-- GLM-4.7 (OpenRouter) = analyst — bulk data processing, clustering, idea generation
+## Pipeline
+- TypeScript orchestration — direct function calls, no LLM needed for pipeline control
+- GLM-4.7 (OpenRouter) = analyst — narrative clustering, build idea generation
 
 ## 3-Layer Signal Detection
 - Layer 1 (LEADING): GitHub API — stars, commits, forks, new repos
@@ -29,8 +29,7 @@ pnpm build        # Build all packages
 
 ## Environment
 All secrets in `~/Documents/secret/.env`. Required:
-- `ANTHROPIC_API_KEY` — Claude Agent SDK
-- `OPENROUTER_API_KEY` — GLM-4.7
+- `OPENROUTER_API_KEY` — GLM-4.7 (narrative clustering + idea generation)
 - `GITHUB_TOKEN` — GitHub API
 - `HELIUS_API_KEY` — Onchain data
 

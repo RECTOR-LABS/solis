@@ -1,14 +1,10 @@
 import { cleanEnv, str, num } from 'envalid';
+import { resolve } from 'node:path';
 
 export const env = cleanEnv(process.env, {
   NODE_ENV: str({
     choices: ['development', 'production', 'test'] as const,
     default: 'development',
-  }),
-
-  // Claude Agent SDK — orchestration
-  ANTHROPIC_API_KEY: str({
-    desc: 'Anthropic API key for Claude Agent SDK',
   }),
 
   // OpenRouter — GLM-4.7 analysis
@@ -42,9 +38,9 @@ export const env = cleanEnv(process.env, {
     desc: 'Z-score threshold for anomaly detection',
   }),
 
-  // Output
+  // Output — resolve to monorepo root (packages/agent/ → ../../reports)
   REPORTS_DIR: str({
-    default: './reports',
+    default: resolve(import.meta.dirname, '..', '..', '..', 'reports'),
     desc: 'Directory for report output',
   }),
 
