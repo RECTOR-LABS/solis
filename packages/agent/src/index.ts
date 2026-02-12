@@ -5,6 +5,7 @@ import { collectDefiLlama } from './tools/defillama.js';
 import { collectCoinGecko } from './tools/coingecko.js';
 import { collectHelius } from './tools/helius.js';
 import { getAllRepoNames } from './repos/curated.js';
+import { discoverRepos } from './repos/discovery.js';
 import { scoreSignals, type ScoredSignals } from './analysis/scoring.js';
 import { clusterNarratives } from './analysis/clustering.js';
 import { generateBuildIdeas } from './analysis/ideas.js';
@@ -37,10 +38,24 @@ async function main() {
   logger.info('SOLIS pipeline starting');
 
   try {
+    // === Phase 0: Repo discovery (optional) ===
+    let repos: string[];
+    if (env.ENABLE_REPO_DISCOVERY) {
+      try {
+        logger.info({ phase: 'discovery' }, 'Phase 0: Discovering repos...');
+        const { allRepos, discoveredCount } = await discoverRepos(env.DISCOVERY_MIN_STARS);
+        repos = allRepos.map(r => r.repo);
+        logger.info({ discoveredCount, totalRepos: repos.length }, 'Discovery merged with curated list');
+      } catch (err) {
+        logger.warn({ error: err instanceof Error ? err.message : err }, 'Discovery failed — falling back to curated list');
+        repos = getAllRepoNames();
+      }
+    } else {
+      repos = getAllRepoNames();
+    }
+
     // === Phase 1: Collect signals from all 3 layers ===
     logger.info({ phase: 'collect' }, 'Phase 1: Collecting signals...');
-
-    const repos = getAllRepoNames();
     logger.info({ repoCount: repos.length }, 'Tracking repos');
 
     const [githubResult, defiLlamaResult, heliusResult, coingeckoResult] = await Promise.allSettled([
