@@ -1,6 +1,6 @@
 # SOLIS Roadmap
 
-## v0.1 — Foundation
+## v0.1 — Foundation (Complete)
 
 - [x] Monorepo setup (pnpm workspaces)
 - [x] Shared types contract
@@ -24,17 +24,32 @@
 - [x] Configure repository secrets
 - [x] First dry run: validate pipeline end-to-end
 - [x] First real report generated (2026-02-12)
-- [ ] Deploy website to VPS (solis.rectorspace.com)
+- [x] Deploy website to VPS (solis.rectorspace.com)
+- [x] Docker + GHCR CI/CD pipeline (auto-deploy on push to main)
+- [x] Daily report generation via GitHub Actions cron (08:00 UTC)
+- [x] Layer 0: X/Twitter KOL timeline signal collection
+- [x] Layer 0: LunarCrush social signal collection
+- [x] Narrative history tracking (fuzzy matching, stage transitions, report diffing)
+- [x] Post-pipeline alerting (Telegram/Discord notifications)
+- [x] Pipeline error resilience (retry logic, graceful degradation)
+- [x] Dynamic repo discovery via GitHub Search API
+- [x] x402 micropayment middleware (opt-in paid tier bypass)
+- [x] Report comparison page (/compare)
+- [x] Narrative timeline page (/narrative/[slug]/timeline)
+- [x] Full-text search modal (Cmd+K)
+- [x] CSV/JSON export
+- [x] Homepage revamp: 7-section glassmorphic landing page
+- [x] Report page revamp: 8-section intelligence dashboard (header, nav, metrics, diff, stage-grouped narratives, filtered ideas, source cards)
 - [ ] Manual quality review of first 2-3 reports
 - [ ] Expand curated repo list to 100+
 
 ## v0.3 — Monetization
 
-- [ ] x402 middleware integration on API routes
 - [ ] Historical reports API (x402-gated)
 - [ ] Signals API (x402-gated)
 - [ ] Wallet setup (Base USDC + Solana USDC)
-- [ ] Payment flow testing
+- [ ] Payment flow end-to-end testing
+- [ ] Pricing page / documentation
 
 ## v0.4 — Quality Improvements
 
@@ -42,22 +57,19 @@
 - [ ] Historical data caching (Redis or filesystem)
 - [ ] Delta-only fetching (only changes since last run)
 - [ ] GitHub star history tracking (not just current count)
-- [ ] Narrative stage tracking across reports (stage transitions)
 - [ ] Confidence calibration against actual outcomes
 
 ## v0.5 — Advanced Features
 
 - [ ] Custom LLM query API (x402-gated, $0.05/call)
-- [ ] Email digest (fortnightly newsletter)
+- [ ] Email digest (daily newsletter)
 - [ ] RSS feed for reports
-- [ ] Telegram bot for narrative alerts
 - [ ] Interactive charts (D3 or Recharts)
-- [ ] Narrative comparison across reports (timeline view)
+- [ ] Brain page expansion (knowledge graph visualization)
 
 ## Future
 
 - [ ] Community-contributed repo tracking
 - [ ] Multi-chain expansion (Ethereum L2s, Sui)
-- [ ] Sentiment analysis layer (X/Twitter, Discord)
 - [ ] Prediction market integration (Polymarket)
 - [ ] API SDK for programmatic access
