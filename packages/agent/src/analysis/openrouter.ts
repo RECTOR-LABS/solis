@@ -128,7 +128,7 @@ export async function analyzeWithLLM(
 }
 
 /**
- * Parse JSON from LLM response, handling markdown code fences.
+ * Parse JSON from LLM response, handling markdown code fences and trailing commentary.
  */
 export function parseLLMJson<T>(content: string): T {
   // Strip markdown code fences if present
@@ -143,10 +143,31 @@ export function parseLLMJson<T>(content: string): T {
   }
   cleaned = cleaned.trim();
 
+  // First try: direct parse
   try {
     return JSON.parse(cleaned) as T;
   } catch {
-    const preview = cleaned.slice(0, 200);
-    throw new Error(`Failed to parse LLM JSON response (first 200 chars): ${preview}`);
+    // LLMs sometimes append commentary after JSON — find the top-level closing brace
+    const start = cleaned.indexOf('{');
+    if (start !== -1) {
+      let depth = 0;
+      let inString = false;
+      let escaped = false;
+      for (let i = start; i < cleaned.length; i++) {
+        const ch = cleaned[i];
+        if (escaped) { escaped = false; continue; }
+        if (ch === '\\' && inString) { escaped = true; continue; }
+        if (ch === '"') { inString = !inString; continue; }
+        if (inString) continue;
+        if (ch === '{') depth++;
+        if (ch === '}') { depth--; if (depth === 0) {
+          try { return JSON.parse(cleaned.slice(start, i + 1)) as T; } catch { break; }
+        }}
+      }
+    }
+
+    const head = cleaned.slice(0, 200);
+    const tail = cleaned.slice(-200);
+    throw new Error(`Failed to parse LLM JSON (len=${cleaned.length}): head=${head} | tail=${tail}`);
   }
 }

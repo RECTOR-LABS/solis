@@ -2,7 +2,7 @@ import { env } from '../config.js';
 import { logger } from '../logger.js';
 import type { XTopicSignal, XSignals } from '@solis/shared';
 
-const X_API = 'https://api.twitter.com/2';
+const X_API = 'https://api.x.com/2';
 
 interface XTweet {
   id: string;
@@ -59,7 +59,8 @@ async function xFetch<T>(path: string, params: Record<string, string> = {}): Pro
     }
 
     if (!res.ok) {
-      logger.warn({ path, status: res.status, latency: Date.now() - start }, 'X API error');
+      const body = await res.text().catch(() => '');
+      logger.warn({ path, status: res.status, body: body.slice(0, 200), latency: Date.now() - start }, 'X API error');
       return null;
     }
 
@@ -114,10 +115,14 @@ export async function collectX(
   // Period bounds
   const now = new Date();
   const periodStart = new Date();
-  periodStart.setDate(now.getDate() - Math.min(periodDays, 7)); // X recent search limited to 7 days
+  // X recent search limited to 7 days; add 30s buffer to avoid boundary errors
+  periodStart.setDate(now.getDate() - Math.min(periodDays, 7));
+  periodStart.setTime(periodStart.getTime() + 30_000);
 
   const startTime = periodStart.toISOString();
-  const endTime = now.toISOString();
+  // X API requires end_time to be at least 10 seconds before request time
+  const safeEnd = new Date(now.getTime() - 15_000);
+  const endTime = safeEnd.toISOString();
 
   // Accumulate topics across all queries
   const topicMap = new Map<string, TopicAccumulator>();
