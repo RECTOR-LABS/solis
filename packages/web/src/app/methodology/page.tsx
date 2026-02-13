@@ -22,7 +22,7 @@ export default function MethodologyPage() {
               <li>- Social interactions and engagement volume (LunarCrush)</li>
               <li>- Sentiment scores (bullish/bearish ratio)</li>
               <li>- Galaxy score and social dominance</li>
-              <li>- X/Twitter tweet volume, engagement, and verified author activity</li>
+              <li>- X/Twitter KOL timeline signals (Mert, Toly, Akshay, Messari, a16z, Solana Devs)</li>
               <li>- Topic extraction via cashtag and protocol name matching</li>
             </ul>
           </div>
@@ -176,8 +176,8 @@ export default function MethodologyPage() {
               </tr>
               <tr>
                 <td className="p-3">X/Twitter</td>
-                <td className="p-3 text-sol-muted">Pay-as-you-go (opt-in)</td>
-                <td className="p-3 text-sol-muted">450 req/15min</td>
+                <td className="p-3 text-sol-muted">Pay-as-you-go (opt-in) — KOL timeline tracking</td>
+                <td className="p-3 text-sol-muted">Per-user rate limits</td>
               </tr>
             </tbody>
           </table>

@@ -95,7 +95,7 @@ async function main() {
     if (env.ENABLE_X_SIGNALS) {
       const { collectX } = await import('./tools/twitter.js');
       xCollectorIndex = collectors.length;
-      collectors.push(collectX(periodDays, repos));
+      collectors.push(collectX(periodDays));
     }
 
     const results = await Promise.allSettled(collectors);

@@ -163,17 +163,17 @@ export const env = cleanEnv(process.env, {
     default: 1000,
     desc: 'Delay between X API requests (ms)',
   }),
-  X_MAX_PAGES: num({
-    default: 2,
-    desc: 'Max pages per search query (100 tweets/page)',
+  X_KOL_HANDLES: str({
+    default: 'mert,toly,akshaybd,MessariCrypto,a16zcrypto,solana_devs',
+    desc: 'Comma-separated X/Twitter KOL handles to track',
+  }),
+  X_TWEETS_PER_KOL: num({
+    default: 10,
+    desc: 'Number of recent tweets to fetch per KOL (5-100)',
   }),
   LLM_TOP_X_TOPICS: num({
     default: 20,
     desc: 'Max X topics sent to LLM for clustering',
-  }),
-  X_SEARCH_QUERIES: str({
-    default: '(solana OR $SOL) -is:retweet lang:en',
-    desc: 'Comma-separated X search queries',
   }),
 
   // Repo discovery — opt-in dynamic GitHub Search

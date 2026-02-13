@@ -4,6 +4,28 @@ import type { XTopicSignal, XSignals } from '@solis/shared';
 
 const X_API = 'https://api.x.com/2';
 
+// Solana ecosystem protocol names that KOLs reference in tweets
+const SOLANA_PROTOCOL_NAMES = [
+  'Jupiter', 'Raydium', 'Orca', 'Drift', 'Jito', 'Marinade',
+  'Pyth', 'Switchboard', 'Metaplex', 'Tensor', 'Phantom',
+  'Solflare', 'Helius', 'Wormhole', 'LayerZero', 'Helium',
+  'Hivemapper', 'Nosana', 'MagicBlock', 'Dialect', 'Bonfida',
+  'Kamino', 'Sanctum', 'MarginFi', 'Solend', 'Phoenix',
+  'OpenBook', 'Firedancer', 'Anchor', 'Squads', 'Backpack',
+  'DeBridge', 'Tiplink', 'Clockwork', 'Neon EVM',
+  'Solana', 'Saga', 'Seeker', 'Blinks', 'Actions',
+];
+
+// Known Solana token tickers — filters out non-Solana cashtag noise ($BTC, $ETH, etc.)
+const SOLANA_TOKENS = new Set([
+  'SOL', 'JUP', 'RAY', 'BONK', 'JTO', 'PYTH', 'HNT', 'RNDR',
+  'ORCA', 'MNDE', 'MSOL', 'JSOL', 'BSOL', 'INF',
+  'WIF', 'POPCAT', 'MEW', 'PENGU',
+  'W', 'JLP', 'KMNO', 'DRIFT',
+  'MOBILE', 'IOT', 'RENDER', 'SAMO',
+  'FIDA', 'SHDW', 'BLZE', 'STEP',
+]);
+
 interface XTweet {
   id: string;
   text: string;
@@ -23,9 +45,12 @@ interface XUser {
   verified: boolean;
 }
 
-interface XSearchResponse {
+interface XUserLookupResponse {
+  data?: XUser[];
+}
+
+interface XTimelineResponse {
   data?: XTweet[];
-  includes?: { users?: XUser[] };
   meta?: {
     next_token?: string;
     result_count: number;
@@ -71,15 +96,18 @@ async function xFetch<T>(path: string, params: Record<string, string> = {}): Pro
   }
 }
 
-// Extract topics from tweet text: $TICKER cashtags + known protocol names
+// Extract topics from tweet text: $TICKER cashtags (Solana only) + known protocol names
 const CASHTAG_RE = /\$([A-Z]{2,10})\b/g;
 
 function extractTopics(text: string, knownNames: Set<string>): string[] {
   const topics = new Set<string>();
 
-  // Extract $CASHTAG mentions
+  // Extract $CASHTAG mentions — only keep Solana ecosystem tokens
   for (const match of text.matchAll(CASHTAG_RE)) {
-    topics.add(match[1].toUpperCase());
+    const ticker = match[1].toUpperCase();
+    if (SOLANA_TOKENS.has(ticker)) {
+      topics.add(ticker);
+    }
   }
 
   // Match known protocol/project names (case-insensitive)
@@ -101,104 +129,107 @@ interface TopicAccumulator {
   topTweets: { text: string; engagement: number; author: string }[];
 }
 
+function emptyResult(): XSignals {
+  const now = new Date();
+  const start = new Date();
+  start.setDate(now.getDate() - 7);
+  return {
+    period: { start: start.toISOString(), end: now.toISOString() },
+    topics: [],
+    anomalies: [],
+    topByEngagement: [],
+    totalTweetsAnalyzed: 0,
+  };
+}
+
 export async function collectX(
   periodDays: number,
   knownProtocols: string[] = [],
 ): Promise<XSignals> {
   const log = logger.child({ tool: 'x-twitter' });
-  log.info({ periodDays }, 'Collecting X/Twitter signals');
 
-  const queries = env.X_SEARCH_QUERIES.split(',').map(q => q.trim()).filter(Boolean);
-  const maxPages = env.X_MAX_PAGES;
-  const knownNames = new Set(knownProtocols);
+  const handles = env.X_KOL_HANDLES.split(',').map(h => h.trim()).filter(Boolean);
+  const tweetsPerKol = env.X_TWEETS_PER_KOL;
+  const knownNames = new Set([...SOLANA_PROTOCOL_NAMES, ...knownProtocols]);
 
-  // Period bounds
-  const now = new Date();
-  const periodStart = new Date();
-  // X recent search limited to 7 days; add 30s buffer to avoid boundary errors
-  periodStart.setDate(now.getDate() - Math.min(periodDays, 7));
-  periodStart.setTime(periodStart.getTime() + 30_000);
+  log.info({ kols: handles.length, tweetsPerKol, periodDays }, 'Collecting X/Twitter KOL signals');
 
-  const startTime = periodStart.toISOString();
-  // X API requires end_time to be at least 10 seconds before request time
-  const safeEnd = new Date(now.getTime() - 15_000);
-  const endTime = safeEnd.toISOString();
+  // Step 1: Resolve usernames → user IDs
+  const userLookup = await xFetch<XUserLookupResponse>('/users/by', {
+    usernames: handles.join(','),
+    'user.fields': 'username,verified',
+  });
 
-  // Accumulate topics across all queries
+  if (!userLookup?.data || userLookup.data.length === 0) {
+    log.warn('Failed to look up KOL user IDs — returning empty signals');
+    return emptyResult();
+  }
+
+  const kolUsers = userLookup.data;
+  log.info({
+    resolved: kolUsers.map(u => u.username),
+    requested: handles.length,
+  }, 'KOL users resolved');
+
+  // Step 2: Fetch timeline for each KOL
   const topicMap = new Map<string, TopicAccumulator>();
   let totalTweetsAnalyzed = 0;
+  const now = new Date();
+  const periodStart = new Date();
+  periodStart.setDate(now.getDate() - Math.min(periodDays, 7));
 
-  for (const query of queries) {
-    let nextToken: string | undefined;
-    let pagesProcessed = 0;
+  for (const user of kolUsers) {
+    await new Promise(resolve => setTimeout(resolve, env.X_THROTTLE_MS));
 
-    while (pagesProcessed < maxPages) {
-      await new Promise(resolve => setTimeout(resolve, env.X_THROTTLE_MS));
+    const params: Record<string, string> = {
+      max_results: String(Math.max(5, Math.min(100, tweetsPerKol))),
+      'tweet.fields': 'public_metrics,created_at,author_id',
+      exclude: 'retweets,replies',
+      start_time: periodStart.toISOString(),
+      end_time: new Date(now.getTime() - 15_000).toISOString(),
+    };
 
-      const params: Record<string, string> = {
-        query,
-        max_results: '100',
-        'tweet.fields': 'public_metrics,created_at,author_id',
-        expansions: 'author_id',
-        'user.fields': 'username,verified',
-        start_time: startTime,
-        end_time: endTime,
-      };
-      if (nextToken) params.next_token = nextToken;
+    const timeline = await xFetch<XTimelineResponse>(`/users/${user.id}/tweets`, params);
 
-      const response = await xFetch<XSearchResponse>('/tweets/search/recent', params);
-
-      if (!response?.data || response.data.length === 0) break;
-
-      // Build author lookup from includes
-      const userMap = new Map<string, XUser>();
-      if (response.includes?.users) {
-        for (const user of response.includes.users) {
-          userMap.set(user.id, user);
-        }
-      }
-
-      for (const tweet of response.data) {
-        totalTweetsAnalyzed++;
-        const topics = extractTopics(tweet.text, knownNames);
-        const metrics = tweet.public_metrics;
-        const engagement = metrics.like_count + metrics.retweet_count + metrics.quote_count;
-        const author = userMap.get(tweet.author_id);
-        const authorName = author?.username ?? 'unknown';
-
-        for (const topic of topics) {
-          let acc = topicMap.get(topic);
-          if (!acc) {
-            acc = {
-              tweetCount: 0,
-              totalEngagement: 0,
-              uniqueAuthors: new Set(),
-              verifiedAuthors: new Set(),
-              topTweets: [],
-            };
-            topicMap.set(topic, acc);
-          }
-
-          acc.tweetCount++;
-          acc.totalEngagement += engagement;
-          acc.uniqueAuthors.add(tweet.author_id);
-          if (author?.verified) acc.verifiedAuthors.add(tweet.author_id);
-
-          // Keep top 3 tweets by engagement
-          acc.topTweets.push({ text: tweet.text, engagement, author: authorName });
-          if (acc.topTweets.length > 3) {
-            acc.topTweets.sort((a, b) => b.engagement - a.engagement);
-            acc.topTweets.length = 3;
-          }
-        }
-      }
-
-      pagesProcessed++;
-      nextToken = response.meta?.next_token;
-      if (!nextToken) break;
+    if (!timeline?.data || timeline.data.length === 0) {
+      log.info({ username: user.username }, 'No tweets in period for KOL');
+      continue;
     }
 
-    log.info({ query: query.slice(0, 60), pagesProcessed }, 'Query batch complete');
+    for (const tweet of timeline.data) {
+      totalTweetsAnalyzed++;
+      const topics = extractTopics(tweet.text, knownNames);
+      const metrics = tweet.public_metrics;
+      const engagement = metrics.like_count + metrics.retweet_count + metrics.quote_count;
+
+      for (const topic of topics) {
+        let acc = topicMap.get(topic);
+        if (!acc) {
+          acc = {
+            tweetCount: 0,
+            totalEngagement: 0,
+            uniqueAuthors: new Set(),
+            verifiedAuthors: new Set(),
+            topTweets: [],
+          };
+          topicMap.set(topic, acc);
+        }
+
+        acc.tweetCount++;
+        acc.totalEngagement += engagement;
+        acc.uniqueAuthors.add(user.id);
+        if (user.verified) acc.verifiedAuthors.add(user.id);
+
+        // Keep top 3 tweets per topic by engagement
+        acc.topTweets.push({ text: tweet.text, engagement, author: user.username });
+        if (acc.topTweets.length > 3) {
+          acc.topTweets.sort((a, b) => b.engagement - a.engagement);
+          acc.topTweets.length = 3;
+        }
+      }
+    }
+
+    log.info({ username: user.username, tweets: timeline.data.length }, 'KOL timeline processed');
   }
 
   // Convert accumulator to XTopicSignal[]
@@ -224,7 +255,8 @@ export async function collectX(
     totalTweetsAnalyzed,
     topicsExtracted: topics.length,
     topByEngagement: topByEngagement.length,
-  }, 'X/Twitter collection complete');
+    kols: kolUsers.map(u => u.username),
+  }, 'X/Twitter KOL collection complete');
 
   return {
     period: { start: periodStart.toISOString(), end: now.toISOString() },

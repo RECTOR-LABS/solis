@@ -42,8 +42,8 @@ SOLIS fuses signals from four independent layers to detect narratives at differe
 ```
                     ┌─────────────────────────────┐
                     │  Layer 0 — SOCIAL (opt-in)   │
-                    │  LunarCrush + X/Twitter:      │
-                    │  sentiment, tweets, engage    │
+                    │  LunarCrush + X/Twitter KOL:  │
+                    │  sentiment, KOL signals       │
                     └──────────────┬──────────────┘
                                    │
 ┌──────────────────┐  ┌───────────────────────┐  ┌──────────────────┐
@@ -303,7 +303,8 @@ pnpm agent
 | `ENABLE_X_SIGNALS` | `false` | Enable X/Twitter Layer 0 collection |
 | `X_BEARER_TOKEN` | — | X API v2 Bearer token |
 | `X_THROTTLE_MS` | `1000` | Delay between X API requests |
-| `X_MAX_PAGES` | `2` | Max pages per search query (100/page) |
+| `X_KOL_HANDLES` | `mert,toly,akshaybd,MessariCrypto,a16zcrypto,solana_devs` | Comma-separated KOL handles to track |
+| `X_TWEETS_PER_KOL` | `10` | Max tweets per KOL timeline |
 | `LLM_TOP_X_TOPICS` | `20` | Max X topics sent to LLM |
 
 #### Repo Discovery
@@ -343,7 +344,7 @@ pnpm agent
 The pipeline runs as 9 sequential phases — TypeScript orchestration with no LLM needed for control flow:
 
 1. **Discovery** — Dynamic repo discovery via GitHub Search API (optional, `ENABLE_REPO_DISCOVERY`)
-2. **Collect** — Parallel signal collection from all layers (GitHub, DeFi Llama, Helius, CoinGecko, LunarCrush, X/Twitter)
+2. **Collect** — Parallel signal collection from all layers (GitHub, DeFi Llama, Helius, CoinGecko, LunarCrush, X/Twitter KOL timelines)
 3. **Deltas** — Calculate changes from previous report (star velocity, TVL delta, volume delta)
 4. **Score** — Z-score anomaly detection across all metrics (`|z| >= 2.0`)
 5. **Cluster** — LLM narrative clustering with previous report context for continuity
@@ -365,7 +366,7 @@ The pipeline runs as 9 sequential phases — TypeScript orchestration with no LL
 | [Helius](https://helius.dev) | Coincident | Program activity, transaction counts | API key (free) | 1M credits/mo |
 | [CoinGecko](https://www.coingecko.com/en/api) | Confirming | Prices, volumes, market caps, categories | Optional key | 30 req/min (free) |
 | [LunarCrush](https://lunarcrush.com/developers/api) | Social (opt-in) | Sentiment, interactions, galaxy score | API key | Configurable |
-| [X/Twitter API](https://developer.x.com/en/docs) | Social (opt-in) | Tweet volume, engagement, verified authors | Bearer token (pay-as-you-go) | 450 req/15min |
+| [X/Twitter API](https://developer.x.com/en/docs) | Social (opt-in) | KOL timeline signals (Mert, Toly, Akshay, Messari, a16z, Solana Devs) | Bearer token (pay-as-you-go) | 450 req/15min |
 
 ---
 

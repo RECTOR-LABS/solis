@@ -4,8 +4,8 @@ vi.mock('../../src/config.js', () => ({
   env: {
     X_BEARER_TOKEN: 'test-bearer-token',
     X_THROTTLE_MS: 0,
-    X_MAX_PAGES: 3,
-    X_SEARCH_QUERIES: '(solana OR $SOL) -is:retweet lang:en',
+    X_KOL_HANDLES: 'mert,toly,akshaybd',
+    X_TWEETS_PER_KOL: 10,
     LLM_TOP_X_TOPICS: 20,
     LOG_LEVEL: 'error',
     isDevelopment: false,
@@ -40,11 +40,20 @@ function makeTweet(id: string, text: string, authorId: string, likes = 10, retwe
   };
 }
 
-function makeUser(id: string, username: string, verified = false) {
-  return { id, username, verified };
+function makeUserLookupResponse(users: { id: string; username: string; verified?: boolean }[]) {
+  return {
+    data: users.map(u => ({ id: u.id, username: u.username, verified: u.verified ?? false })),
+  };
 }
 
-describe('X/Twitter collector', () => {
+function makeTimelineResponse(tweets: ReturnType<typeof makeTweet>[], nextToken?: string) {
+  return {
+    data: tweets.length > 0 ? tweets : undefined,
+    meta: { result_count: tweets.length, ...(nextToken ? { next_token: nextToken } : {}) },
+  };
+}
+
+describe('X/Twitter KOL collector', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.restoreAllMocks();
@@ -71,79 +80,126 @@ describe('X/Twitter collector', () => {
     expect(result.topics).toEqual([]);
     expect(result.anomalies).toEqual([]);
     expect(result.totalTweetsAnalyzed).toBe(0);
-    expect(result.period.start).toBeDefined();
-    expect(result.period.end).toBeDefined();
 
     vi.unstubAllGlobals();
   });
 
-  it('should extract topics from $CASHTAG mentions', async () => {
-    const mockResponse = {
-      data: [
-        makeTweet('1', 'Bullish on $SOL and $JUP ecosystem', 'u1', 50, 20, 5),
-        makeTweet('2', '$SOL is pumping, $RAY looking good too', 'u2', 30, 10, 3),
-        makeTweet('3', 'Building on $SOL with new tools', 'u3', 20, 5, 1),
-      ],
-      includes: {
-        users: [
-          makeUser('u1', 'trader1'),
-          makeUser('u2', 'trader2'),
-          makeUser('u3', 'dev1'),
-        ],
-      },
-      meta: { result_count: 3 },
-    };
+  it('should look up KOL user IDs then fetch timelines', async () => {
+    const userLookup = makeUserLookupResponse([
+      { id: 'u1', username: 'mert' },
+      { id: 'u2', username: 'toly' },
+      { id: 'u3', username: 'akshaybd' },
+    ]);
 
-    const mockFetch = vi.fn().mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(mockResponse),
-    });
+    const mertTimeline = makeTimelineResponse([
+      makeTweet('t1', 'Helius just shipped $SOL compression', 'u1', 100, 50, 10),
+    ]);
+    const tolyTimeline = makeTimelineResponse([
+      makeTweet('t2', '$JUP airdrop is live, Jupiter leading DeFi', 'u2', 200, 80, 20),
+    ]);
+    const akshayTimeline = makeTimelineResponse([
+      makeTweet('t3', 'Solana DePIN is accelerating with $HNT', 'u3', 50, 20, 5),
+    ]);
+
+    const mockFetch = vi.fn()
+      // User lookup
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(userLookup) })
+      // Timelines in order
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(mertTimeline) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(tolyTimeline) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(akshayTimeline) });
     vi.stubGlobal('fetch', mockFetch);
 
     const { collectX } = await import('../../src/tools/twitter.js');
     const result = await collectX(7);
 
-    // Should extract SOL, JUP, RAY as topics
+    // 4 API calls: 1 lookup + 3 timelines
+    expect(mockFetch).toHaveBeenCalledTimes(4);
+    expect(result.totalTweetsAnalyzed).toBe(3);
+
+    // First call should be user lookup
+    const lookupUrl = mockFetch.mock.calls[0][0];
+    expect(lookupUrl).toContain('/users/by');
+    expect(lookupUrl).toContain('usernames=mert%2Ctoly%2Cakshaybd');
+
+    // Second call should be timeline for user u1
+    const timelineUrl = mockFetch.mock.calls[1][0];
+    expect(timelineUrl).toContain('/users/u1/tweets');
+
+    vi.unstubAllGlobals();
+  });
+
+  it('should extract only Solana cashtags, filtering out non-Solana tokens', async () => {
+    const userLookup = makeUserLookupResponse([{ id: 'u1', username: 'mert' }]);
+    const timeline = makeTimelineResponse([
+      makeTweet('t1', '$SOL is outperforming $BTC and $ETH, bullish on $JUP', 'u1', 50, 20, 5),
+    ]);
+
+    const mockFetch = vi.fn()
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(userLookup) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(timeline) });
+    vi.stubGlobal('fetch', mockFetch);
+
+    const { collectX } = await import('../../src/tools/twitter.js');
+    const result = await collectX(7);
+
     const topicNames = result.topics.map(t => t.topic);
     expect(topicNames).toContain('SOL');
     expect(topicNames).toContain('JUP');
-    expect(topicNames).toContain('RAY');
-
-    // SOL should have highest tweet count (mentioned in all 3 tweets)
-    const sol = result.topics.find(t => t.topic === 'SOL')!;
-    expect(sol.tweetCount).toBe(3);
+    // Non-Solana tokens should be filtered out
+    expect(topicNames).not.toContain('BTC');
+    expect(topicNames).not.toContain('ETH');
 
     vi.unstubAllGlobals();
   });
 
-  it('should aggregate engagement per topic correctly', async () => {
-    const mockResponse = {
-      data: [
-        makeTweet('1', '$SOL to the moon', 'u1', 100, 50, 10), // engagement = 160
-        makeTweet('2', '$SOL is great', 'u2', 20, 10, 5),      // engagement = 35
-      ],
-      includes: {
-        users: [
-          makeUser('u1', 'whale'),
-          makeUser('u2', 'trader'),
-        ],
-      },
-      meta: { result_count: 2 },
-    };
+  it('should match known Solana protocol names from tweet text', async () => {
+    const userLookup = makeUserLookupResponse([{ id: 'u1', username: 'toly' }]);
+    const timeline = makeTimelineResponse([
+      makeTweet('t1', 'Jupiter is the best DEX on Solana right now', 'u1', 100, 40, 10),
+      makeTweet('t2', 'Firedancer going to change everything for Helius infra', 'u1', 80, 30, 8),
+    ]);
 
-    const mockFetch = vi.fn().mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(mockResponse),
-    });
+    const mockFetch = vi.fn()
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(userLookup) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(timeline) });
+    vi.stubGlobal('fetch', mockFetch);
+
+    const { collectX } = await import('../../src/tools/twitter.js');
+    const result = await collectX(7);
+
+    const topicNames = result.topics.map(t => t.topic);
+    expect(topicNames).toContain('Jupiter');
+    expect(topicNames).toContain('Solana');
+    expect(topicNames).toContain('Firedancer');
+    expect(topicNames).toContain('Helius');
+
+    vi.unstubAllGlobals();
+  });
+
+  it('should aggregate engagement per topic across KOLs', async () => {
+    const userLookup = makeUserLookupResponse([
+      { id: 'u1', username: 'mert' },
+      { id: 'u2', username: 'toly' },
+    ]);
+    const mertTimeline = makeTimelineResponse([
+      makeTweet('t1', '$SOL infra week', 'u1', 100, 50, 10), // engagement = 160
+    ]);
+    const tolyTimeline = makeTimelineResponse([
+      makeTweet('t2', '$SOL validator updates', 'u2', 200, 80, 20), // engagement = 300
+    ]);
+
+    const mockFetch = vi.fn()
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(userLookup) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(mertTimeline) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(tolyTimeline) });
     vi.stubGlobal('fetch', mockFetch);
 
     const { collectX } = await import('../../src/tools/twitter.js');
     const result = await collectX(7);
 
     const sol = result.topics.find(t => t.topic === 'SOL')!;
-    expect(sol.totalEngagement).toBe(195); // 160 + 35
+    expect(sol.totalEngagement).toBe(460); // 160 + 300
     expect(sol.uniqueAuthors).toBe(2);
     expect(sol.tweetCount).toBe(2);
 
@@ -151,101 +207,63 @@ describe('X/Twitter collector', () => {
   });
 
   it('should track verified authors', async () => {
-    const mockResponse = {
-      data: [
-        makeTweet('1', '$SOL is amazing', 'u1', 50, 20, 5),
-        makeTweet('2', '$SOL keeps building', 'u2', 30, 10, 3),
-        makeTweet('3', '$SOL new ATH?', 'u3', 10, 5, 1),
-      ],
-      includes: {
-        users: [
-          makeUser('u1', 'verified_trader', true),
-          makeUser('u2', 'verified_analyst', true),
-          makeUser('u3', 'regular_user', false),
-        ],
-      },
-      meta: { result_count: 3 },
-    };
-
-    const mockFetch = vi.fn().mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(mockResponse),
-    });
-    vi.stubGlobal('fetch', mockFetch);
-
-    const { collectX } = await import('../../src/tools/twitter.js');
-    const result = await collectX(7);
-
-    const sol = result.topics.find(t => t.topic === 'SOL')!;
-    expect(sol.verifiedAuthors).toBe(2);
-    expect(sol.uniqueAuthors).toBe(3);
-
-    vi.unstubAllGlobals();
-  });
-
-  it('should handle pagination with next_token', async () => {
-    const page1 = {
-      data: [makeTweet('1', '$SOL page 1', 'u1')],
-      includes: { users: [makeUser('u1', 'user1')] },
-      meta: { result_count: 1, next_token: 'page2token' },
-    };
-    const page2 = {
-      data: [makeTweet('2', '$SOL page 2', 'u2')],
-      includes: { users: [makeUser('u2', 'user2')] },
-      meta: { result_count: 1 },
-    };
+    const userLookup = makeUserLookupResponse([
+      { id: 'u1', username: 'mert', verified: true },
+      { id: 'u2', username: 'random', verified: false },
+    ]);
+    const mertTimeline = makeTimelineResponse([
+      makeTweet('t1', '$SOL shipping', 'u1', 50, 20, 5),
+    ]);
+    const randomTimeline = makeTimelineResponse([
+      makeTweet('t2', '$SOL pumping', 'u2', 10, 5, 1),
+    ]);
 
     const mockFetch = vi.fn()
-      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(page1) })
-      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(page2) });
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(userLookup) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(mertTimeline) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(randomTimeline) });
     vi.stubGlobal('fetch', mockFetch);
 
     const { collectX } = await import('../../src/tools/twitter.js');
     const result = await collectX(7);
 
-    expect(result.totalTweetsAnalyzed).toBe(2);
     const sol = result.topics.find(t => t.topic === 'SOL')!;
-    expect(sol.tweetCount).toBe(2);
-    expect(mockFetch).toHaveBeenCalledTimes(2);
+    expect(sol.verifiedAuthors).toBe(1);
+    expect(sol.uniqueAuthors).toBe(2);
 
     vi.unstubAllGlobals();
   });
 
-  it('should handle 429 rate limit with retry', async () => {
-    const resetTime = String(Math.floor(Date.now() / 1000) - 10); // in the past → minimal wait
+  it('should handle 429 rate limit with retry on user lookup', async () => {
+    const resetTime = String(Math.floor(Date.now() / 1000) - 10);
     const rateLimitHeaders = new Headers({ 'x-rate-limit-reset': resetTime });
 
-    const successResponse = {
-      data: [makeTweet('1', '$SOL after retry', 'u1')],
-      includes: { users: [makeUser('u1', 'user1')] },
-      meta: { result_count: 1 },
-    };
+    const userLookup = makeUserLookupResponse([{ id: 'u1', username: 'mert' }]);
+    const timeline = makeTimelineResponse([
+      makeTweet('t1', '$SOL after retry', 'u1', 10, 5, 1),
+    ]);
 
     const mockFetch = vi.fn()
+      // User lookup: rate limited then success
       .mockResolvedValueOnce({ ok: false, status: 429, headers: rateLimitHeaders })
-      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(successResponse) });
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(userLookup) })
+      // Timeline
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(timeline) });
     vi.stubGlobal('fetch', mockFetch);
 
     const { collectX } = await import('../../src/tools/twitter.js');
     const result = await collectX(7);
 
     expect(result.totalTweetsAnalyzed).toBe(1);
-    expect(mockFetch).toHaveBeenCalledTimes(2);
 
     vi.unstubAllGlobals();
   });
 
-  it('should handle empty results gracefully', async () => {
-    const emptyResponse = {
-      data: undefined,
-      meta: { result_count: 0 },
-    };
-
+  it('should return empty signals when user lookup fails', async () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(emptyResponse),
+      json: () => Promise.resolve({ data: [] }),
     });
     vi.stubGlobal('fetch', mockFetch);
 
@@ -254,67 +272,47 @@ describe('X/Twitter collector', () => {
 
     expect(result.topics).toEqual([]);
     expect(result.totalTweetsAnalyzed).toBe(0);
-    expect(result.topByEngagement).toEqual([]);
 
     vi.unstubAllGlobals();
   });
 
-  it('should match known protocol names from knownProtocols list', async () => {
-    const mockResponse = {
-      data: [
-        makeTweet('1', 'Jupiter is the best DEX on Solana', 'u1', 50, 20, 5),
-        makeTweet('2', 'Raydium TVL is going up', 'u2', 30, 10, 3),
-      ],
-      includes: {
-        users: [
-          makeUser('u1', 'defi_user'),
-          makeUser('u2', 'yield_farmer'),
-        ],
-      },
-      meta: { result_count: 2 },
-    };
+  it('should handle KOL with empty timeline gracefully', async () => {
+    const userLookup = makeUserLookupResponse([
+      { id: 'u1', username: 'mert' },
+      { id: 'u2', username: 'toly' },
+    ]);
+    const mertTimeline = makeTimelineResponse([]); // empty
+    const tolyTimeline = makeTimelineResponse([
+      makeTweet('t1', '$SOL validator upgrades', 'u2', 50, 20, 5),
+    ]);
 
-    const mockFetch = vi.fn().mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(mockResponse),
-    });
+    const mockFetch = vi.fn()
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(userLookup) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(mertTimeline) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(tolyTimeline) });
     vi.stubGlobal('fetch', mockFetch);
 
     const { collectX } = await import('../../src/tools/twitter.js');
-    const result = await collectX(7, ['Jupiter', 'Raydium', 'Marinade']);
+    const result = await collectX(7);
 
-    const topicNames = result.topics.map(t => t.topic);
-    expect(topicNames).toContain('Jupiter');
-    expect(topicNames).toContain('Raydium');
-    // Marinade not mentioned → should not appear
-    expect(topicNames).not.toContain('Marinade');
+    expect(result.totalTweetsAnalyzed).toBe(1);
+    expect(result.topics.length).toBeGreaterThan(0);
 
     vi.unstubAllGlobals();
   });
 
   it('should keep top 3 tweets per topic by engagement', async () => {
-    const mockResponse = {
-      data: [
-        makeTweet('1', '$SOL tweet 1', 'u1', 10, 5, 1),   // engagement = 16
-        makeTweet('2', '$SOL tweet 2', 'u2', 100, 50, 10), // engagement = 160
-        makeTweet('3', '$SOL tweet 3', 'u3', 50, 20, 5),   // engagement = 75
-        makeTweet('4', '$SOL tweet 4', 'u4', 5, 2, 1),     // engagement = 8
-      ],
-      includes: {
-        users: [
-          makeUser('u1', 'a'), makeUser('u2', 'b'),
-          makeUser('u3', 'c'), makeUser('u4', 'd'),
-        ],
-      },
-      meta: { result_count: 4 },
-    };
+    const userLookup = makeUserLookupResponse([{ id: 'u1', username: 'mert' }]);
+    const timeline = makeTimelineResponse([
+      makeTweet('t1', '$SOL tweet 1', 'u1', 10, 5, 1),   // engagement = 16
+      makeTweet('t2', '$SOL tweet 2', 'u1', 100, 50, 10), // engagement = 160
+      makeTweet('t3', '$SOL tweet 3', 'u1', 50, 20, 5),   // engagement = 75
+      makeTweet('t4', '$SOL tweet 4', 'u1', 5, 2, 1),     // engagement = 8
+    ]);
 
-    const mockFetch = vi.fn().mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(mockResponse),
-    });
+    const mockFetch = vi.fn()
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(userLookup) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(timeline) });
     vi.stubGlobal('fetch', mockFetch);
 
     const { collectX } = await import('../../src/tools/twitter.js');
@@ -322,7 +320,6 @@ describe('X/Twitter collector', () => {
 
     const sol = result.topics.find(t => t.topic === 'SOL')!;
     expect(sol.topTweets.length).toBe(3);
-    // Top 3 by engagement should be: 160, 75, 16
     expect(sol.topTweets[0].engagement).toBe(160);
     expect(sol.topTweets[1].engagement).toBe(75);
     expect(sol.topTweets[2].engagement).toBe(16);
@@ -331,25 +328,16 @@ describe('X/Twitter collector', () => {
   });
 
   it('should sort topics by engagement descending', async () => {
-    const mockResponse = {
-      data: [
-        makeTweet('1', '$JUP looking great', 'u1', 10, 5, 1),   // JUP engagement = 16
-        makeTweet('2', '$SOL is king', 'u2', 100, 50, 10),       // SOL engagement = 160
-        makeTweet('3', '$RAY farming yields', 'u3', 30, 15, 5),  // RAY engagement = 50
-      ],
-      includes: {
-        users: [
-          makeUser('u1', 'a'), makeUser('u2', 'b'), makeUser('u3', 'c'),
-        ],
-      },
-      meta: { result_count: 3 },
-    };
+    const userLookup = makeUserLookupResponse([{ id: 'u1', username: 'mert' }]);
+    const timeline = makeTimelineResponse([
+      makeTweet('t1', '$JUP looking great', 'u1', 10, 5, 1),   // JUP engagement = 16
+      makeTweet('t2', '$SOL is king', 'u1', 100, 50, 10),       // SOL engagement = 160
+      makeTweet('t3', '$RAY farming yields', 'u1', 30, 15, 5),  // RAY engagement = 50
+    ]);
 
-    const mockFetch = vi.fn().mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(mockResponse),
-    });
+    const mockFetch = vi.fn()
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(userLookup) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(timeline) });
     vi.stubGlobal('fetch', mockFetch);
 
     const { collectX } = await import('../../src/tools/twitter.js');
@@ -358,6 +346,46 @@ describe('X/Twitter collector', () => {
     expect(result.topics[0].topic).toBe('SOL');
     expect(result.topics[1].topic).toBe('RAY');
     expect(result.topics[2].topic).toBe('JUP');
+
+    vi.unstubAllGlobals();
+  });
+
+  it('should accept additional knownProtocols for topic matching', async () => {
+    const userLookup = makeUserLookupResponse([{ id: 'u1', username: 'mert' }]);
+    const timeline = makeTimelineResponse([
+      makeTweet('t1', 'MyNewProtocol is building something cool on Solana', 'u1', 50, 20, 5),
+    ]);
+
+    const mockFetch = vi.fn()
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(userLookup) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(timeline) });
+    vi.stubGlobal('fetch', mockFetch);
+
+    const { collectX } = await import('../../src/tools/twitter.js');
+    const result = await collectX(7, ['MyNewProtocol']);
+
+    const topicNames = result.topics.map(t => t.topic);
+    expect(topicNames).toContain('MyNewProtocol');
+    expect(topicNames).toContain('Solana');
+
+    vi.unstubAllGlobals();
+  });
+
+  it('should use exclude=retweets,replies for timeline requests', async () => {
+    const userLookup = makeUserLookupResponse([{ id: 'u1', username: 'mert' }]);
+    const timeline = makeTimelineResponse([]);
+
+    const mockFetch = vi.fn()
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(userLookup) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(timeline) });
+    vi.stubGlobal('fetch', mockFetch);
+
+    const { collectX } = await import('../../src/tools/twitter.js');
+    await collectX(7);
+
+    // Timeline call should include exclude param
+    const timelineUrl = mockFetch.mock.calls[1][0];
+    expect(timelineUrl).toContain('exclude=retweets%2Creplies');
 
     vi.unstubAllGlobals();
   });
