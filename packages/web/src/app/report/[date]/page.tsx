@@ -1,10 +1,13 @@
 import { notFound } from 'next/navigation';
 import { getReport, getReportDates } from '@/lib/reports';
-import { NarrativeCard } from '@/components/narrative-card';
-import { BuildIdeaCard } from '@/components/build-ideas';
-import { ReportTimestamp } from '@/components/report-timestamp';
-import { ExportButtons } from '@/components/export-buttons';
-import { extractEvidence } from '@/lib/evidence';
+import type { SignalStage } from '@solis/shared';
+import { ReportHeader } from '@/components/report-header';
+import { ReportNav } from '@/components/report-nav';
+import { ReportMetrics } from '@/components/report-metrics';
+import { ReportDiff } from '@/components/report-diff';
+import { NarrativeStageGroup } from '@/components/narrative-stage-group';
+import { BuildIdeasFilter } from '@/components/build-ideas-filter';
+import { DataSourcesCard } from '@/components/data-sources-card';
 
 export const revalidate = 3600;
 
@@ -13,96 +16,76 @@ export async function generateStaticParams() {
   return dates.map(date => ({ date }));
 }
 
+const stageOrder: SignalStage[] = ['EARLY', 'EMERGING', 'GROWING', 'MAINSTREAM'];
+
 export default async function ReportPage({ params }: { params: Promise<{ date: string }> }) {
   const { date } = await params;
   const report = await getReport(date);
 
   if (!report) notFound();
 
+  // Prev/next navigation
+  const dates = await getReportDates();
+  const idx = dates.indexOf(date);
+  const prevDate = idx < dates.length - 1 ? dates[idx + 1] : null;
+  const nextDate = idx > 0 ? dates[idx - 1] : null;
+
+  // Group narratives by stage
+  const narrativesByStage = stageOrder.map(stage => ({
+    stage,
+    narratives: report.narratives.filter(n => n.stage === stage),
+  }));
+
+  // Determine if diff has meaningful content
+  const hasDiff = !!(report.diff && (
+    report.diff.stageTransitions.length > 0 ||
+    report.diff.newNarratives.length > 0 ||
+    report.diff.removedNarratives.length > 0 ||
+    report.diff.confidenceChanges.some(c => Math.abs(c.delta) >= 10)
+  ));
+
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold mb-1">SOLIS Report</h1>
-          <p className="text-sol-muted text-sm">
-            {new Date(report.period.start).toLocaleDateString()} — {new Date(report.period.end).toLocaleDateString()}
-          </p>
-          <ReportTimestamp generatedAt={report.generatedAt} />
-        </div>
-        <div className="flex items-center gap-4">
-          <ExportButtons report={report} date={date} />
-          <a href="/archive" className="text-sol-muted hover:text-white text-sm transition-colors">
-            View all reports
-          </a>
-        </div>
-      </div>
+    <div className="space-y-6">
+      <ReportHeader
+        date={date}
+        period={report.period}
+        generatedAt={report.generatedAt}
+        report={report}
+        prevDate={prevDate}
+        nextDate={nextDate}
+      />
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="border border-sol-border rounded-lg p-4 bg-sol-card text-center">
-          <div className="text-2xl font-bold text-sol-purple">{report.meta.narrativesIdentified}</div>
-          <div className="text-xs text-sol-muted">Narratives</div>
-        </div>
-        <div className="border border-sol-border rounded-lg p-4 bg-sol-card text-center">
-          <div className="text-2xl font-bold text-sol-green">{report.meta.anomaliesDetected}</div>
-          <div className="text-xs text-sol-muted">Anomalies</div>
-        </div>
-        <div className="border border-sol-border rounded-lg p-4 bg-sol-card text-center">
-          <div className="text-2xl font-bold text-sol-blue">{report.meta.totalReposAnalyzed}</div>
-          <div className="text-xs text-sol-muted">Repos</div>
-        </div>
-        <div className="border border-sol-border rounded-lg p-4 bg-sol-card text-center">
-          <div className="text-2xl font-bold text-sol-orange">{report.meta.buildIdeasGenerated}</div>
-          <div className="text-xs text-sol-muted">Ideas</div>
-        </div>
-      </div>
+      <ReportNav hasDiff={hasDiff} />
 
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Narratives</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {report.narratives.map(narrative => (
-            <NarrativeCard
-              key={narrative.id}
-              narrative={narrative}
-              evidence={extractEvidence(narrative, report.signals)}
-            />
-          ))}
-        </div>
+      <section id="summary">
+        <ReportMetrics meta={report.meta} />
       </section>
 
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Build Ideas</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {report.buildIdeas.map(idea => (
-            <BuildIdeaCard key={idea.id} idea={idea} />
-          ))}
-        </div>
+      {hasDiff && (
+        <section id="changes">
+          <ReportDiff diff={report.diff} />
+        </section>
+      )}
+
+      <section id="narratives" className="space-y-6">
+        <h2 className="text-xl font-semibold">Narratives</h2>
+        {narrativesByStage.map(({ stage, narratives }) => (
+          <NarrativeStageGroup
+            key={stage}
+            stage={stage}
+            narratives={narratives}
+            signals={report.signals}
+          />
+        ))}
       </section>
 
-      <section className="border border-sol-border rounded-lg p-6 bg-sol-card">
-        <h2 className="text-lg font-semibold mb-4">Data Sources</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-sol-border text-sol-muted text-left">
-                <th className="pb-2">Source</th>
-                <th className="pb-2">Layer</th>
-                <th className="pb-2 text-right">Data Points</th>
-              </tr>
-            </thead>
-            <tbody>
-              {report.sources.map(source => (
-                <tr key={source.name} className="border-b border-sol-border/50">
-                  <td className="py-2 text-white">{source.name}</td>
-                  <td className="py-2 text-sol-muted">{source.layer}</td>
-                  <td className="py-2 text-right font-mono">{source.dataPoints}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div className="mt-4 text-xs text-sol-muted">
-          LLM: {report.meta.llmModel} | Cost: ${report.meta.llmCostUsd.toFixed(4)} | Duration: {(report.meta.pipelineDurationMs / 1000).toFixed(1)}s
-        </div>
+      <section id="ideas" className="space-y-4">
+        <h2 className="text-xl font-semibold">Build Ideas</h2>
+        <BuildIdeasFilter ideas={report.buildIdeas} />
+      </section>
+
+      <section id="sources">
+        <DataSourcesCard sources={report.sources} meta={report.meta} />
       </section>
     </div>
   );
