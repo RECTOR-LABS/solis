@@ -28,7 +28,7 @@ Solana Onchain & Landscape Intelligence Signal. Detects emerging Solana ecosyste
 9. **Alerts** — send notifications via configured channel
 
 ## 4-Layer Signal Detection
-- Layer 0 (SOCIAL, opt-in): LunarCrush v4 — interactions, sentiment, galaxy score, social dominance
+- Layer 0 (SOCIAL, opt-in): LunarCrush v4 — interactions, sentiment, galaxy score, social dominance; X/Twitter v2 — tweet volume, engagement, verified authors
 - Layer 1 (LEADING): GitHub API — stars, commits, forks, new repos
 - Layer 2 (COINCIDENT): DeFi Llama + Helius — TVL, volumes, program activity
 - Layer 3 (CONFIRMING): CoinGecko — prices, volumes, categories
@@ -61,6 +61,12 @@ Optional config (all have sensible defaults in `config.ts`):
 - `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` — Telegram bot config
 - `DISCORD_WEBHOOK_URL` — Discord webhook config
 - `ALERT_ANOMALY_THRESHOLD` (3.0) — z-score threshold for anomaly spike alerts
+- `ENABLE_X_SIGNALS` (false) — enable X/Twitter signal collection via X API v2
+- `X_BEARER_TOKEN` — X API v2 Bearer token (required when X signals enabled)
+- `X_THROTTLE_MS` (1000) — delay between X API requests
+- `X_MAX_PAGES` (5) — max pages per search query (100 tweets/page)
+- `LLM_TOP_X_TOPICS` (20) — max X topics sent to LLM for clustering
+- `X_SEARCH_QUERIES` — comma-separated X search queries (default: 3 Solana-focused queries)
 - `ENABLE_SOCIAL_SIGNALS` (false) — enable Layer 0 social signal collection via LunarCrush
 - `LUNARCRUSH_API_KEY` — LunarCrush v4 Bearer token (required when social signals enabled)
 - `LUNARCRUSH_THROTTLE_MS` (1000) — delay between LunarCrush API requests
@@ -82,8 +88,9 @@ Optional config (all have sensible defaults in `config.ts`):
 - **Cleanup**: Deploy workflow prunes old images aggressively (VPS at 78% disk)
 
 ## Key Files
-- `shared/src/types.ts` — Type contract between agent and web (Narrative, ReportDiff, FortnightlyReport, SocialSignals)
+- `shared/src/types.ts` — Type contract between agent and web (Narrative, ReportDiff, FortnightlyReport, SocialSignals, XSignals)
 - `packages/agent/src/tools/lunarcrush.ts` — LunarCrush v4 API collector (Layer 0 social signals)
+- `packages/agent/src/tools/twitter.ts` — X/Twitter v2 API collector (Layer 0 social signals)
 - `packages/agent/src/config.ts` — Environment validation (envalid, 20+ vars)
 - `packages/agent/src/index.ts` — Pipeline entry point (9 phases)
 - `packages/agent/src/utils/history.ts` — Narrative matching, history population, report diffing

@@ -13,16 +13,17 @@ export default function MethodologyPage() {
 
         <div className="space-y-3">
           <div className="border border-sol-border rounded-lg p-4 bg-sol-card">
-            <h3 className="font-semibold text-orange-400 mb-1">Layer 0: Social (LunarCrush, opt-in)</h3>
+            <h3 className="font-semibold text-orange-400 mb-1">Layer 0: Social (LunarCrush + X/Twitter, opt-in)</h3>
             <p className="text-sol-muted text-sm mb-2">
               Social sentiment and engagement signals. When community buzz precedes developer activity,
               it can signal early narrative formation.
             </p>
             <ul className="text-xs text-sol-muted space-y-1">
-              <li>- Social interactions and engagement volume</li>
+              <li>- Social interactions and engagement volume (LunarCrush)</li>
               <li>- Sentiment scores (bullish/bearish ratio)</li>
               <li>- Galaxy score and social dominance</li>
-              <li>- Alt rank changes</li>
+              <li>- X/Twitter tweet volume, engagement, and verified author activity</li>
+              <li>- Topic extraction via cashtag and protocol name matching</li>
             </ul>
           </div>
 
@@ -168,10 +169,15 @@ export default function MethodologyPage() {
                 <td className="p-3 text-sol-muted">Free (10K/mo)</td>
                 <td className="p-3 text-sol-muted">~330 calls/day</td>
               </tr>
-              <tr>
+              <tr className="border-b border-sol-border/50">
                 <td className="p-3">LunarCrush</td>
                 <td className="p-3 text-sol-muted">Free tier (opt-in)</td>
                 <td className="p-3 text-sol-muted">Configurable throttle</td>
+              </tr>
+              <tr>
+                <td className="p-3">X/Twitter</td>
+                <td className="p-3 text-sol-muted">Pay-as-you-go (opt-in)</td>
+                <td className="p-3 text-sol-muted">450 req/15min</td>
               </tr>
             </tbody>
           </table>
