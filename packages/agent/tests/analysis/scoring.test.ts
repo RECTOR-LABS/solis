@@ -272,6 +272,7 @@ describe('scoreSignals', () => {
     expect(result.summary.leadingAnomalies).toBe(result.leading.anomalies.length);
     expect(result.summary.totalAnomalies).toBe(
       result.summary.socialAnomalies +
+      result.summary.xAnomalies +
       result.summary.leadingAnomalies +
       result.summary.coincidentAnomalies +
       result.summary.confirmingAnomalies,
