@@ -6,7 +6,7 @@ Solana Onchain & Landscape Intelligence Signal. Detects emerging Solana ecosyste
 ## Architecture
 - **Monorepo**: pnpm workspaces — `packages/agent`, `packages/web`, `shared`
 - **Agent**: TypeScript pipeline orchestration, Claude Haiku 4.5 (via OpenRouter) for LLM analysis, GLM fallback chain
-- **Web**: Next.js 15 + Tailwind v4, static report rendering with temporal UX
+- **Web**: Next.js 15 + Tailwind v4, 7-section landing page (hero → pipeline → report → narratives → ideas → methodology → CTA) + report/archive/compare pages
 - **Reports**: Git-committed JSON/MD artifacts in `reports/`
 - **API Guard**: Route-level rate limiting (in-memory sliding window) + optional x402 micropayments for paid tier bypass
 
@@ -37,7 +37,7 @@ Solana Onchain & Landscape Intelligence Signal. Detects emerging Solana ecosyste
 ```bash
 pnpm dev          # Start web dev server (port 3001)
 pnpm agent        # Run analysis pipeline
-pnpm test:run     # Run all tests (~200 tests across agent + web)
+pnpm test:run     # Run all tests (~245 tests across agent + web)
 pnpm typecheck    # TypeScript check
 pnpm build        # Build all packages
 ```
@@ -96,13 +96,22 @@ Optional config (all have sensible defaults in `config.ts`):
 - `packages/agent/src/utils/history.ts` — Narrative matching, history population, report diffing
 - `packages/agent/src/output/alerts.ts` — Alert detection, formatting, Telegram/Discord dispatch
 - `packages/agent/src/output/markdown.ts` — Markdown report with "What Changed" diff section
+- `packages/web/src/app/page.tsx` — Homepage: 7-section landing page with container breakout strategy
+- `packages/web/src/components/hero-section.tsx` — Client: animated gradient, glassmorphic card, floating tags, live stats ticker
+- `packages/web/src/components/signal-pipeline.tsx` — Server: 4-step horizontal/vertical timeline with layer colors
+- `packages/web/src/components/report-summary-card.tsx` — Server: glassmorphic report stats card
+- `packages/web/src/components/featured-narratives.tsx` — Server: top 4 narratives by confidence
+- `packages/web/src/components/build-ideas-highlight.tsx` — Server: top 3 build ideas
+- `packages/web/src/components/methodology-trust.tsx` — Server: 2x2 trust/differentiator cards
+- `packages/web/src/components/open-source-cta.tsx` — Server: full-bleed GitHub CTA with trust badges
+- `packages/web/src/components/scroll-indicator.tsx` — Client: bouncing chevron, hides on scroll
 - `packages/web/src/lib/temporal.ts` — Date utilities (freshness, countdown, relative labels)
 - `packages/web/src/components/countdown-timer.tsx` — Live countdown to next 08:00 UTC report
 - `packages/web/src/components/report-timestamp.tsx` — Freshness-coded relative timestamps
 - `packages/web/src/lib/rate-limit.ts` — In-memory sliding window rate limiter
 - `packages/web/src/lib/x402.ts` — x402 payment protocol (402 responses, proof verification)
 - `packages/web/src/lib/api-guard.ts` — Composable guard combining rate limiting + x402
-- `packages/web/src/app/layout.tsx` — App shell
+- `packages/web/src/app/layout.tsx` — App shell (shared header/footer, max-w-6xl container)
 - `Dockerfile` — Multi-stage build (deps → build → standalone)
 - `docker-compose.yml` — Production container config (port 8001)
 
@@ -112,6 +121,8 @@ Optional config (all have sensible defaults in `config.ts`):
 - Tests: vitest, 80%+ coverage on agent/analysis
 - One commit per feature/fix
 - Client components use `mounted` state guard for SSR hydration safety
+- Full-bleed sections use `-mx-4 -mt-8` container breakout on page.tsx (avoids layout.tsx changes)
+- Tailwind v4 dynamic class safety: color-dependent classes use static config maps (not template literals)
 - Alert errors never crash the pipeline (graceful failure)
 - API routes use route-level `apiGuard()` — not Next.js middleware (routes use Node.js APIs)
 - x402 is fully opt-in — rate limiting is always-on, payment bypass requires `ENABLE_X402=true`

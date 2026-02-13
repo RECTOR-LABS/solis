@@ -245,7 +245,7 @@ pnpm agent
 |---------|-------------|
 | `pnpm agent` | Run the analysis pipeline |
 | `pnpm dev` | Start web dashboard (port 3001) |
-| `pnpm test:run` | Run all tests (~200 tests) |
+| `pnpm test:run` | Run all tests (~245 tests) |
 | `pnpm typecheck` | TypeScript strict mode check |
 | `pnpm build` | Build all packages |
 
@@ -304,7 +304,7 @@ pnpm agent
 | `X_BEARER_TOKEN` | — | X API v2 Bearer token |
 | `X_THROTTLE_MS` | `1000` | Delay between X API requests |
 | `X_KOL_HANDLES` | `mert,toly,akshaybd,MessariCrypto,a16zcrypto,solana_devs` | Comma-separated KOL handles to track |
-| `X_TWEETS_PER_KOL` | `10` | Max tweets per KOL timeline |
+| `X_TWEETS_PER_KOL` | `5` | Max tweets per KOL timeline |
 | `LLM_TOP_X_TOPICS` | `20` | Max X topics sent to LLM |
 
 #### Repo Discovery
@@ -382,11 +382,11 @@ solis/
 │   │   │   ├── repos/           # Curated repo list (64) + dynamic discovery
 │   │   │   ├── output/          # JSON + Markdown report writers, alerting
 │   │   │   └── utils/           # Narrative history, matching, diffing
-│   │   └── tests/               # 27 test files (~200 tests)
+│   │   └── tests/               # 20 test files (~156 tests)
 │   └── web/                # Next.js 15 dashboard
 │       └── src/
 │           ├── app/             # Pages (home, report, archive, compare, methodology)
-│           ├── components/      # Narrative card, stage badge, momentum gauge, countdown
+│           ├── components/      # Landing page sections, narrative card, stage badge, evidence panel
 │           └── lib/             # Report loading, rate limiting, x402, temporal utils
 ├── shared/                 # Shared type contract (Narrative, ReportDiff, SocialSignals)
 ├── reports/                # Git-committed report artifacts (JSON + MD)
