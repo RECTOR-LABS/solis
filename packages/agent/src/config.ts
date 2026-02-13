@@ -164,7 +164,7 @@ export const env = cleanEnv(process.env, {
     desc: 'Delay between X API requests (ms)',
   }),
   X_MAX_PAGES: num({
-    default: 5,
+    default: 2,
     desc: 'Max pages per search query (100 tweets/page)',
   }),
   LLM_TOP_X_TOPICS: num({
@@ -172,7 +172,7 @@ export const env = cleanEnv(process.env, {
     desc: 'Max X topics sent to LLM for clustering',
   }),
   X_SEARCH_QUERIES: str({
-    default: '(solana OR $SOL) -is:retweet lang:en,($JUP OR $RAY OR $BONK OR $JTO OR $PYTH OR $HNT OR $RNDR) -is:retweet,("solana defi" OR "solana nft" OR "solana gaming" OR "solana ai") -is:retweet lang:en',
+    default: '(solana OR $SOL) -is:retweet lang:en',
     desc: 'Comma-separated X search queries',
   }),
 

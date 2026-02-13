@@ -64,9 +64,9 @@ Optional config (all have sensible defaults in `config.ts`):
 - `ENABLE_X_SIGNALS` (false) — enable X/Twitter signal collection via X API v2
 - `X_BEARER_TOKEN` — X API v2 Bearer token (required when X signals enabled)
 - `X_THROTTLE_MS` (1000) — delay between X API requests
-- `X_MAX_PAGES` (5) — max pages per search query (100 tweets/page)
+- `X_MAX_PAGES` (2) — max pages per search query (100 tweets/page)
 - `LLM_TOP_X_TOPICS` (20) — max X topics sent to LLM for clustering
-- `X_SEARCH_QUERIES` — comma-separated X search queries (default: 3 Solana-focused queries)
+- `X_SEARCH_QUERIES` — X search query (default: broad Solana ecosystem query)
 - `ENABLE_SOCIAL_SIGNALS` (false) — enable Layer 0 social signal collection via LunarCrush
 - `LUNARCRUSH_API_KEY` — LunarCrush v4 Bearer token (required when social signals enabled)
 - `LUNARCRUSH_THROTTLE_MS` (1000) — delay between LunarCrush API requests

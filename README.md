@@ -303,7 +303,7 @@ pnpm agent
 | `ENABLE_X_SIGNALS` | `false` | Enable X/Twitter Layer 0 collection |
 | `X_BEARER_TOKEN` | — | X API v2 Bearer token |
 | `X_THROTTLE_MS` | `1000` | Delay between X API requests |
-| `X_MAX_PAGES` | `5` | Max pages per search query (100/page) |
+| `X_MAX_PAGES` | `2` | Max pages per search query (100/page) |
 | `LLM_TOP_X_TOPICS` | `20` | Max X topics sent to LLM |
 
 #### Repo Discovery
