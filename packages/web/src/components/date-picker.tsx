@@ -35,13 +35,13 @@ export function DatePicker({ dates }: { dates: string[] }) {
               className={`
                 border rounded-lg p-3 text-left transition-all cursor-pointer
                 ${isSelected
-                  ? 'border-sol-accent bg-sol-accent/10 ring-1 ring-sol-accent'
+                  ? 'border-sol-green bg-sol-green/10 ring-1 ring-sol-green'
                   : 'border-sol-border bg-sol-card hover:border-sol-muted'}
               `}
             >
               <span className="font-mono text-sm text-white">{date}</span>
               {order && (
-                <span className="ml-2 text-xs text-sol-accent font-medium">
+                <span className="ml-2 text-xs text-sol-green font-medium">
                   {order === 1 ? 'FROM' : 'TO'}
                 </span>
               )}
@@ -55,7 +55,7 @@ export function DatePicker({ dates }: { dates: string[] }) {
         className={`
           w-full sm:w-auto px-6 py-2.5 rounded-lg font-medium text-sm transition-all
           ${selected.length === 2
-            ? 'bg-sol-accent text-black hover:bg-sol-accent/90 cursor-pointer'
+            ? 'bg-sol-green text-black hover:bg-sol-green/90 cursor-pointer'
             : 'bg-sol-card text-sol-muted border border-sol-border cursor-not-allowed'}
         `}
       >
