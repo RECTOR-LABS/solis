@@ -1,6 +1,7 @@
 import { getReport, getReportDates } from '@/lib/reports';
 import { compareReports } from '@/lib/compare';
 import { ComparisonView } from '@/components/comparison-view';
+import { DatePicker } from '@/components/date-picker';
 
 export const revalidate = 3600;
 
@@ -32,17 +33,7 @@ export default async function ComparePage({
     return (
       <div className="space-y-6">
         <h1 className="text-2xl font-bold">Compare Reports</h1>
-        <p className="text-sol-muted text-sm">Select two reports to compare side by side.</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {allDates.map(date => (
-            <div key={date} className="border border-sol-border rounded-lg p-4 bg-sol-card">
-              <span className="font-mono text-white">{date}</span>
-            </div>
-          ))}
-        </div>
-        <p className="text-sol-muted text-xs">
-          Use the URL format: <code className="bg-sol-card px-1.5 py-0.5 rounded">/compare?dates=YYYY-MM-DD,YYYY-MM-DD</code>
-        </p>
+        <DatePicker dates={allDates} />
       </div>
     );
   }
