@@ -1,119 +1,73 @@
-import { getLatestReport } from '@/lib/reports';
-import { NarrativeCard } from '@/components/narrative-card';
-import { BuildIdeaCard } from '@/components/build-ideas';
-import { CountdownTimer } from '@/components/countdown-timer';
-import { ReportTimestamp } from '@/components/report-timestamp';
-import { extractEvidence } from '@/lib/evidence';
+import { getLatestReport, getReportDates } from '@/lib/reports';
+import { HeroSection } from '@/components/hero-section';
+import { ScrollIndicator } from '@/components/scroll-indicator';
+import { SignalPipeline } from '@/components/signal-pipeline';
+import { ReportSummaryCard } from '@/components/report-summary-card';
+import { FeaturedNarratives } from '@/components/featured-narratives';
+import { BuildIdeasHighlight } from '@/components/build-ideas-highlight';
+import { MethodologyTrust } from '@/components/methodology-trust';
+import { OpenSourceCTA } from '@/components/open-source-cta';
 
 export const revalidate = 3600;
 
 export default async function HomePage() {
   const report = await getLatestReport();
+  const dates = await getReportDates();
+  const reportDate = dates[0] ?? null;
 
   return (
-    <div className="space-y-8">
-      <section className="text-center py-12">
-        <h1 className="text-4xl font-bold mb-4">
-          <span className="bg-gradient-to-r from-sol-purple via-sol-blue to-sol-green bg-clip-text text-transparent">
-            Solana Narrative Intelligence
-          </span>
-        </h1>
-        <p className="text-sol-muted text-lg max-w-2xl mx-auto">
-          Daily reports detecting emerging Solana ecosystem narratives
-          through developer activity, onchain metrics, and market signals.
-        </p>
-        <div className="flex items-center justify-center gap-4 mt-4 text-sm">
-          {report && <ReportTimestamp generatedAt={report.generatedAt} />}
-          <span className="text-sol-border">|</span>
-          <CountdownTimer />
-        </div>
-      </section>
+    <div className="-mx-4 -mt-8 space-y-16">
+      {/* Section 1: Hero — full bleed */}
+      <HeroSection
+        narrativeCount={report?.meta.narrativesIdentified ?? 0}
+        anomalyCount={report?.meta.anomaliesDetected ?? 0}
+        reposTracked={report?.meta.totalReposAnalyzed ?? 0}
+        generatedAt={report?.generatedAt}
+        reportDate={reportDate ?? undefined}
+      />
+      <ScrollIndicator />
 
-      {!report ? (
-        <section className="border border-sol-border rounded-lg p-8 bg-sol-card text-center">
-          <p className="text-sol-muted">
-            First report generating soon. Check back after the next pipeline run.
-          </p>
-        </section>
-      ) : (
+      {/* Section 2: Signal Pipeline — contained */}
+      <SignalPipeline />
+
+      {report && reportDate ? (
         <>
-          <section className="border border-sol-border rounded-lg p-6 bg-sol-card">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <h2 className="text-xl font-semibold">Latest Report</h2>
-                <ReportTimestamp generatedAt={report.generatedAt} />
-              </div>
-              <span className="text-sol-muted text-sm">
-                {new Date(report.period.start).toLocaleDateString()} — {new Date(report.period.end).toLocaleDateString()}
-              </span>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-              <div>
-                <div className="text-2xl font-bold text-sol-purple">{report.meta.narrativesIdentified}</div>
-                <div className="text-xs text-sol-muted">Narratives</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-sol-green">{report.meta.anomaliesDetected}</div>
-                <div className="text-xs text-sol-muted">Anomalies</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-sol-blue">{report.meta.totalReposAnalyzed}</div>
-                <div className="text-xs text-sol-muted">Repos Tracked</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-sol-orange">{report.meta.buildIdeasGenerated}</div>
-                <div className="text-xs text-sol-muted">Build Ideas</div>
-              </div>
-            </div>
-          </section>
+          {/* Section 3: Report Summary — contained */}
+          <ReportSummaryCard
+            meta={report.meta}
+            period={report.period}
+            generatedAt={report.generatedAt}
+            reportDate={reportDate}
+          />
 
-          <section>
-            <h2 className="text-xl font-semibold mb-4">Detected Narratives</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {report.narratives.map(narrative => (
-                <NarrativeCard
-                  key={narrative.id}
-                  narrative={narrative}
-                  evidence={extractEvidence(narrative, report.signals)}
-                />
-              ))}
-            </div>
-          </section>
+          {/* Section 4: Featured Narratives — contained */}
+          <FeaturedNarratives
+            narratives={report.narratives}
+            signals={report.signals}
+            reportDate={reportDate}
+          />
 
-          <section>
-            <h2 className="text-xl font-semibold mb-4">Build Ideas</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {report.buildIdeas.map(idea => (
-                <BuildIdeaCard key={idea.id} idea={idea} />
-              ))}
-            </div>
-          </section>
+          {/* Section 5: Build Ideas — contained */}
+          <BuildIdeasHighlight
+            ideas={report.buildIdeas}
+            reportDate={reportDate}
+          />
         </>
+      ) : (
+        <section className="max-w-6xl mx-auto px-4">
+          <div className="border border-sol-border rounded-lg p-8 bg-sol-card text-center">
+            <p className="text-sol-muted">
+              First report generating soon. Check back after the next pipeline run.
+            </p>
+          </div>
+        </section>
       )}
 
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="border border-sol-border rounded-lg p-6 bg-sol-card">
-          <h3 className="text-sol-purple font-semibold mb-2">Leading Signals</h3>
-          <p className="text-sol-muted text-sm">
-            GitHub activity — star velocity, commit surges, new repo clusters.
-            2-4 weeks ahead of market.
-          </p>
-        </div>
-        <div className="border border-sol-border rounded-lg p-6 bg-sol-card">
-          <h3 className="text-sol-blue font-semibold mb-2">Coincident Signals</h3>
-          <p className="text-sol-muted text-sm">
-            Onchain data — TVL shifts, DEX volumes, program activity.
-            Real-time capital movement.
-          </p>
-        </div>
-        <div className="border border-sol-border rounded-lg p-6 bg-sol-card">
-          <h3 className="text-sol-green font-semibold mb-2">Confirming Signals</h3>
-          <p className="text-sol-muted text-sm">
-            Market data — token price/volume, category market caps.
-            Validation layer.
-          </p>
-        </div>
-      </section>
+      {/* Section 6: Methodology & Trust — contained */}
+      <MethodologyTrust />
+
+      {/* Section 7: Open Source CTA — full bleed */}
+      <OpenSourceCTA />
     </div>
   );
 }

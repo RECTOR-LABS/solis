@@ -15,6 +15,8 @@
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
   --animate-glow-pulse: glow-pulse 2s ease-in-out infinite;
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-gradient-shift: gradient-shift 8s ease infinite;
 }
 
 @keyframes glow-pulse {
@@ -24,4 +26,21 @@
   50% {
     box-shadow: 0 0 12px var(--color-sol-green);
   }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; background-size: 200% 200%; }
+  50% { background-position: 100% 50%; background-size: 200% 200%; }
+}
+
+.bg-grid-pattern {
+  background-image:
+    linear-gradient(var(--color-sol-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-sol-border) 1px, transparent 1px);
+  background-size: 60px 60px;
 }
