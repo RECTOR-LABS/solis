@@ -4,13 +4,28 @@ export default function MethodologyPage() {
       <h1 className="text-2xl font-bold">Methodology</h1>
 
       <section className="space-y-4">
-        <h2 className="text-lg font-semibold text-sol-purple">3-Layer Signal Architecture</h2>
+        <h2 className="text-lg font-semibold text-sol-purple">4-Layer Signal Architecture</h2>
         <p className="text-sol-muted">
-          SOLIS detects emerging Solana narratives by triangulating signals across three independent data layers,
+          SOLIS detects emerging Solana narratives by triangulating signals across four independent data layers,
           each with different lead times relative to market price action.
+          For a full visual deep-dive, see the <a href="/brain.html" className="text-sol-purple hover:underline">Brain Architecture</a> page.
         </p>
 
         <div className="space-y-3">
+          <div className="border border-sol-border rounded-lg p-4 bg-sol-card">
+            <h3 className="font-semibold text-orange-400 mb-1">Layer 0: Social (LunarCrush, opt-in)</h3>
+            <p className="text-sol-muted text-sm mb-2">
+              Social sentiment and engagement signals. When community buzz precedes developer activity,
+              it can signal early narrative formation.
+            </p>
+            <ul className="text-xs text-sol-muted space-y-1">
+              <li>- Social interactions and engagement volume</li>
+              <li>- Sentiment scores (bullish/bearish ratio)</li>
+              <li>- Galaxy score and social dominance</li>
+              <li>- Alt rank changes</li>
+            </ul>
+          </div>
+
           <div className="border border-sol-border rounded-lg p-4 bg-sol-card">
             <h3 className="font-semibold text-sol-purple mb-1">Layer 1: Leading (GitHub)</h3>
             <p className="text-sol-muted text-sm mb-2">
@@ -18,7 +33,7 @@ export default function MethodologyPage() {
               the market hasn&apos;t noticed yet.
             </p>
             <ul className="text-xs text-sol-muted space-y-1">
-              <li>- Star velocity on 200+ tracked Solana repos</li>
+              <li>- Star velocity on 64 curated Solana repos + dynamic discovery</li>
               <li>- Commit frequency surges (z-score &gt; 2.0)</li>
               <li>- New repo clusters by topic</li>
               <li>- Contributor count deltas</li>
@@ -102,22 +117,22 @@ export default function MethodologyPage() {
       </section>
 
       <section className="space-y-4">
-        <h2 className="text-lg font-semibold">Two-LLM Pattern</h2>
+        <h2 className="text-lg font-semibold">LLM Analysis</h2>
         <p className="text-sol-muted text-sm">
-          SOLIS uses two LLMs with different roles:
+          SOLIS uses exactly 2 LLM calls per report via pure TypeScript orchestration (no Agent SDK):
         </p>
         <ul className="text-sol-muted text-sm space-y-2">
           <li>
-            <span className="text-white font-medium">Claude (Agent SDK)</span> — Orchestrates the pipeline,
-            uses tools, handles errors. Runs the overall decision-making.
+            <span className="text-white font-medium">Claude Haiku 4.5 (via OpenRouter)</span> — Primary model for
+            narrative clustering and build idea generation. Temperature 0.3 with JSON schema enforcement.
           </li>
           <li>
-            <span className="text-white font-medium">GLM-4.7 (via OpenRouter)</span> — Handles bulk analysis:
-            narrative clustering, idea generation, signal summarization. 10x cheaper than Claude for text analysis.
+            <span className="text-white font-medium">GLM-4.7 → GLM-4.7-flash (fallback)</span> — Fallback chain
+            activated on 5xx errors. Cheaper but less capable.
           </li>
         </ul>
         <p className="text-sol-muted text-sm">
-          Total LLM cost per report: ~$2-5. Reports are generated daily.
+          Total LLM cost per report: ~$0.06. At daily cadence, ~$22/year.
         </p>
       </section>
 
@@ -148,10 +163,15 @@ export default function MethodologyPage() {
                 <td className="p-3 text-sol-muted">Free (1M credits/mo)</td>
                 <td className="p-3 text-sol-muted">~1M RPC calls/mo</td>
               </tr>
-              <tr>
+              <tr className="border-b border-sol-border/50">
                 <td className="p-3">CoinGecko</td>
                 <td className="p-3 text-sol-muted">Free (10K/mo)</td>
                 <td className="p-3 text-sol-muted">~330 calls/day</td>
+              </tr>
+              <tr>
+                <td className="p-3">LunarCrush</td>
+                <td className="p-3 text-sol-muted">Free tier (opt-in)</td>
+                <td className="p-3 text-sol-muted">Configurable throttle</td>
               </tr>
             </tbody>
           </table>
