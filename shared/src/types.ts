@@ -43,6 +43,29 @@ export interface SocialSignals {
   topBySentiment: SocialSignal[];
 }
 
+// --- Layer 0: X/Twitter ---
+
+export interface XTopicSignal {
+  topic: string;
+  tweetCount: number;
+  tweetCountDelta: number;
+  tweetCountZScore: number;
+  totalEngagement: number;
+  engagementDelta: number;
+  engagementZScore: number;
+  uniqueAuthors: number;
+  verifiedAuthors: number;
+  topTweets: { text: string; engagement: number; author: string }[];
+}
+
+export interface XSignals {
+  period: { start: string; end: string };
+  topics: XTopicSignal[];
+  anomalies: XTopicSignal[];
+  topByEngagement: XTopicSignal[];
+  totalTweetsAnalyzed: number;
+}
+
 // --- Layer 1: Leading (GitHub) ---
 
 export interface GitHubRepoSignal {
@@ -220,6 +243,7 @@ export interface FortnightlyReport {
     coincident: CoincidentSignals;
     confirming: ConfirmingSignals;
     social?: SocialSignals;
+    x?: XSignals;
   };
   narratives: Narrative[];
   buildIdeas: BuildIdea[];
