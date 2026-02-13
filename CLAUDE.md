@@ -6,7 +6,7 @@ Solana Onchain & Landscape Intelligence Signal. Detects emerging Solana ecosyste
 ## Architecture
 - **Monorepo**: pnpm workspaces — `packages/agent`, `packages/web`, `shared`
 - **Agent**: TypeScript pipeline orchestration, Claude Haiku 4.5 (via OpenRouter) for LLM analysis, GLM fallback chain
-- **Web**: Next.js 15 + Tailwind v4, 7-section landing page (hero → pipeline → report → narratives → ideas → methodology → CTA) + report/archive/compare pages
+- **Web**: Next.js 15 + Tailwind v4, 7-section landing page (hero → pipeline → report → narratives → ideas → methodology → CTA) + 8-section report dashboard (header → nav → metrics → diff → narratives → ideas → sources) + archive/compare pages
 - **Reports**: Git-committed JSON/MD artifacts in `reports/`
 - **API Guard**: Route-level rate limiting (in-memory sliding window) + optional x402 micropayments for paid tier bypass
 
@@ -105,6 +105,14 @@ Optional config (all have sensible defaults in `config.ts`):
 - `packages/web/src/components/methodology-trust.tsx` — Server: 2x2 trust/differentiator cards
 - `packages/web/src/components/open-source-cta.tsx` — Server: full-bleed GitHub CTA with trust badges
 - `packages/web/src/components/scroll-indicator.tsx` — Client: bouncing chevron, hides on scroll
+- `packages/web/src/app/report/[date]/page.tsx` — Report page: 8-section intelligence dashboard with section anchors, prev/next nav, stage grouping
+- `packages/web/src/components/report-header.tsx` — Server: glassmorphic header with breadcrumb, prev/next chevron nav, export buttons, timestamp
+- `packages/web/src/components/report-nav.tsx` — Client: sticky section pills with IntersectionObserver scroll tracking, mounted SSR guard
+- `packages/web/src/components/report-metrics.tsx` — Server: 4-stat glassmorphic cards with color-coded top borders (purple/green/blue/orange)
+- `packages/web/src/components/report-diff.tsx` — Server: "What Changed" section — stage transitions, new/faded signals, confidence shifts (≥10pt threshold)
+- `packages/web/src/components/narrative-stage-group.tsx` — Server: stage-grouped narratives (EARLY→MAINSTREAM) with colored banners, confidence-sorted
+- `packages/web/src/components/build-ideas-filter.tsx` — Client: difficulty filter pills (All/Beginner/Intermediate/Advanced) with count badges + filtered grid
+- `packages/web/src/components/data-sources-card.tsx` — Server: visual source cards with status dots, layer badges (color-coded), LLM footer
 - `packages/web/src/lib/temporal.ts` — Date utilities (freshness, countdown, relative labels)
 - `packages/web/src/components/countdown-timer.tsx` — Live countdown to next 08:00 UTC report
 - `packages/web/src/components/report-timestamp.tsx` — Freshness-coded relative timestamps
