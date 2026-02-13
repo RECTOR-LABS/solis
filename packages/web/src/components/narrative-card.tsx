@@ -1,8 +1,16 @@
 import type { Narrative } from '@solis/shared';
+import type { NarrativeEvidence } from '@/lib/evidence';
 import { StageBadge } from './stage-badge';
 import { MomentumGauge } from './momentum-gauge';
+import { EvidencePanel } from './evidence-panel';
 
-export function NarrativeCard({ narrative }: { narrative: Narrative }) {
+export function NarrativeCard({
+  narrative,
+  evidence,
+}: {
+  narrative: Narrative;
+  evidence?: NarrativeEvidence;
+}) {
   return (
     <div className="border border-sol-border rounded-lg p-6 bg-sol-card hover:border-sol-purple/50 transition-colors">
       <div className="flex items-start justify-between gap-4 mb-3">
@@ -77,6 +85,8 @@ export function NarrativeCard({ narrative }: { narrative: Narrative }) {
           </ul>
         </div>
       )}
+
+      {evidence && <EvidencePanel evidence={evidence} />}
 
       <div className="flex items-center justify-between mt-3 pt-3 border-t border-sol-border">
         <div className="flex flex-wrap gap-1.5">

@@ -4,6 +4,7 @@ import { NarrativeCard } from '@/components/narrative-card';
 import { BuildIdeaCard } from '@/components/build-ideas';
 import { ReportTimestamp } from '@/components/report-timestamp';
 import { ExportButtons } from '@/components/export-buttons';
+import { extractEvidence } from '@/lib/evidence';
 
 export const revalidate = 3600;
 
@@ -59,7 +60,11 @@ export default async function ReportPage({ params }: { params: Promise<{ date: s
         <h2 className="text-xl font-semibold mb-4">Narratives</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {report.narratives.map(narrative => (
-            <NarrativeCard key={narrative.id} narrative={narrative} />
+            <NarrativeCard
+              key={narrative.id}
+              narrative={narrative}
+              evidence={extractEvidence(narrative, report.signals)}
+            />
           ))}
         </div>
       </section>
