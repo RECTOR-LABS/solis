@@ -35,7 +35,7 @@ export default function RootLayout({
               <a href="/methodology" className="text-sol-muted hover:text-white transition-colors">
                 Methodology
               </a>
-              <a href="/brain.html" className="text-sol-muted hover:text-white transition-colors">
+              <a href="/brain" className="text-sol-muted hover:text-white transition-colors">
                 Brain
               </a>
               <span className="text-sol-muted flex items-center gap-1.5">

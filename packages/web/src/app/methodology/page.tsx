@@ -8,7 +8,7 @@ export default function MethodologyPage() {
         <p className="text-sol-muted">
           SOLIS detects emerging Solana narratives by triangulating signals across four independent data layers,
           each with different lead times relative to market price action.
-          For a full visual deep-dive, see the <a href="/brain.html" className="text-sol-purple hover:underline">Brain Architecture</a> page.
+          For a full visual deep-dive, see the <a href="/brain" className="text-sol-purple hover:underline">Brain Architecture</a> page.
         </p>
 
         <div className="space-y-3">

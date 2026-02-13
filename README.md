@@ -347,7 +347,7 @@ The pipeline runs as 9 sequential phases — TypeScript orchestration with no LL
 8. **Output** — Write JSON + Markdown reports to `reports/`
 9. **Alerts** — Send notifications via Telegram/Discord for stage transitions and anomaly spikes
 
-**[Architecture Deep-Dive →](https://solis.rectorspace.com/brain.html)**
+**[Architecture Deep-Dive →](https://solis.rectorspace.com/brain)**
 
 ---
 
