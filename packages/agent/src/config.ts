@@ -168,7 +168,7 @@ export const env = cleanEnv(process.env, {
     desc: 'Comma-separated X/Twitter KOL handles to track',
   }),
   X_TWEETS_PER_KOL: num({
-    default: 10,
+    default: 5,
     desc: 'Number of recent tweets to fetch per KOL (5-100)',
   }),
   LLM_TOP_X_TOPICS: num({

@@ -65,7 +65,7 @@ Optional config (all have sensible defaults in `config.ts`):
 - `X_BEARER_TOKEN` — X API v2 Bearer token (required when X signals enabled)
 - `X_THROTTLE_MS` (1000) — delay between X API requests
 - `X_KOL_HANDLES` (mert,toly,akshaybd,MessariCrypto,a16zcrypto,solana_devs) — KOL handles to track
-- `X_TWEETS_PER_KOL` (10) — recent tweets to fetch per KOL (5-100)
+- `X_TWEETS_PER_KOL` (5) — recent tweets to fetch per KOL (5-100)
 - `LLM_TOP_X_TOPICS` (20) — max X topics sent to LLM for clustering
 - `ENABLE_SOCIAL_SIGNALS` (false) — enable Layer 0 social signal collection via LunarCrush
 - `LUNARCRUSH_API_KEY` — LunarCrush v4 Bearer token (required when social signals enabled)
