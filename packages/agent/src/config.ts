@@ -150,6 +150,32 @@ export const env = cleanEnv(process.env, {
     desc: 'Max social coins sent to LLM for clustering',
   }),
 
+  // X/Twitter signals — opt-in Layer 0
+  ENABLE_X_SIGNALS: bool({
+    default: false,
+    desc: 'Enable X/Twitter signal collection via X API v2',
+  }),
+  X_BEARER_TOKEN: str({
+    default: '',
+    desc: 'X API v2 Bearer token',
+  }),
+  X_THROTTLE_MS: num({
+    default: 1000,
+    desc: 'Delay between X API requests (ms)',
+  }),
+  X_MAX_PAGES: num({
+    default: 5,
+    desc: 'Max pages per search query (100 tweets/page)',
+  }),
+  LLM_TOP_X_TOPICS: num({
+    default: 20,
+    desc: 'Max X topics sent to LLM for clustering',
+  }),
+  X_SEARCH_QUERIES: str({
+    default: '(solana OR $SOL) -is:retweet lang:en,($JUP OR $RAY OR $BONK OR $JTO OR $PYTH OR $HNT OR $RNDR) -is:retweet,("solana defi" OR "solana nft" OR "solana gaming" OR "solana ai") -is:retweet lang:en',
+    desc: 'Comma-separated X search queries',
+  }),
+
   // Repo discovery — opt-in dynamic GitHub Search
   ENABLE_REPO_DISCOVERY: bool({
     default: false,

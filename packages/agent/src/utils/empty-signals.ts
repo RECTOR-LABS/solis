@@ -4,6 +4,7 @@ import type {
   ConfirmingSignals,
   OnchainSignal,
   SocialSignals,
+  XSignals,
 } from '@solis/shared';
 
 /** Valid GitHubSignals with empty arrays — safe for scoring/clustering. */
@@ -47,6 +48,20 @@ export function emptySocialSignals(): SocialSignals {
     coins: [],
     anomalies: [],
     topBySentiment: [],
+  };
+}
+
+/** Valid XSignals with empty arrays. */
+export function emptyXSignals(): XSignals {
+  const now = new Date();
+  const start = new Date();
+  start.setDate(now.getDate() - 7);
+  return {
+    period: { start: start.toISOString(), end: now.toISOString() },
+    topics: [],
+    anomalies: [],
+    topByEngagement: [],
+    totalTweetsAnalyzed: 0,
   };
 }
 
