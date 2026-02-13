@@ -42,7 +42,7 @@ function renderNarrative(n: Narrative, index: number): string {
   ];
 
   if (n.signals.social.length > 0) {
-    lines.push('**Social Signals (LunarCrush):**');
+    lines.push('**Social Signals:**');
     for (const s of n.signals.social) {
       lines.push(`- ${s}`);
     }
@@ -171,6 +171,7 @@ export async function writeMarkdownReport(report: FortnightlyReport, date: strin
     `| Repos analyzed | ${report.meta.totalReposAnalyzed} |`,
     `| Protocols analyzed | ${report.meta.totalProtocolsAnalyzed} |`,
     `| Tokens analyzed | ${report.meta.totalTokensAnalyzed} |`,
+    ...(report.signals.x ? [`| Tweets analyzed | ${report.signals.x.totalTweetsAnalyzed} |`] : []),
     `| Anomalies detected | ${report.meta.anomaliesDetected} |`,
     `| Narratives identified | ${report.meta.narrativesIdentified} |`,
     `| Build ideas generated | ${report.meta.buildIdeasGenerated} |`,

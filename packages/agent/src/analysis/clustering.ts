@@ -12,6 +12,7 @@ import type {
   CoincidentSignals,
   ConfirmingSignals,
   SocialSignals,
+  XSignals,
 } from '@solis/shared';
 
 interface ClusteringInput {
@@ -19,6 +20,7 @@ interface ClusteringInput {
   coincident: CoincidentSignals;
   confirming: ConfirmingSignals;
   social?: SocialSignals;
+  x?: XSignals;
   previousNarratives?: Narrative[];
 }
 
@@ -43,7 +45,7 @@ const NarrativesResponseSchema = z.object({
 
 const SYSTEM_PROMPT = `You are SOLIS, a Solana ecosystem intelligence analyst. Your job is to identify emerging narratives by clustering signals across up to four layers:
 
-0. SOCIAL (LunarCrush): Social sentiment and community engagement — often the earliest signal
+0. SOCIAL (LunarCrush + X/Twitter): Social sentiment, community engagement, and tweet activity — often the earliest signal
 1. LEADING (GitHub): Developer activity that precedes market movement by 2-4 weeks
 2. COINCIDENT (DeFi Llama + Helius): Real-time capital and onchain activity
 3. CONFIRMING (CoinGecko): Market price/volume validation
@@ -121,6 +123,28 @@ export async function clusterNarratives(
         topBySentiment: signals.social.topBySentiment
           .slice(0, 5)
           .map(s => ({ topic: s.topic, sentiment: s.sentiment, galaxyScore: s.galaxyScore })),
+      },
+    } : {}),
+    ...(signals.x && signals.x.topics.length > 0 ? {
+      xTwitter: {
+        topByEngagement: signals.x.topics
+          .sort((a, b) => b.totalEngagement - a.totalEngagement)
+          .slice(0, env.LLM_TOP_X_TOPICS)
+          .map(t => ({
+            topic: t.topic,
+            tweets: t.tweetCount,
+            engagement: t.totalEngagement,
+            uniqueAuthors: t.uniqueAuthors,
+            verified: t.verifiedAuthors,
+            topTweets: t.topTweets.slice(0, 2).map(tw => tw.text.slice(0, 140)),
+          })),
+        anomalies: signals.x.anomalies.map(a => ({
+          topic: a.topic,
+          tweetCountDelta: a.tweetCountDelta,
+          tweetCountZScore: a.tweetCountZScore,
+          engagementZScore: a.engagementZScore,
+        })),
+        totalTweetsAnalyzed: signals.x.totalTweetsAnalyzed,
       },
     } : {}),
     github: {

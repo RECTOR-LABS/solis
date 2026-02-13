@@ -5,6 +5,7 @@ import type {
   CoincidentSignals,
   ConfirmingSignals,
   SocialSignals,
+  XSignals,
 } from '@solis/shared';
 
 /**
@@ -18,6 +19,7 @@ export function applyDeltas(
   confirming: ConfirmingSignals,
   previousReport: FortnightlyReport | null,
   social?: SocialSignals,
+  x?: XSignals,
 ): void {
   if (!previousReport) {
     logger.child({ component: 'deltas' }).info('No previous report — skipping delta calculation');
@@ -80,11 +82,25 @@ export function applyDeltas(
     }
   }
 
+  // X/Twitter topic deltas
+  if (x && previousReport?.signals.x) {
+    const prevXMap = new Map(
+      previousReport.signals.x.topics.map(t => [t.topic, t]),
+    );
+    for (const topic of x.topics) {
+      const prev = prevXMap.get(topic.topic);
+      if (!prev) continue;
+      topic.tweetCountDelta = topic.tweetCount - prev.tweetCount;
+      topic.engagementDelta = topic.totalEngagement - prev.totalEngagement;
+    }
+  }
+
   log.info({
     repos: leading.repos.length,
     onchain: coincident.onchain.length,
     dex: coincident.dexVolumes.protocols.length,
     tokens: confirming.tokens.length,
     ...(social ? { social: social.coins.length } : {}),
+    ...(x ? { xTopics: x.topics.length } : {}),
   }, 'Delta calculation complete');
 }

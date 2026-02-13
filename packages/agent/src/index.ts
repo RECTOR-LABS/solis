@@ -18,6 +18,7 @@ import {
   emptyOnchainSignals,
   emptyConfirmingSignals,
   emptySocialSignals,
+  emptyXSignals,
 } from './utils/empty-signals.js';
 import { computeReportDiff } from './utils/history.js';
 import type {
@@ -27,6 +28,7 @@ import type {
   GitHubSignals,
   ConfirmingSignals,
   SocialSignals,
+  XSignals,
   OnchainSignal,
   ReportDiff,
 } from '@solis/shared';
@@ -87,6 +89,13 @@ async function main() {
       const { collectLunarCrush } = await import('./tools/lunarcrush.js');
       socialCollectorIndex = collectors.length;
       collectors.push(collectLunarCrush(periodDays));
+    }
+
+    let xCollectorIndex = -1;
+    if (env.ENABLE_X_SIGNALS) {
+      const { collectX } = await import('./tools/twitter.js');
+      xCollectorIndex = collectors.length;
+      collectors.push(collectX(periodDays, repos));
     }
 
     const results = await Promise.allSettled(collectors);
@@ -150,6 +159,20 @@ async function main() {
       }
     }
 
+    // Unwrap X signals (Layer 0) — conditional
+    let x: XSignals | undefined;
+    if (xCollectorIndex >= 0) {
+      const xResult = results[xCollectorIndex];
+      if (xResult.status === 'fulfilled') {
+        x = xResult.value as XSignals;
+        sourceResults['X/Twitter'] = { status: 'success' };
+      } else {
+        logger.error({ error: (xResult as PromiseRejectedResult).reason }, 'X/Twitter collection failed — using empty signals');
+        x = emptyXSignals();
+        sourceResults['X/Twitter'] = { status: 'failed', error: String((xResult as PromiseRejectedResult).reason) };
+      }
+    }
+
     const coincident: CoincidentSignals = {
       ...defiLlamaData,
       onchain: onchainSignals,
@@ -158,13 +181,13 @@ async function main() {
     // === Phase 1.5: Calculate deltas from previous report ===
     const todayDate = new Date().toISOString().split('T')[0];
     const previousReport = await loadPreviousReport(todayDate);
-    applyDeltas(leading, coincident, confirming, previousReport, social);
+    applyDeltas(leading, coincident, confirming, previousReport, social, x);
 
     // === Phase 2: Score signals with z-scores ===
     logger.info({ phase: 'score' }, 'Phase 2: Scoring signals...');
     let scored: ScoredSignals;
     try {
-      scored = scoreSignals(leading, coincident, confirming, env.ANOMALY_THRESHOLD, social);
+      scored = scoreSignals(leading, coincident, confirming, env.ANOMALY_THRESHOLD, social, x);
       logger.info({ summary: scored.summary }, 'Scoring complete');
     } catch (err) {
       logger.error({ error: err instanceof Error ? err.message : err }, 'Scoring failed — proceeding with unscored signals');
@@ -172,7 +195,7 @@ async function main() {
         leading,
         coincident,
         confirming,
-        summary: { socialAnomalies: 0, leadingAnomalies: 0, coincidentAnomalies: 0, confirmingAnomalies: 0, totalAnomalies: 0 },
+        summary: { socialAnomalies: 0, xAnomalies: 0, leadingAnomalies: 0, coincidentAnomalies: 0, confirmingAnomalies: 0, totalAnomalies: 0 },
       };
     }
 
@@ -183,6 +206,7 @@ async function main() {
       coincident: scored.coincident,
       confirming: scored.confirming,
       social: scored.social,
+      x: scored.x,
       previousNarratives: previousReport?.narratives,
     });
 
@@ -217,6 +241,7 @@ async function main() {
       },
       sources: [
         ...(social ? [{ name: 'LunarCrush', layer: 'SOCIAL' as const, fetchedAt: now.toISOString(), dataPoints: social.coins.length, ...sourceResults['LunarCrush'] }] : []),
+        ...(x ? [{ name: 'X/Twitter', layer: 'SOCIAL' as const, fetchedAt: now.toISOString(), dataPoints: x.totalTweetsAnalyzed, ...sourceResults['X/Twitter'] }] : []),
         { name: 'GitHub API', layer: 'LEADING', fetchedAt: now.toISOString(), dataPoints: leading.repos.length, ...sourceResults['GitHub API'] },
         { name: 'DeFi Llama', layer: 'COINCIDENT', fetchedAt: now.toISOString(), dataPoints: coincident.tvl.protocols.length, ...sourceResults['DeFi Llama'] },
         { name: 'Helius', layer: 'COINCIDENT', fetchedAt: now.toISOString(), dataPoints: coincident.onchain.length, ...sourceResults['Helius'] },
@@ -227,6 +252,7 @@ async function main() {
         coincident: scored.coincident,
         confirming: scored.confirming,
         ...(scored.social ? { social: scored.social } : {}),
+        ...(scored.x ? { x: scored.x } : {}),
       },
       narratives,
       buildIdeas: ideas,

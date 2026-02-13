@@ -3,10 +3,12 @@ import type {
   CoincidentSignals,
   ConfirmingSignals,
   SocialSignals,
+  XSignals,
   GitHubRepoSignal,
   TVLSignal,
   OnchainSignal,
   SocialSignal,
+  XTopicSignal,
 } from '@solis/shared';
 import {
   detectAnomalies,
@@ -20,8 +22,10 @@ export interface ScoredSignals {
   coincident: CoincidentSignals;
   confirming: ConfirmingSignals;
   social?: SocialSignals;
+  x?: XSignals;
   summary: {
     socialAnomalies: number;
+    xAnomalies: number;
     leadingAnomalies: number;
     coincidentAnomalies: number;
     confirmingAnomalies: number;
@@ -39,6 +43,7 @@ export function scoreSignals(
   confirming: ConfirmingSignals,
   threshold: number = 2.0,
   social?: SocialSignals,
+  x?: XSignals,
 ): ScoredSignals {
   const log = logger.child({ component: 'scoring' });
 
@@ -68,6 +73,43 @@ export function scoreSignals(
     log.info({
       socialAnomalies,
     }, 'Layer 0 scored');
+  }
+
+  // === Layer 0: X/Twitter z-scores (optional) ===
+  let xAnomalies = 0;
+  if (x && x.topics.length > 0) {
+    enrichWithZScores(
+      x.topics,
+      t => t.tweetCountDelta,
+      (t, z) => { t.tweetCountZScore = z; },
+    );
+    enrichWithZScores(
+      x.topics,
+      t => t.engagementDelta,
+      (t, z) => { t.engagementZScore = z; },
+    );
+
+    const tweetAnomalies: AnomalyResult<XTopicSignal>[] = detectAnomalies(
+      x.topics,
+      t => t.tweetCountDelta,
+      'x_tweets',
+      threshold,
+    );
+    const engagementAnomalies: AnomalyResult<XTopicSignal>[] = detectAnomalies(
+      x.topics,
+      t => t.engagementDelta,
+      'x_engagement',
+      threshold,
+    );
+
+    const uniqueXAnomalies = new Map<string, XTopicSignal>();
+    for (const a of [...tweetAnomalies, ...engagementAnomalies]) {
+      uniqueXAnomalies.set(a.item.topic, a.item);
+    }
+    x.anomalies = [...uniqueXAnomalies.values()];
+    xAnomalies = x.anomalies.length;
+
+    log.info({ xAnomalies }, 'Layer 0 (X) scored');
   }
 
   // === Layer 1: GitHub z-scores ===
@@ -179,6 +221,7 @@ export function scoreSignals(
 
   const totalAnomalies =
     socialAnomalies +
+    xAnomalies +
     leading.anomalies.length +
     tvlAnomalies.length +
     onchainAnomalies.length +
@@ -191,8 +234,10 @@ export function scoreSignals(
     coincident,
     confirming,
     ...(social ? { social } : {}),
+    ...(x ? { x } : {}),
     summary: {
       socialAnomalies,
+      xAnomalies,
       leadingAnomalies: leading.anomalies.length,
       coincidentAnomalies: tvlAnomalies.length + onchainAnomalies.length,
       confirmingAnomalies: tokenVolumeAnomalies.length,
