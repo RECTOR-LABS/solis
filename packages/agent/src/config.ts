@@ -176,6 +176,16 @@ export const env = cleanEnv(process.env, {
     desc: 'Max X topics sent to LLM for clustering',
   }),
 
+  // Signal caching
+  CACHE_ENABLED: bool({
+    default: true,
+    desc: 'Enable filesystem signal caching (skip re-fetching on same-day re-runs)',
+  }),
+  CACHE_TTL_HOURS: num({
+    default: 20,
+    desc: 'Cache entry TTL in hours (20h ensures daily runs get fresh data)',
+  }),
+
   // Repo discovery — opt-in dynamic GitHub Search
   ENABLE_REPO_DISCOVERY: bool({
     default: false,
