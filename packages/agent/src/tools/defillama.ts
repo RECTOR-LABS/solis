@@ -1,5 +1,6 @@
 import { env } from '../config.js';
 import { logger } from '../logger.js';
+import type { CacheStore } from '../cache/index.js';
 import type { TVLSignal, DEXVolumeSignal, CoincidentSignals } from '@solis/shared';
 
 const DEFILLAMA_API = 'https://api.llama.fi';
@@ -94,8 +95,16 @@ async function getSolanaStablecoinFlows(): Promise<{ netFlow: number; inflows: n
 
 export async function collectDefiLlama(
   periodDays: number = 14,
+  cache?: CacheStore,
 ): Promise<Omit<CoincidentSignals, 'onchain'>> {
   const log = logger.child({ tool: 'defillama' });
+
+  const cacheKey = new Date().toISOString().split('T')[0];
+  if (cache) {
+    const cached = await cache.get<Omit<CoincidentSignals, 'onchain'>>('defillama', cacheKey);
+    if (cached) return cached;
+  }
+
   log.info({ periodDays }, 'Collecting DeFi Llama signals');
 
   const [protocols, tvlHistory, dexData, stableFlows] = await Promise.all([
@@ -144,7 +153,7 @@ export async function collectDefiLlama(
     totalTVL: latestTVL,
   }, 'DeFi Llama collection complete');
 
-  return {
+  const result: Omit<CoincidentSignals, 'onchain'> = {
     period: {
       start: periodStart.toISOString(),
       end: now.toISOString(),
@@ -161,4 +170,7 @@ export async function collectDefiLlama(
     },
     stablecoinFlows: stableFlows,
   };
+
+  if (cache) await cache.set('defillama', cacheKey, result, env.CACHE_TTL_HOURS);
+  return result;
 }
