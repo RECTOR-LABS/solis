@@ -57,8 +57,9 @@ export async function analyzeWithLLM(
   systemPrompt: string,
   userPrompt: string,
   jsonSchema?: boolean,
+  modelOverride?: string,
 ): Promise<LLMResponse> {
-  const models = buildModelChain();
+  const models = modelOverride ? [modelOverride] : buildModelChain();
   const log = logger.child({ component: 'openrouter' });
   let lastError: unknown;
 
