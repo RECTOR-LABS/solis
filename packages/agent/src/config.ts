@@ -122,8 +122,11 @@ export const env = cleanEnv(process.env, {
   }),
 
   // Output — resolve to monorepo root (packages/agent/ → ../../reports)
+  // import.meta.dirname is undefined on Node <20.11 and in esbuild bundles
   REPORTS_DIR: str({
-    default: resolve(import.meta.dirname, '..', '..', '..', 'reports'),
+    default: import.meta.dirname
+      ? resolve(import.meta.dirname, '..', '..', '..', 'reports')
+      : resolve(process.cwd(), 'reports'),
     desc: 'Directory for report output',
   }),
 
