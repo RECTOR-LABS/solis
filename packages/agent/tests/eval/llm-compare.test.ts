@@ -5,7 +5,15 @@ vi.mock('../../src/config.js', () => ({
   env: {
     LOG_LEVEL: 'error',
     isDevelopment: false,
+    OPENROUTER_API_KEY: 'test-key',
+    OPENROUTER_MODEL: 'test/model',
+    OPENROUTER_FALLBACK_MODELS: '',
   },
+}));
+
+vi.mock('../../src/analysis/openrouter.js', () => ({
+  analyzeWithLLM: vi.fn(),
+  parseLLMJson: vi.fn(),
 }));
 
 vi.mock('../../src/logger.js', () => ({
