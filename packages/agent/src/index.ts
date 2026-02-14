@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { join } from 'node:path';
 import { logger } from './logger.js';
 import { CacheStore } from './cache/index.js';
+import { recordStars, loadStarHistory, enrichWithStarHistory } from './cache/star-history.js';
 import { collectGitHub } from './tools/github.js';
 import { collectDefiLlama } from './tools/defillama.js';
 import { collectCoinGecko } from './tools/coingecko.js';
@@ -183,8 +184,22 @@ export async function runPipeline(): Promise<void> {
       onchain: onchainSignals,
     };
 
-    // === Phase 1.5: Calculate deltas from previous report ===
+    // === Phase 1.5: Star history tracking ===
     const todayDate = new Date().toISOString().split('T')[0];
+    const starHistoryPath = join(env.REPORTS_DIR, '.cache', 'github', 'star-history.json');
+    try {
+      await recordStars(
+        leading.repos.map(r => ({ repo: r.repo, stars: r.stars })),
+        todayDate,
+        starHistoryPath,
+      );
+      const starHistory = await loadStarHistory(starHistoryPath);
+      enrichWithStarHistory(leading.repos, starHistory, todayDate);
+    } catch (err) {
+      logger.warn({ error: err instanceof Error ? err.message : err }, 'Star history tracking failed — continuing without');
+    }
+
+    // === Phase 2: Calculate deltas from previous report ===
     const previousReport = await loadPreviousReport(todayDate);
     applyDeltas(leading, coincident, confirming, previousReport, social, x);
 
