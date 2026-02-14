@@ -280,3 +280,27 @@ export interface SignalsResponse {
   date: string;
   signals: FortnightlyReport['signals'];
 }
+
+// --- Query API Types ---
+
+export interface QueryRequest {
+  question: string;
+  reportDate?: string; // defaults to latest
+}
+
+export interface QueryResponse {
+  answer: string;
+  model: string;
+  tokensUsed: number;
+  costUsd: number;
+  reportDate: string;
+  latencyMs: number;
+}
+
+// --- Subscriber Types ---
+
+export interface Subscriber {
+  email: string;
+  subscribedAt: string; // ISO 8601
+  verified: boolean;
+}
