@@ -73,6 +73,9 @@ export interface GitHubRepoSignal {
   stars: number;
   starsDelta: number; // change in period
   starsZScore: number;
+  stars7d?: number; // star delta over last 7 days
+  stars30d?: number; // star delta over last 30 days
+  starsVelocity?: number; // stars/day rate (7-day window)
   commits: number;
   commitsDelta: number;
   commitsZScore: number;
