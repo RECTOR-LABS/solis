@@ -246,7 +246,7 @@ pnpm agent
 | `pnpm agent` | Run the analysis pipeline (one-shot) |
 | `pnpm heartbeat` | Start persistent heartbeat daemon (daily at 08:00 UTC) |
 | `pnpm dev` | Start web dashboard (port 3001) |
-| `pnpm test:run` | Run all tests (~245 tests) |
+| `pnpm test:run` | Run all tests (353 tests) |
 | `pnpm typecheck` | TypeScript strict mode check |
 | `pnpm build` | Build all packages |
 | `pnpm deploy:agent` | Bundle heartbeat daemon and SCP to VPS |
@@ -394,7 +394,7 @@ solis/
 │   │   │   ├── repos/           # Curated repo list (103) + dynamic discovery
 │   │   │   ├── output/          # JSON + Markdown report writers, alerting
 │   │   │   └── utils/           # Narrative history, matching, diffing
-│   │   └── tests/               # 20 test files (~156 tests)
+│   │   └── tests/               # 24 test files (~197 tests)
 │   └── web/                # Next.js 15 dashboard
 │       └── src/
 │           ├── app/             # Pages (home, report, archive, compare, methodology)
@@ -416,6 +416,33 @@ solis/
 - **Claude Haiku 4.5** via OpenRouter: ~$0.06/run (2 LLM calls, ~12K tokens each)
 - **Infrastructure**: $0 incremental (VPS shared, heartbeat daemon is a single Node process)
 - **All data APIs**: Free tier sufficient
+
+---
+
+## Built by AI Agents
+
+SOLIS is designed, built, and operated by AI agents — from architecture to daily intelligence production.
+
+### SOLIS — The Autonomous Pipeline Agent
+
+The SOLIS heartbeat daemon runs continuously on a VPS, executing the full intelligence pipeline daily at 08:00 UTC without human intervention:
+
+- **Parallel signal collection** from 6 data sources (GitHub, DeFi Llama, Helius, CoinGecko, LunarCrush, X/Twitter)
+- **Z-score anomaly detection** across all metrics — pure math, no ML
+- **LLM narrative clustering** via Claude Haiku 4.5 — groups anomalous signals into coherent ecosystem narratives
+- **Build idea generation** — actionable project ideas grounded in detected signals with difficulty ratings and tech stacks
+- **Autonomous git operations** — commits and pushes reports to the repository, Docker volume mount makes them instantly live
+- **Post-pipeline alerting** — Telegram/Discord notifications for stage transitions, new narratives, and anomaly spikes
+- **Self-healing** — lock file management, state persistence across restarts, graceful shutdown on SIGTERM/SIGINT
+
+### CIPHER — The Builder Agent
+
+The entire SOLIS codebase was designed and implemented by CIPHER, a Claude Code (Claude Opus) agent operating as a senior development partner:
+
+- **Full-stack architecture** — monorepo structure, 9-phase pipeline orchestration, Next.js 15 dashboard, Docker deployment
+- **353 tests** across agent (197) and web (156) packages — TypeScript strict mode, CI/CD pipeline
+- **Advanced features** — Recharts visualizations, knowledge graph, x402 micropayments, email digest system, RSS feed
+- **Infrastructure** — GitHub Actions CI/CD, Docker multi-stage builds, VPS deployment automation, nginx reverse proxy
 
 ---
 
