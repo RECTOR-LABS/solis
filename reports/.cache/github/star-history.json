@@ -1,0 +1,2288 @@
+{
+  "solana-labs/solana": [
+    {
+      "date": "2026-02-14",
+      "stars": 14782
+    }
+  ],
+  "anza-xyz/agave": [
+    {
+      "date": "2026-02-14",
+      "stars": 1676
+    }
+  ],
+  "firedancer-io/firedancer": [
+    {
+      "date": "2026-02-14",
+      "stars": 1400
+    }
+  ],
+  "solana-labs/solana-program-library": [
+    {
+      "date": "2026-02-14",
+      "stars": 4176
+    }
+  ],
+  "solana-foundation/anchor": [
+    {
+      "date": "2026-02-14",
+      "stars": 4949
+    }
+  ],
+  "solana-foundation/solana-web3.js": [
+    {
+      "date": "2026-02-14",
+      "stars": 2700
+    }
+  ],
+  "solana-labs/rbpf": [
+    {
+      "date": "2026-02-14",
+      "stars": 331
+    }
+  ],
+  "anza-xyz/pinocchio": [
+    {
+      "date": "2026-02-14",
+      "stars": 853
+    }
+  ],
+  "anza-xyz/kit": [
+    {
+      "date": "2026-02-14",
+      "stars": 654
+    }
+  ],
+  "anza-xyz/platform-tools": [
+    {
+      "date": "2026-02-14",
+      "stars": 86
+    }
+  ],
+  "solana-labs/solana-perf-libs": [
+    {
+      "date": "2026-02-14",
+      "stars": 48
+    }
+  ],
+  "solana-developers/program-examples": [
+    {
+      "date": "2026-02-14",
+      "stars": 1368
+    }
+  ],
+  "jup-ag/jupiter-cpi": [
+    {
+      "date": "2026-02-14",
+      "stars": 70
+    }
+  ],
+  "orca-so/whirlpools": [
+    {
+      "date": "2026-02-14",
+      "stars": 511
+    }
+  ],
+  "raydium-io/raydium-sdk-V2": [
+    {
+      "date": "2026-02-14",
+      "stars": 340
+    }
+  ],
+  "raydium-io/raydium-clmm": [
+    {
+      "date": "2026-02-14",
+      "stars": 366
+    }
+  ],
+  "raydium-io/raydium-cp-swap": [
+    {
+      "date": "2026-02-14",
+      "stars": 226
+    }
+  ],
+  "openbook-dex/openbook-v2": [
+    {
+      "date": "2026-02-14",
+      "stars": 255
+    }
+  ],
+  "Ellipsis-Labs/phoenix-v1": [
+    {
+      "date": "2026-02-14",
+      "stars": 246
+    }
+  ],
+  "jup-ag/jupiter-swap-api-client": [
+    {
+      "date": "2026-02-14",
+      "stars": 187
+    }
+  ],
+  "MeteoraAg/dlmm-sdk": [
+    {
+      "date": "2026-02-14",
+      "stars": 283
+    }
+  ],
+  "Ellipsis-Labs/phoenix-sdk": [
+    {
+      "date": "2026-02-14",
+      "stars": 99
+    }
+  ],
+  "mrgnlabs/marginfi-v2": [
+    {
+      "date": "2026-02-14",
+      "stars": 284
+    }
+  ],
+  "drift-labs/protocol-v2": [
+    {
+      "date": "2026-02-14",
+      "stars": 377
+    }
+  ],
+  "solendprotocol/solend-sdk": [
+    {
+      "date": "2026-02-14",
+      "stars": 44
+    }
+  ],
+  "Kamino-Finance/klend": [
+    {
+      "date": "2026-02-14",
+      "stars": 158
+    }
+  ],
+  "hubbleprotocol/hubble-common": [
+    {
+      "date": "2026-02-14",
+      "stars": 15
+    }
+  ],
+  "jito-foundation/jito-programs": [
+    {
+      "date": "2026-02-14",
+      "stars": 87
+    }
+  ],
+  "marinade-finance/liquid-staking-program": [
+    {
+      "date": "2026-02-14",
+      "stars": 119
+    }
+  ],
+  "jito-foundation/stakenet": [
+    {
+      "date": "2026-02-14",
+      "stars": 87
+    }
+  ],
+  "marinade-finance/marinade-ts-sdk": [
+    {
+      "date": "2026-02-14",
+      "stars": 24
+    }
+  ],
+  "drift-labs/drift-common": [
+    {
+      "date": "2026-02-14",
+      "stars": 19
+    }
+  ],
+  "Kamino-Finance/farms-sdk": [
+    {
+      "date": "2026-02-14",
+      "stars": 4
+    }
+  ],
+  "drift-labs/drift-vaults": [
+    {
+      "date": "2026-02-14",
+      "stars": 44
+    }
+  ],
+  "Kamino-Finance/kliquidity-sdk": [
+    {
+      "date": "2026-02-14",
+      "stars": 3
+    }
+  ],
+  "pyth-network/pyth-crosschain": [
+    {
+      "date": "2026-02-14",
+      "stars": 228
+    }
+  ],
+  "pyth-network/pyth-sdk-rs": [
+    {
+      "date": "2026-02-14",
+      "stars": 107
+    }
+  ],
+  "switchboard-xyz/switchboard": [
+    {
+      "date": "2026-02-14",
+      "stars": 37
+    }
+  ],
+  "switchboard-xyz/on-demand": [
+    {
+      "date": "2026-02-14",
+      "stars": 7
+    }
+  ],
+  "metaplex-foundation/mpl-core": [
+    {
+      "date": "2026-02-14",
+      "stars": 92
+    }
+  ],
+  "metaplex-foundation/mpl-token-metadata": [
+    {
+      "date": "2026-02-14",
+      "stars": 243
+    }
+  ],
+  "metaplex-foundation/umi": [
+    {
+      "date": "2026-02-14",
+      "stars": 240
+    }
+  ],
+  "tensor-foundation/marketplace": [
+    {
+      "date": "2026-02-14",
+      "stars": 27
+    }
+  ],
+  "tensor-foundation/toolkit": [
+    {
+      "date": "2026-02-14",
+      "stars": 20
+    }
+  ],
+  "me-foundation/mmm": [
+    {
+      "date": "2026-02-14",
+      "stars": 54
+    }
+  ],
+  "solana-foundation/solana-pay": [
+    {
+      "date": "2026-02-14",
+      "stars": 1494
+    }
+  ],
+  "TipLink/tiplink-open-source": [
+    {
+      "date": "2026-02-14",
+      "stars": 5
+    }
+  ],
+  "wormhole-foundation/wormhole": [
+    {
+      "date": "2026-02-14",
+      "stars": 1876
+    }
+  ],
+  "LayerZero-Labs/LayerZero-v2": [
+    {
+      "date": "2026-02-14",
+      "stars": 755
+    }
+  ],
+  "mayan-finance/swap-sdk": [
+    {
+      "date": "2026-02-14",
+      "stars": 68
+    }
+  ],
+  "debridge-finance/dln-contracts": [
+    {
+      "date": "2026-02-14",
+      "stars": 2
+    }
+  ],
+  "helium/helium-program-library": [
+    {
+      "date": "2026-02-14",
+      "stars": 156
+    }
+  ],
+  "helium/oracles": [
+    {
+      "date": "2026-02-14",
+      "stars": 24
+    }
+  ],
+  "Hivemapper/hivemapper-data-logger": [
+    {
+      "date": "2026-02-14",
+      "stars": 1
+    }
+  ],
+  "nosana-ci/nosana-programs": [
+    {
+      "date": "2026-02-14",
+      "stars": 32
+    }
+  ],
+  "GenesysGo/shadow-drive": [
+    {
+      "date": "2026-02-14",
+      "stars": 79
+    }
+  ],
+  "magicblock-labs/bolt": [
+    {
+      "date": "2026-02-14",
+      "stars": 60
+    }
+  ],
+  "magicblock-labs/ephemeral-rollups-spl": [
+    {
+      "date": "2026-02-14",
+      "stars": 7
+    }
+  ],
+  "regolith-labs/ore": [
+    {
+      "date": "2026-02-14",
+      "stars": 808
+    }
+  ],
+  "dialectlabs/protocol": [
+    {
+      "date": "2026-02-14",
+      "stars": 78
+    }
+  ],
+  "coral-xyz/backpack": [
+    {
+      "date": "2026-02-14",
+      "stars": 1612
+    }
+  ],
+  "SolanaNameService/sns-sdk": [
+    {
+      "date": "2026-02-14",
+      "stars": 67
+    }
+  ],
+  "Bonfida/name-tokenizer": [
+    {
+      "date": "2026-02-14",
+      "stars": 32
+    }
+  ],
+  "Squads-Protocol/v4": [
+    {
+      "date": "2026-02-14",
+      "stars": 172
+    }
+  ],
+  "solana-labs/governance-program-library": [
+    {
+      "date": "2026-02-14",
+      "stars": 54
+    }
+  ],
+  "solana-labs/governance-ui": [
+    {
+      "date": "2026-02-14",
+      "stars": 324
+    }
+  ],
+  "solana-foundation/solana-improvement-documents": [
+    {
+      "date": "2026-02-14",
+      "stars": 393
+    }
+  ],
+  "rpcpool/yellowstone-grpc": [
+    {
+      "date": "2026-02-14",
+      "stars": 911
+    }
+  ],
+  "helius-labs/helius-sdk": [
+    {
+      "date": "2026-02-14",
+      "stars": 271
+    }
+  ],
+  "helius-labs/helius-rust-sdk": [
+    {
+      "date": "2026-02-14",
+      "stars": 168
+    }
+  ],
+  "sevenlabs-hq/carbon": [
+    {
+      "date": "2026-02-14",
+      "stars": 552
+    }
+  ],
+  "metaplex-foundation/shank": [
+    {
+      "date": "2026-02-14",
+      "stars": 222
+    }
+  ],
+  "kklas/anchor-client-gen": [
+    {
+      "date": "2026-02-14",
+      "stars": 206
+    }
+  ],
+  "solana-labs/solana-accountsdb-plugin-postgres": [
+    {
+      "date": "2026-02-14",
+      "stars": 132
+    }
+  ],
+  "Ellipsis-Labs/solana-verifiable-build": [
+    {
+      "date": "2026-02-14",
+      "stars": 413
+    }
+  ],
+  "Ackee-Blockchain/trident": [
+    {
+      "date": "2026-02-14",
+      "stars": 368
+    }
+  ],
+  "solana-playground/solana-playground": [
+    {
+      "date": "2026-02-14",
+      "stars": 916
+    }
+  ],
+  "clockwork-xyz/clockwork": [
+    {
+      "date": "2026-02-14",
+      "stars": 311
+    }
+  ],
+  "anza-xyz/wallet-adapter": [
+    {
+      "date": "2026-02-14",
+      "stars": 1988
+    }
+  ],
+  "phantom/sandbox": [
+    {
+      "date": "2026-02-14",
+      "stars": 66
+    }
+  ],
+  "solflare-wallet/solflare-sdk": [
+    {
+      "date": "2026-02-14",
+      "stars": 8
+    }
+  ],
+  "MeteoraAg/damm-v1-sdk": [
+    {
+      "date": "2026-02-14",
+      "stars": 127
+    }
+  ],
+  "jito-foundation/jito-solana": [
+    {
+      "date": "2026-02-14",
+      "stars": 684
+    }
+  ],
+  "jito-labs/mev-protos": [
+    {
+      "date": "2026-02-14",
+      "stars": 92
+    }
+  ],
+  "jito-foundation/jito-tip-router": [
+    {
+      "date": "2026-02-14",
+      "stars": 19
+    }
+  ],
+  "jito-labs/searcher-examples": [
+    {
+      "date": "2026-02-14",
+      "stars": 426
+    }
+  ],
+  "drift-labs/keeper-bots-v2": [
+    {
+      "date": "2026-02-14",
+      "stars": 145
+    }
+  ],
+  "arcium-hq/elusiv": [
+    {
+      "date": "2026-02-14",
+      "stars": 67
+    }
+  ],
+  "metaplex-foundation/mpl-bubblegum": [
+    {
+      "date": "2026-02-14",
+      "stars": 118
+    }
+  ],
+  "solana-mobile/mobile-wallet-adapter": [
+    {
+      "date": "2026-02-14",
+      "stars": 316
+    }
+  ],
+  "solana-mobile/dapp-publishing": [
+    {
+      "date": "2026-02-14",
+      "stars": 70
+    }
+  ],
+  "jito-foundation/restaking": [
+    {
+      "date": "2026-02-14",
+      "stars": 80
+    }
+  ],
+  "fragmetric-labs/fragmetric-contracts": [
+    {
+      "date": "2026-02-14",
+      "stars": 4
+    }
+  ],
+  "neonlabsorg/neon-evm": [
+    {
+      "date": "2026-02-14",
+      "stars": 25
+    }
+  ],
+  "Eclipse-Laboratories-Inc/eclipse-deposit": [
+    {
+      "date": "2026-02-14",
+      "stars": 115
+    }
+  ],
+  "soonlabs/igloo": [
+    {
+      "date": "2026-02-14",
+      "stars": 42
+    }
+  ],
+  "dialectlabs/blinks": [
+    {
+      "date": "2026-02-14",
+      "stars": 109
+    }
+  ],
+  "Lightprotocol/light-protocol": [
+    {
+      "date": "2026-02-14",
+      "stars": 318
+    }
+  ],
+  "helius-labs/photon": [
+    {
+      "date": "2026-02-14",
+      "stars": 100
+    }
+  ],
+  "sendaifun/solana-agent-kit": [
+    {
+      "date": "2026-02-14",
+      "stars": 1604
+    }
+  ],
+  "solana-developers/solana-cookbook": [
+    {
+      "date": "2026-02-14",
+      "stars": 714
+    }
+  ],
+  "build23w/fdv.lol": [
+    {
+      "date": "2026-02-14",
+      "stars": 93
+    }
+  ],
+  "OneKeyHQ/app-monorepo": [
+    {
+      "date": "2026-02-14",
+      "stars": 2298
+    }
+  ],
+  "hackbg/fadroma": [
+    {
+      "date": "2026-02-14",
+      "stars": 53
+    }
+  ],
+  "Blockdaemon/solana-accountsdb-plugin-kafka": [
+    {
+      "date": "2026-02-14",
+      "stars": 135
+    }
+  ],
+  "AudiusProject/apps": [
+    {
+      "date": "2026-02-14",
+      "stars": 605
+    }
+  ],
+  "Bonasa-Tech/manifest": [
+    {
+      "date": "2026-02-14",
+      "stars": 119
+    }
+  ],
+  "gemwalletcom/gem-ios": [
+    {
+      "date": "2026-02-14",
+      "stars": 293
+    }
+  ],
+  "gemwalletcom/gem-android": [
+    {
+      "date": "2026-02-14",
+      "stars": 309
+    }
+  ],
+  "cake-tech/cake_wallet": [
+    {
+      "date": "2026-02-14",
+      "stars": 1461
+    }
+  ],
+  "lifinance/sdk": [
+    {
+      "date": "2026-02-14",
+      "stars": 246
+    }
+  ],
+  "Drakkar-Software/OctoBot": [
+    {
+      "date": "2026-02-14",
+      "stars": 5203
+    }
+  ],
+  "Quillhash/QuillAudit_smart_contract_audit_Reports": [
+    {
+      "date": "2026-02-14",
+      "stars": 438
+    }
+  ],
+  "ilkamo/jupiter-go": [
+    {
+      "date": "2026-02-14",
+      "stars": 125
+    }
+  ],
+  "dfinity/oisy-wallet": [
+    {
+      "date": "2026-02-14",
+      "stars": 161
+    }
+  ],
+  "subsquid/docs": [
+    {
+      "date": "2026-02-14",
+      "stars": 70
+    }
+  ],
+  "horizontalsystems/unstoppable-wallet-android": [
+    {
+      "date": "2026-02-14",
+      "stars": 1153
+    }
+  ],
+  "Shyft-to/solana-defi": [
+    {
+      "date": "2026-02-14",
+      "stars": 342
+    }
+  ],
+  "blueshift-gg/blueshift-dashboard": [
+    {
+      "date": "2026-02-14",
+      "stars": 66
+    }
+  ],
+  "exotic-markets-labs/typhoon": [
+    {
+      "date": "2026-02-14",
+      "stars": 67
+    }
+  ],
+  "SuperteamDAO/earn": [
+    {
+      "date": "2026-02-14",
+      "stars": 220
+    }
+  ],
+  "razedotbot/solana-ui": [
+    {
+      "date": "2026-02-14",
+      "stars": 50
+    }
+  ],
+  "samuelvanderwaal/metaboss": [
+    {
+      "date": "2026-02-14",
+      "stars": 719
+    }
+  ],
+  "metaDAOproject/programs": [
+    {
+      "date": "2026-02-14",
+      "stars": 107
+    }
+  ],
+  "sol4k/sol4k": [
+    {
+      "date": "2026-02-14",
+      "stars": 125
+    }
+  ],
+  "0xMurk/pumpfun-stealth-bundler-bubblemap-bypass": [
+    {
+      "date": "2026-02-14",
+      "stars": 52
+    }
+  ],
+  "0xfnzero/sol-trade-sdk": [
+    {
+      "date": "2026-02-14",
+      "stars": 271
+    }
+  ],
+  "lifinance/widget": [
+    {
+      "date": "2026-02-14",
+      "stars": 191
+    }
+  ],
+  "Tronzit-Veca/Pumpfun-Smart-Contract": [
+    {
+      "date": "2026-02-14",
+      "stars": 133
+    }
+  ],
+  "Certora/CertoraProver": [
+    {
+      "date": "2026-02-14",
+      "stars": 276
+    }
+  ],
+  "drift-labs/jit-proxy": [
+    {
+      "date": "2026-02-14",
+      "stars": 54
+    }
+  ],
+  "metaplex-foundation/mpl-candy-machine": [
+    {
+      "date": "2026-02-14",
+      "stars": 102
+    }
+  ],
+  "ant-design/ant-design-web3": [
+    {
+      "date": "2026-02-14",
+      "stars": 1126
+    }
+  ],
+  "gomoonit/moonit-sdk": [
+    {
+      "date": "2026-02-14",
+      "stars": 60
+    }
+  ],
+  "horizontalsystems/unstoppable-wallet-ios": [
+    {
+      "date": "2026-02-14",
+      "stars": 854
+    }
+  ],
+  "EremosCore/Eremos": [
+    {
+      "date": "2026-02-14",
+      "stars": 80
+    }
+  ],
+  "magicblock-labs/Solana.Unity-Core": [
+    {
+      "date": "2026-02-14",
+      "stars": 53
+    }
+  ],
+  "CoinSpace/CoinSpace": [
+    {
+      "date": "2026-02-14",
+      "stars": 448
+    }
+  ],
+  "Web3Auth/Auth": [
+    {
+      "date": "2026-02-14",
+      "stars": 140
+    }
+  ],
+  "solana-foundation/framework-kit": [
+    {
+      "date": "2026-02-14",
+      "stars": 78
+    }
+  ],
+  "metaplex-foundation/kinobi": [
+    {
+      "date": "2026-02-14",
+      "stars": 158
+    }
+  ],
+  "ValidatorsDAO/slv": [
+    {
+      "date": "2026-02-14",
+      "stars": 83
+    }
+  ],
+  "x89/Solana-Arbitrage-Bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 1138
+    }
+  ],
+  "hodlwarden/solana-arbitrage-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 177
+    }
+  ],
+  "d0sc4u/solana-evm-casino-games": [
+    {
+      "date": "2026-02-14",
+      "stars": 211
+    }
+  ],
+  "hanshaze/solana-sniper-copy-trading-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 173
+    }
+  ],
+  "insionCEO/solana-sniper-copy-mev-trading-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 180
+    }
+  ],
+  "vincentkoc/dexscraper": [
+    {
+      "date": "2026-02-14",
+      "stars": 87
+    }
+  ],
+  "txtx/surfpool": [
+    {
+      "date": "2026-02-14",
+      "stars": 492
+    }
+  ],
+  "skynetcap/solanaj": [
+    {
+      "date": "2026-02-14",
+      "stars": 174
+    }
+  ],
+  "chainstacklabs/pumpfun-bonkfun-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 892
+    }
+  ],
+  "block-mesh/block-mesh-monorepo": [
+    {
+      "date": "2026-02-14",
+      "stars": 159
+    }
+  ],
+  "KeystoneHQ/keystone3-firmware": [
+    {
+      "date": "2026-02-14",
+      "stars": 198
+    }
+  ],
+  "Auditware/radar": [
+    {
+      "date": "2026-02-14",
+      "stars": 121
+    }
+  ],
+  "kevinheavey/solders": [
+    {
+      "date": "2026-02-14",
+      "stars": 433
+    }
+  ],
+  "yerofey/cryptowallet-cli": [
+    {
+      "date": "2026-02-14",
+      "stars": 151
+    }
+  ],
+  "automata-network/automata-dcap-attestation": [
+    {
+      "date": "2026-02-14",
+      "stars": 50
+    }
+  ],
+  "cutupdev/Solana-Arbitrage-Bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 273
+    }
+  ],
+  "magicblock-labs/Solana.Unity-SDK": [
+    {
+      "date": "2026-02-14",
+      "stars": 193
+    }
+  ],
+  "samui-build/samui-wallet": [
+    {
+      "date": "2026-02-14",
+      "stars": 157
+    }
+  ],
+  "dfinity/evm-rpc-canister": [
+    {
+      "date": "2026-02-14",
+      "stars": 84
+    }
+  ],
+  "solanmevbot/solana-mev-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 212
+    }
+  ],
+  "michaelhly/solana-py": [
+    {
+      "date": "2026-02-14",
+      "stars": 1422
+    }
+  ],
+  "openSVM/awesome-svm": [
+    {
+      "date": "2026-02-14",
+      "stars": 56
+    }
+  ],
+  "aarjn/solana-programs-list": [
+    {
+      "date": "2026-02-14",
+      "stars": 65
+    }
+  ],
+  "ilyarolf/AiogramShopBot": [
+    {
+      "date": "2026-02-14",
+      "stars": 155
+    }
+  ],
+  "tatumio/tatum-js": [
+    {
+      "date": "2026-02-14",
+      "stars": 395
+    }
+  ],
+  "horizontalsystems/ethereum-kit-android": [
+    {
+      "date": "2026-02-14",
+      "stars": 116
+    }
+  ],
+  "LaChance-Lab/Web3-EVM-Solana-Casino-Games": [
+    {
+      "date": "2026-02-14",
+      "stars": 302
+    }
+  ],
+  "swapkit/SwapKit": [
+    {
+      "date": "2026-02-14",
+      "stars": 82
+    }
+  ],
+  "ElliteAnts/Pumpswap-Liquidity-Management-Script": [
+    {
+      "date": "2026-02-14",
+      "stars": 101
+    }
+  ],
+  "cicere/pumpfun-bundler": [
+    {
+      "date": "2026-02-14",
+      "stars": 417
+    }
+  ],
+  "teal-finance/rainbow": [
+    {
+      "date": "2026-02-14",
+      "stars": 64
+    }
+  ],
+  "AV1080p/Solana-Sniper-Bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 1922
+    }
+  ],
+  "brij-digital/espresso-cash-public": [
+    {
+      "date": "2026-02-14",
+      "stars": 301
+    }
+  ],
+  "mhxw/hyperledger": [
+    {
+      "date": "2026-02-14",
+      "stars": 151
+    }
+  ],
+  "Cetipoo/solana-onchain-arbitrage-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 246
+    }
+  ],
+  "AL-THE-BOT-FATHER/pump_ws": [
+    {
+      "date": "2026-02-14",
+      "stars": 57
+    }
+  ],
+  "AL-THE-BOT-FATHER/pump_fun_py": [
+    {
+      "date": "2026-02-14",
+      "stars": 312
+    }
+  ],
+  "sava-software/sava": [
+    {
+      "date": "2026-02-14",
+      "stars": 64
+    }
+  ],
+  "rango-exchange/rango-client": [
+    {
+      "date": "2026-02-14",
+      "stars": 1135
+    }
+  ],
+  "tradingstrategy-ai/getting-started": [
+    {
+      "date": "2026-02-14",
+      "stars": 197
+    }
+  ],
+  "LMAX-Exchange/solana4j": [
+    {
+      "date": "2026-02-14",
+      "stars": 52
+    }
+  ],
+  "Virus-Axel/godot-solana-sdk": [
+    {
+      "date": "2026-02-14",
+      "stars": 71
+    }
+  ],
+  "orao-network/solana-vrf": [
+    {
+      "date": "2026-02-14",
+      "stars": 97
+    }
+  ],
+  "coffellas-cto/Solana-Copy-Trading-Bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 392
+    }
+  ],
+  "SIGNIAINDEX/SIGNIA": [
+    {
+      "date": "2026-02-14",
+      "stars": 206
+    }
+  ],
+  "StockpileLabs/awesome-solana-oss": [
+    {
+      "date": "2026-02-14",
+      "stars": 352
+    }
+  ],
+  "az0mb13/awesome-solana-security": [
+    {
+      "date": "2026-02-14",
+      "stars": 68
+    }
+  ],
+  "0xcregis/anychain": [
+    {
+      "date": "2026-02-14",
+      "stars": 241
+    }
+  ],
+  "solanakite/anchor-escrow-2026": [
+    {
+      "date": "2026-02-14",
+      "stars": 70
+    }
+  ],
+  "LaChance-Lab/blockchain-evm-solana-mixer-bubblemaps-bypassing-engine": [
+    {
+      "date": "2026-02-14",
+      "stars": 53
+    }
+  ],
+  "solanahcl/solanahcl": [
+    {
+      "date": "2026-02-14",
+      "stars": 75
+    }
+  ],
+  "GuidoDipietro/solana-ed25519-secp256k1-sig-verification": [
+    {
+      "date": "2026-02-14",
+      "stars": 84
+    }
+  ],
+  "AV1080p/tourist-dapp-payment-integration": [
+    {
+      "date": "2026-02-14",
+      "stars": 143
+    }
+  ],
+  "thetateman/Trading-API": [
+    {
+      "date": "2026-02-14",
+      "stars": 147
+    }
+  ],
+  "taoteh1221/Open_Crypto_Tracker": [
+    {
+      "date": "2026-02-14",
+      "stars": 119
+    }
+  ],
+  "blueshift-gg/doppler": [
+    {
+      "date": "2026-02-14",
+      "stars": 145
+    }
+  ],
+  "drift-labs/driftpy": [
+    {
+      "date": "2026-02-14",
+      "stars": 106
+    }
+  ],
+  "streamflow-finance/js-sdk": [
+    {
+      "date": "2026-02-14",
+      "stars": 149
+    }
+  ],
+  "hanshaze/solana-sniper-copy-mev-trading-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 136
+    }
+  ],
+  "imbue-bit/no_JIT": [
+    {
+      "date": "2026-02-14",
+      "stars": 182
+    }
+  ],
+  "intbags/solana-sniper-platform": [
+    {
+      "date": "2026-02-14",
+      "stars": 51
+    }
+  ],
+  "aws-samples/aws-blockchain-node-runners": [
+    {
+      "date": "2026-02-14",
+      "stars": 98
+    }
+  ],
+  "solana-foundation/create-solana-dapp": [
+    {
+      "date": "2026-02-14",
+      "stars": 610
+    }
+  ],
+  "WincerChan/SolVanityCL": [
+    {
+      "date": "2026-02-14",
+      "stars": 174
+    }
+  ],
+  "openSVM/solana-mcp-server": [
+    {
+      "date": "2026-02-14",
+      "stars": 56
+    }
+  ],
+  "rango-exchange/rango-sdk": [
+    {
+      "date": "2026-02-14",
+      "stars": 1666
+    }
+  ],
+  "regolith-labs/ore-app": [
+    {
+      "date": "2026-02-14",
+      "stars": 56
+    }
+  ],
+  "solanabull/Solana-Pumpfun-Sniper-Bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 942
+    }
+  ],
+  "insionCEO/Solana-Arbitrage-Bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 576
+    }
+  ],
+  "256hax/solana-anchor-react-minimal-example": [
+    {
+      "date": "2026-02-14",
+      "stars": 96
+    }
+  ],
+  "jito-foundation/jito-relayer": [
+    {
+      "date": "2026-02-14",
+      "stars": 126
+    }
+  ],
+  "cOSmIcloCkZMa/MEV-by-JaredFromSubway": [
+    {
+      "date": "2026-02-14",
+      "stars": 84
+    }
+  ],
+  "cutupdev/Solana-RWA-Smart-Contract": [
+    {
+      "date": "2026-02-14",
+      "stars": 141
+    }
+  ],
+  "cutupdev/Solana-Perpetual-Dex-Smart-Contract": [
+    {
+      "date": "2026-02-14",
+      "stars": 142
+    }
+  ],
+  "cutupdev/Solana-Pumpfun-Backend": [
+    {
+      "date": "2026-02-14",
+      "stars": 199
+    }
+  ],
+  "cutupdev/Solana-Pumpfun-Frontend": [
+    {
+      "date": "2026-02-14",
+      "stars": 212
+    }
+  ],
+  "Banana-Tool/BananaTool-Nav": [
+    {
+      "date": "2026-02-14",
+      "stars": 111
+    }
+  ],
+  "ChainBuff/open-sol-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 402
+    }
+  ],
+  "0xMurk/casino-game-smart-contract": [
+    {
+      "date": "2026-02-14",
+      "stars": 104
+    }
+  ],
+  "L9T-Development/prediction-market-smart-contract-solana-evm": [
+    {
+      "date": "2026-02-14",
+      "stars": 82
+    }
+  ],
+  "cutupdev/Pumpfun-solana-smart-contract": [
+    {
+      "date": "2026-02-14",
+      "stars": 381
+    }
+  ],
+  "L9T-Development/Pumpfun-Smart-Contract": [
+    {
+      "date": "2026-02-14",
+      "stars": 123
+    }
+  ],
+  "cutupdev/Solana-Token-Staking-Smart-Contract": [
+    {
+      "date": "2026-02-14",
+      "stars": 142
+    }
+  ],
+  "MeoMunDep/Automatic-Ultimate-Create-Wallets-for-Airdrop": [
+    {
+      "date": "2026-02-14",
+      "stars": 78
+    }
+  ],
+  "imcrazysteven/SOL-TRADING-BOT": [
+    {
+      "date": "2026-02-14",
+      "stars": 51
+    }
+  ],
+  "LaChance-Lab/blockchain-trading-platform-demo": [
+    {
+      "date": "2026-02-14",
+      "stars": 59
+    }
+  ],
+  "regolith-labs/steel": [
+    {
+      "date": "2026-02-14",
+      "stars": 254
+    }
+  ],
+  "lorine93s/Blockchain-Casino-game": [
+    {
+      "date": "2026-02-14",
+      "stars": 147
+    }
+  ],
+  "regolith-labs/ore-cli": [
+    {
+      "date": "2026-02-14",
+      "stars": 1507
+    }
+  ],
+  "TheSolaAI/sola-application": [
+    {
+      "date": "2026-02-14",
+      "stars": 53
+    }
+  ],
+  "roswelly/solana-grpc-copy-trading-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 67
+    }
+  ],
+  "lorine93s/pumpfun-raydium-sniper-rust-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 69
+    }
+  ],
+  "0xMacro/awesome-solana-security": [
+    {
+      "date": "2026-02-14",
+      "stars": 554
+    }
+  ],
+  "CryptomSol/prediction-market": [
+    {
+      "date": "2026-02-14",
+      "stars": 93
+    }
+  ],
+  "frogansol/solana-prediction-market": [
+    {
+      "date": "2026-02-14",
+      "stars": 64
+    }
+  ],
+  "gamba-labs/gamba": [
+    {
+      "date": "2026-02-14",
+      "stars": 76
+    }
+  ],
+  "LaChance-Lab/solana-organic-volume-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 75
+    }
+  ],
+  "0xfnzero/solana-rpc-install": [
+    {
+      "date": "2026-02-14",
+      "stars": 150
+    }
+  ],
+  "quantform/quantform": [
+    {
+      "date": "2026-02-14",
+      "stars": 63
+    }
+  ],
+  "DevNexaro/custom-sol-address": [
+    {
+      "date": "2026-02-14",
+      "stars": 51
+    }
+  ],
+  "bmresearch/Solnet": [
+    {
+      "date": "2026-02-14",
+      "stars": 390
+    }
+  ],
+  "jito-foundation/geyser-grpc-plugin": [
+    {
+      "date": "2026-02-14",
+      "stars": 135
+    }
+  ],
+  "Ackee-Blockchain/Solana-Auditors-Bootcamp": [
+    {
+      "date": "2026-02-14",
+      "stars": 158
+    }
+  ],
+  "pina-rs/wasm_solana": [
+    {
+      "date": "2026-02-14",
+      "stars": 174
+    }
+  ],
+  "paulmillr/micro-sol-signer": [
+    {
+      "date": "2026-02-14",
+      "stars": 79
+    }
+  ],
+  "nmweaver/soltrade": [
+    {
+      "date": "2026-02-14",
+      "stars": 342
+    }
+  ],
+  "FLOCK4H/Dexter": [
+    {
+      "date": "2026-02-14",
+      "stars": 50
+    }
+  ],
+  "WSOL12/Solana-Arbitrage-Bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 496
+    }
+  ],
+  "keidev-sol/Solana-Copy-Trading-Bot-Rust": [
+    {
+      "date": "2026-02-14",
+      "stars": 52
+    }
+  ],
+  "ChainInsighter/Solana-NFT-Marketplace-by-CandyMachine": [
+    {
+      "date": "2026-02-14",
+      "stars": 133
+    }
+  ],
+  "taoteh1221/Slideshow_Crypto_Ticker": [
+    {
+      "date": "2026-02-14",
+      "stars": 59
+    }
+  ],
+  "Inversive-Labs/eloizer": [
+    {
+      "date": "2026-02-14",
+      "stars": 83
+    }
+  ],
+  "cornel-pe/casino-hub": [
+    {
+      "date": "2026-02-14",
+      "stars": 167
+    }
+  ],
+  "gagliardetto/anchor-go": [
+    {
+      "date": "2026-02-14",
+      "stars": 296
+    }
+  ],
+  "ChangeYourself0613/Solana-Arbitrage-Bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 286
+    }
+  ],
+  "machenxi/meteora-dlmm-copytrading-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 60
+    }
+  ],
+  "luzhenqian/web3-examples": [
+    {
+      "date": "2026-02-14",
+      "stars": 1678
+    }
+  ],
+  "machenxi/solana-yield-farmer": [
+    {
+      "date": "2026-02-14",
+      "stars": 98
+    }
+  ],
+  "Jackhuang166/ai-memecoin-trading-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 91
+    }
+  ],
+  "gillsdk/gill": [
+    {
+      "date": "2026-02-14",
+      "stars": 409
+    }
+  ],
+  "hyperledger-solang/solang": [
+    {
+      "date": "2026-02-14",
+      "stars": 1368
+    }
+  ],
+  "aarjn/solana-chio": [
+    {
+      "date": "2026-02-14",
+      "stars": 59
+    }
+  ],
+  "metaplex-foundation/sugar": [
+    {
+      "date": "2026-02-14",
+      "stars": 225
+    }
+  ],
+  "MadgicDev/solana-trade": [
+    {
+      "date": "2026-02-14",
+      "stars": 57
+    }
+  ],
+  "Deezzir/SolanaBot": [
+    {
+      "date": "2026-02-14",
+      "stars": 54
+    }
+  ],
+  "TeamRaccoons/Unified-Wallet-Kit": [
+    {
+      "date": "2026-02-14",
+      "stars": 87
+    }
+  ],
+  "jiayouzl/Bitcoin-Monitoring": [
+    {
+      "date": "2026-02-14",
+      "stars": 79
+    }
+  ],
+  "angel10x/Solana-Pumpfun-Smart-Contract": [
+    {
+      "date": "2026-02-14",
+      "stars": 79
+    }
+  ],
+  "helius-labs/xray": [
+    {
+      "date": "2026-02-14",
+      "stars": 216
+    }
+  ],
+  "enlomy/pumpfun-solana-smart-contract": [
+    {
+      "date": "2026-02-14",
+      "stars": 274
+    }
+  ],
+  "Itheum/data-dex": [
+    {
+      "date": "2026-02-14",
+      "stars": 451
+    }
+  ],
+  "SolanaUpdateTools/solana-starter-kit": [
+    {
+      "date": "2026-02-14",
+      "stars": 346
+    }
+  ],
+  "piotrostr/listen": [
+    {
+      "date": "2026-02-14",
+      "stars": 1085
+    }
+  ],
+  "sonicfromnewyoke/solana-rpc": [
+    {
+      "date": "2026-02-14",
+      "stars": 131
+    }
+  ],
+  "lorine93s/rugs.fun-fork": [
+    {
+      "date": "2026-02-14",
+      "stars": 56
+    }
+  ],
+  "cryptole0/Copy-Trading-Bot-Rust": [
+    {
+      "date": "2026-02-14",
+      "stars": 93
+    }
+  ],
+  "cryptole0/Solana_AIAgent_Trading": [
+    {
+      "date": "2026-02-14",
+      "stars": 79
+    }
+  ],
+  "keidev-sol/Solana-Arbitrage-Bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 56
+    }
+  ],
+  "radioman/Auto-solana-trading-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 1048
+    }
+  ],
+  "metaplex-foundation/digital-asset-rpc-infrastructure": [
+    {
+      "date": "2026-02-14",
+      "stars": 117
+    }
+  ],
+  "smartcontractkit/starter-kits": [
+    {
+      "date": "2026-02-14",
+      "stars": 257
+    }
+  ],
+  "0xfnzero/pumpfun-sdk": [
+    {
+      "date": "2026-02-14",
+      "stars": 76
+    }
+  ],
+  "machenxi/solanaArtGuard-AI-nft-marketplace": [
+    {
+      "date": "2026-02-14",
+      "stars": 137
+    }
+  ],
+  "dante-gpu/dantegpu-core": [
+    {
+      "date": "2026-02-14",
+      "stars": 73
+    }
+  ],
+  "outsmartchad/solana-trading-cli": [
+    {
+      "date": "2026-02-14",
+      "stars": 565
+    }
+  ],
+  "metaplex-foundation/metaplex-program-library": [
+    {
+      "date": "2026-02-14",
+      "stars": 645
+    }
+  ],
+  "DangerAcorn/pumpfun-tools": [
+    {
+      "date": "2026-02-14",
+      "stars": 108
+    }
+  ],
+  "Jackhuang166/Pumpfun_AI_Trading_Bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 144
+    }
+  ],
+  "gamba-labs/platform": [
+    {
+      "date": "2026-02-14",
+      "stars": 103
+    }
+  ],
+  "evolify/dumpfun": [
+    {
+      "date": "2026-02-14",
+      "stars": 138
+    }
+  ],
+  "gagliardetto/solana-go": [
+    {
+      "date": "2026-02-14",
+      "stars": 1508
+    }
+  ],
+  "katlogic/solana-arbitrage-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 446
+    }
+  ],
+  "abklabs/svmkit": [
+    {
+      "date": "2026-02-14",
+      "stars": 55
+    }
+  ],
+  "palomachain/paloma": [
+    {
+      "date": "2026-02-14",
+      "stars": 303
+    }
+  ],
+  "radioman/solana-copy-trading-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 452
+    }
+  ],
+  "lorenzourera/solana-auto-sell-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 127
+    }
+  ],
+  "ApexArb/Solana-Arbitrage-Trading-Bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 71
+    }
+  ],
+  "DracoR22/handi-cat_wallet-tracker": [
+    {
+      "date": "2026-02-14",
+      "stars": 199
+    }
+  ],
+  "senzenn/Solana-gRPC_indexer-Rust": [
+    {
+      "date": "2026-02-14",
+      "stars": 114
+    }
+  ],
+  "AV1080p/solana-pumpfun-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 132
+    }
+  ],
+  "Grape-Labs/grape-art": [
+    {
+      "date": "2026-02-14",
+      "stars": 54
+    }
+  ],
+  "0xalberto/pumpfun-smart-contract-frontend-backend": [
+    {
+      "date": "2026-02-14",
+      "stars": 144
+    }
+  ],
+  "0xalberto/pumpfun-laserstream-sniper-rust": [
+    {
+      "date": "2026-02-14",
+      "stars": 127
+    }
+  ],
+  "0xalberto/jupiter-arbitrage-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 123
+    }
+  ],
+  "buffalojoec/paytube": [
+    {
+      "date": "2026-02-14",
+      "stars": 52
+    }
+  ],
+  "ronanyeah/solana-rust-examples": [
+    {
+      "date": "2026-02-14",
+      "stars": 168
+    }
+  ],
+  "chainstacklabs/raydium-sdk-swap-example-typescript": [
+    {
+      "date": "2026-02-14",
+      "stars": 185
+    }
+  ],
+  "cutupdev/Solana-Pumpfun-Sniper-Bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 194
+    }
+  ],
+  "cutupdev/Solana-Raydium-Sniper-Bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 210
+    }
+  ],
+  "cutupdev/Solana-Copytrading-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 276
+    }
+  ],
+  "Emivvvvv/btc-vanity": [
+    {
+      "date": "2026-02-14",
+      "stars": 63
+    }
+  ],
+  "vinnyhoward/rn-crypto-wallet": [
+    {
+      "date": "2026-02-14",
+      "stars": 55
+    }
+  ],
+  "helius-labs/airship": [
+    {
+      "date": "2026-02-14",
+      "stars": 77
+    }
+  ],
+  "Ackee-Blockchain/solana-handbook": [
+    {
+      "date": "2026-02-14",
+      "stars": 59
+    }
+  ],
+  "Rektoff/Security-Roadmap-for-Solana-applications": [
+    {
+      "date": "2026-02-14",
+      "stars": 218
+    }
+  ],
+  "Fankouzu/solana-basic-ui": [
+    {
+      "date": "2026-02-14",
+      "stars": 263
+    }
+  ],
+  "mudachyo/TapSwap": [
+    {
+      "date": "2026-02-14",
+      "stars": 67
+    }
+  ],
+  "YZYLAB/solana-swap": [
+    {
+      "date": "2026-02-14",
+      "stars": 130
+    }
+  ],
+  "metaplex-foundation/solita": [
+    {
+      "date": "2026-02-14",
+      "stars": 178
+    }
+  ],
+  "AL-THE-BOT-FATHER/raydium_py": [
+    {
+      "date": "2026-02-14",
+      "stars": 250
+    }
+  ],
+  "Tee-py/solana-txn-parser": [
+    {
+      "date": "2026-02-14",
+      "stars": 203
+    }
+  ],
+  "cicere/solana-volume-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 97
+    }
+  ],
+  "cicere/pumpswap-volume-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 357
+    }
+  ],
+  "cicere/solana-bundler": [
+    {
+      "date": "2026-02-14",
+      "stars": 62
+    }
+  ],
+  "web3ui/web3uikit": [
+    {
+      "date": "2026-02-14",
+      "stars": 1774
+    }
+  ],
+  "Immutal0/raydium-volume-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 71
+    }
+  ],
+  "Immutal0/pumpfun-raydium-bundler": [
+    {
+      "date": "2026-02-14",
+      "stars": 60
+    }
+  ],
+  "fundgao/DAO_DE_JING": [
+    {
+      "date": "2026-02-14",
+      "stars": 274
+    }
+  ],
+  "tomwangcn/solana_meme": [
+    {
+      "date": "2026-02-14",
+      "stars": 249
+    }
+  ],
+  "m8s-lab/pump-fun-smart-contract": [
+    {
+      "date": "2026-02-14",
+      "stars": 128
+    }
+  ],
+  "cutupdev/Solana-Pumpfun-Smart-Contract-Token-2022": [
+    {
+      "date": "2026-02-14",
+      "stars": 194
+    }
+  ],
+  "Cyfrin/web3-dev-containers": [
+    {
+      "date": "2026-02-14",
+      "stars": 158
+    }
+  ],
+  "cutupdev/Crypto-AI-Agent": [
+    {
+      "date": "2026-02-14",
+      "stars": 108
+    }
+  ],
+  "cutupdev/Solana-Token-Presale-Smart-Contract": [
+    {
+      "date": "2026-02-14",
+      "stars": 142
+    }
+  ],
+  "cutupdev/Solana-Raydium-Pumpfun-Volume-Bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 106
+    }
+  ],
+  "cutupdev/Solana-Raydium-Bundler": [
+    {
+      "date": "2026-02-14",
+      "stars": 111
+    }
+  ],
+  "cutupdev/Solana-PumpSwap-Volume-Bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 120
+    }
+  ],
+  "cutupdev/Solana-Poker-Casino-Game": [
+    {
+      "date": "2026-02-14",
+      "stars": 53
+    }
+  ],
+  "cutupdev/Solana-NFT-Staking-Smart-Contract": [
+    {
+      "date": "2026-02-14",
+      "stars": 51
+    }
+  ],
+  "sendaifun/solana-app-kit": [
+    {
+      "date": "2026-02-14",
+      "stars": 144
+    }
+  ],
+  "Bonfida/bonfida-utils": [
+    {
+      "date": "2026-02-14",
+      "stars": 50
+    }
+  ],
+  "midasoid/Token2022-cpmm-clmm-raydium-pumpfun": [
+    {
+      "date": "2026-02-14",
+      "stars": 72
+    }
+  ],
+  "rustyneuron01/Web3-Casino-Crash-Game-Gamefi": [
+    {
+      "date": "2026-02-14",
+      "stars": 105
+    }
+  ],
+  "m8s-lab/solana-sniping-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 85
+    }
+  ],
+  "YZYLAB/solana-trade-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 154
+    }
+  ],
+  "wisarmy/raytx": [
+    {
+      "date": "2026-02-14",
+      "stars": 180
+    }
+  ],
+  "rustyneuron01/Volume-Bundler-Sniping-Copy-Trading-Bot-Rust": [
+    {
+      "date": "2026-02-14",
+      "stars": 115
+    }
+  ],
+  "ImmuneBytes-Security-Audit/Blockchain-Attack-Vectors": [
+    {
+      "date": "2026-02-14",
+      "stars": 120
+    }
+  ],
+  "Tru3Bliss/Casino_Smart_Contract": [
+    {
+      "date": "2026-02-14",
+      "stars": 154
+    }
+  ],
+  "microgift/my-web3-projects": [
+    {
+      "date": "2026-02-14",
+      "stars": 110
+    }
+  ],
+  "weeaa/goyser": [
+    {
+      "date": "2026-02-14",
+      "stars": 66
+    }
+  ],
+  "BundlerBullet/BundlerBullet": [
+    {
+      "date": "2026-02-14",
+      "stars": 99
+    }
+  ],
+  "cmalf/getgrass-bot-js": [
+    {
+      "date": "2026-02-14",
+      "stars": 543
+    }
+  ],
+  "rustyneuron01/Multichain-AI-Agent-Library": [
+    {
+      "date": "2026-02-14",
+      "stars": 91
+    }
+  ],
+  "solana-developers/developer-bootcamp-2024": [
+    {
+      "date": "2026-02-14",
+      "stars": 749
+    }
+  ],
+  "carson2222/pumpfun-bot": [
+    {
+      "date": "2026-02-14",
+      "stars": 67
+    }
+  ],
+  "regolith-labs/drillx": [
+    {
+      "date": "2026-02-14",
+      "stars": 111
+    }
+  ],
+  "hexishq/velos": [
+    {
+      "date": "2026-02-14",
+      "stars": 153
+    }
+  ],
+  "smolmusk/solana-clamm-core": [
+    {
+      "date": "2026-02-14",
+      "stars": 167
+    }
+  ],
+  "solana-foundation/mucho": [
+    {
+      "date": "2026-02-14",
+      "stars": 95
+    }
+  ],
+  "iamnotstatic/multichain-crypto-wallet": [
+    {
+      "date": "2026-02-14",
+      "stars": 316
+    }
+  ],
+  "wallet-standard/wallet-standard": [
+    {
+      "date": "2026-02-14",
+      "stars": 335
+    }
+  ],
+  "anza-xyz/wallet-standard": [
+    {
+      "date": "2026-02-14",
+      "stars": 129
+    }
+  ],
+  "TradeSEB/solana-raydium-bundler": [
+    {
+      "date": "2026-02-14",
+      "stars": 52
+    }
+  ],
+  "0xjeffro/tx-parser": [
+    {
+      "date": "2026-02-14",
+      "stars": 411
+    }
+  ],
+  "SuperteamDAO/solathon": [
+    {
+      "date": "2026-02-14",
+      "stars": 105
+    }
+  ],
+  "cryptole0/Sol_Raydium_Pumpfun_Sniper_Rust": [
+    {
+      "date": "2026-02-14",
+      "stars": 68
+    }
+  ],
+  "kevinheavey/anchorpy": [
+    {
+      "date": "2026-02-14",
+      "stars": 276
+    }
+  ],
+  "kevinheavey/solana-bankrun": [
+    {
+      "date": "2026-02-14",
+      "stars": 165
+    }
+  ],
+  "Tru3Bliss/Prediction-Market-Smart-Contract-Solana": [
+    {
+      "date": "2026-02-14",
+      "stars": 222
+    }
+  ],
+  "Rabnail-SOL/Solana-PumpFun-Bundler": [
+    {
+      "date": "2026-02-14",
+      "stars": 187
+    }
+  ],
+  "csjcode/awesome-solana": [
+    {
+      "date": "2026-02-14",
+      "stars": 163
+    }
+  ],
+  "blockworks-foundation/autobahn": [
+    {
+      "date": "2026-02-14",
+      "stars": 369
+    }
+  ],
+  "706creators/solana-co-learn": [
+    {
+      "date": "2026-02-14",
+      "stars": 76
+    }
+  ],
+  "moonstream-to/api": [
+    {
+      "date": "2026-02-14",
+      "stars": 150
+    }
+  ],
+  "gianlucamazza/solana-mmaker": [
+    {
+      "date": "2026-02-14",
+      "stars": 92
+    }
+  ],
+  "ronanyeah/solana-connect": [
+    {
+      "date": "2026-02-14",
+      "stars": 50
+    }
+  ],
+  "greengod63/DexScreener-Scraping": [
+    {
+      "date": "2026-02-14",
+      "stars": 72
+    }
+  ],
+  "liqtags/DexScreenerClient": [
+    {
+      "date": "2026-02-14",
+      "stars": 76
+    }
+  ]
+}
