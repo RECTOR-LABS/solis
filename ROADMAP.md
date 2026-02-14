@@ -55,7 +55,7 @@
 - [x] Signals API (x402-gated)
 - [x] Wallet setup (Solana USDC)
 - [x] Pricing page / documentation
-- [ ] Payment flow end-to-end testing
+- [x] Payment flow end-to-end testing
 
 ## v0.4 — Quality Improvements (Complete)
 
