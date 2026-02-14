@@ -56,10 +56,11 @@ jobs:
             docker pull ghcr.io/rector-labs/solis:latest
 
             # Stop and remove old container
-            docker compose -f ~/docker-compose.yml down --remove-orphans 2>/dev/null || true
+            cd ~/solis
+            docker compose down --remove-orphans 2>/dev/null || true
 
             # Start new container
-            docker compose -f ~/docker-compose.yml up -d
+            docker compose up -d
 
             # Wait for health check
             echo "Waiting for health check..."
