@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { env } from '../config.js';
 import { logger } from '../logger.js';
+import type { CacheStore } from '../cache/index.js';
 import type { OnchainSignal } from '@solis/shared';
 
 const HELIUS_RPC = 'https://mainnet.helius-rpc.com';
@@ -103,8 +104,16 @@ async function getProgramTxCount(
 export async function collectHelius(
   periodDays: number = 14,
   programs?: Array<{ id: string; name: string }>,
+  cache?: CacheStore,
 ): Promise<OnchainSignal[]> {
   const log = logger.child({ tool: 'helius' });
+
+  const cacheKey = new Date().toISOString().split('T')[0];
+  if (cache) {
+    const cached = await cache.get<OnchainSignal[]>('helius', cacheKey);
+    if (cached) return cached;
+  }
+
   const tracked = programs ?? loadPrograms();
   log.info({ programCount: tracked.length, periodDays }, 'Collecting Helius signals');
 
@@ -134,5 +143,7 @@ export async function collectHelius(
   }
 
   log.info({ collected: signals.length }, 'Helius collection complete');
+
+  if (cache) await cache.set('helius', cacheKey, signals, env.CACHE_TTL_HOURS);
   return signals;
 }
