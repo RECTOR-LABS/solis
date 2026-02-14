@@ -5,6 +5,11 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'SOLIS — Solana Onchain & Landscape Intelligence Signal',
   description: 'Daily intelligence reports detecting emerging Solana ecosystem narratives through developer activity, onchain metrics, and market signals.',
+  alternates: {
+    types: {
+      'application/rss+xml': '/feed.xml',
+    },
+  },
 };
 
 export default function RootLayout({

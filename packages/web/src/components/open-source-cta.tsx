@@ -30,6 +30,17 @@ export function OpenSourceCTA() {
           >
             Read Methodology
           </a>
+          <a
+            href="/feed.xml"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-white/10 text-sol-muted hover:text-white hover:border-white/20 backdrop-blur-sm transition-colors"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M6.18 15.64a2.18 2.18 0 010 4.36 2.18 2.18 0 010-4.36M4 4.44A15.56 15.56 0 0119.56 20h-2.83A12.73 12.73 0 004 7.27V4.44m0 5.66a9.9 9.9 0 019.9 9.9h-2.83A7.07 7.07 0 004 12.93V10.1z" />
+            </svg>
+            RSS Feed
+          </a>
         </div>
 
         {/* Trust badges */}
