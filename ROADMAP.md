@@ -47,7 +47,7 @@
 
 - [ ] Manual quality review of first 2-3 reports
 - [ ] Monitor heartbeat daemon reliability (first week)
-- [ ] Set up Telegram alerts for pipeline notifications
+- [ ] ~~Set up Telegram alerts for pipeline notifications~~ (deferred — low priority, daemon logs suffice for now)
 
 ## v0.3 — Monetization (Complete)
 
@@ -57,13 +57,12 @@
 - [x] Pricing page / documentation
 - [ ] Payment flow end-to-end testing
 
-## v0.4 — Quality Improvements
+## v0.4 — Quality Improvements (Complete)
 
-- [ ] Side-by-side eval: GLM-4.7 vs Haiku for English narrative quality
-- [ ] Historical data caching (Redis or filesystem)
-- [ ] Delta-only fetching (only changes since last run)
-- [ ] GitHub star history tracking (not just current count)
-- [ ] Confidence calibration against actual outcomes
+- [x] Side-by-side eval: LLM comparison CLI (`pnpm eval:llm`)
+- [x] Filesystem signal cache (20h TTL, delta-only fetching merged into cache)
+- [x] GitHub star history tracking (7d/30d deltas, velocity)
+- [x] Confidence calibration analysis (`pnpm eval:calibration`)
 
 ## v0.5 — Advanced Features
 

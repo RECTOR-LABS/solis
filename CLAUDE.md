@@ -39,10 +39,12 @@ Solana Onchain & Landscape Intelligence Signal. Detects emerging Solana ecosyste
 pnpm dev          # Start web dev server (port 3001)
 pnpm agent        # Run analysis pipeline (one-shot)
 pnpm heartbeat    # Start persistent heartbeat daemon (daily at HEARTBEAT_HOUR UTC)
-pnpm test:run     # Run all tests (~245 tests across agent + web)
+pnpm test:run     # Run all tests (~286 tests across agent + web)
 pnpm typecheck    # TypeScript check
 pnpm build        # Build all packages
 pnpm deploy:agent # Bundle heartbeat.ts and SCP to VPS
+pnpm eval:llm     # LLM side-by-side eval (--date YYYY-MM-DD --models a,b)
+pnpm eval:calibration # Confidence calibration analysis
 ```
 
 ## Environment
@@ -56,6 +58,8 @@ Optional config (all have sensible defaults in `config.ts`):
 - `LLM_TOP_REPOS` (30), `LLM_TOP_PROGRAMS` (15), `LLM_TOP_TOKENS` (20) — signal condensation limits
 - `GITHUB_THROTTLE_MS` (500), `COINGECKO_THROTTLE_MS` (2000), `HELIUS_THROTTLE_MS` (300) — API rate limiting
 - `COINGECKO_MAX_PAGES` (2), `DEFILLAMA_MIN_TVL` (100000) — data filters
+- `CACHE_ENABLED` (true) — enable filesystem signal caching
+- `CACHE_TTL_HOURS` (20) — cache entry TTL (20h ensures daily runs get fresh data)
 - `HELIUS_PROGRAMS_PATH` — override built-in program list with JSON file
 - `OPENROUTER_FALLBACK_MODELS` (`z-ai/glm-4.7,z-ai/glm-4.7-flash`) — comma-separated fallback model chain for 5xx errors
 - `ANOMALY_THRESHOLD` (2.0) — z-score threshold for anomaly detection
@@ -104,6 +108,10 @@ Optional config (all have sensible defaults in `config.ts`):
 - `packages/agent/src/index.ts` — Pipeline entry point (9 phases), exports `runPipeline()` for heartbeat
 - `packages/agent/src/heartbeat.ts` — Persistent daemon: lock file, state persistence, smart scheduling, git commit/push, graceful shutdown
 - `packages/agent/src/utils/history.ts` — Narrative matching, history population, report diffing
+- `packages/agent/src/cache/store.ts` — Filesystem signal cache with TTL-based expiry
+- `packages/agent/src/cache/star-history.ts` — Star snapshot recording + 7d/30d delta enrichment
+- `packages/agent/src/eval/llm-compare.ts` — LLM side-by-side eval CLI (Jaccard overlap, stage agreement, Brier)
+- `packages/agent/src/eval/calibration.ts` — Confidence calibration analysis (persistence, Brier score)
 - `packages/agent/src/output/alerts.ts` — Alert detection, formatting, Telegram/Discord dispatch
 - `packages/agent/src/output/markdown.ts` — Markdown report with "What Changed" diff section
 - `packages/web/src/app/page.tsx` — Homepage: 7-section landing page with container breakout strategy
