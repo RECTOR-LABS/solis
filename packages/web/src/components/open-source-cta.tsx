@@ -1,3 +1,5 @@
+import { SubscribeForm } from './subscribe-form';
+
 export function OpenSourceCTA() {
   return (
     <section className="relative py-16 overflow-hidden">
@@ -41,6 +43,12 @@ export function OpenSourceCTA() {
             </svg>
             RSS Feed
           </a>
+        </div>
+
+        {/* Email Digest */}
+        <div className="relative mb-8">
+          <p className="text-sol-muted text-sm mb-3">Get daily intelligence delivered to your inbox</p>
+          <SubscribeForm />
         </div>
 
         {/* Trust badges */}
