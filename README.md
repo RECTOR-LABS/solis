@@ -12,9 +12,9 @@
 # Solana Onchain & Landscape Intelligence Signal
 
 **Detect emerging Solana narratives before they're priced in.**
-*4-layer signal fusion · Z-score anomaly detection · LLM narrative clustering · Daily automated reports*
+*4-layer signal fusion · Z-score anomaly detection · LLM narrative clustering · Autonomous daily reports*
 
-[![Daily Report](https://github.com/RECTOR-LABS/solis/actions/workflows/generate-report.yml/badge.svg)](https://github.com/RECTOR-LABS/solis/actions/workflows/generate-report.yml)
+[![Deploy](https://github.com/RECTOR-LABS/solis/actions/workflows/deploy.yml/badge.svg)](https://github.com/RECTOR-LABS/solis/actions/workflows/deploy.yml)
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6.svg)](https://www.typescriptlang.org/)
 [![Solana](https://img.shields.io/badge/Solana-ecosystem-9945FF.svg)](https://solana.com)
@@ -243,11 +243,13 @@ pnpm agent
 
 | Command | Description |
 |---------|-------------|
-| `pnpm agent` | Run the analysis pipeline |
+| `pnpm agent` | Run the analysis pipeline (one-shot) |
+| `pnpm heartbeat` | Start persistent heartbeat daemon (daily at 08:00 UTC) |
 | `pnpm dev` | Start web dashboard (port 3001) |
 | `pnpm test:run` | Run all tests (~245 tests) |
 | `pnpm typecheck` | TypeScript strict mode check |
 | `pnpm build` | Build all packages |
+| `pnpm deploy:agent` | Bundle heartbeat daemon and SCP to VPS |
 
 ---
 
@@ -325,6 +327,14 @@ pnpm agent
 | `DISCORD_WEBHOOK_URL` | — | Discord webhook URL |
 | `ALERT_ANOMALY_THRESHOLD` | `3.0` | Z-score threshold for anomaly spike alerts |
 
+#### Heartbeat Daemon
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `HEARTBEAT_HOUR` | `8` | Target UTC hour for daily pipeline run |
+| `GIT_PUSH_ENABLED` | `true` | Push report commits to remote |
+| `REPORTS_DIR` | — | Override reports directory path (Docker volume mount) |
+
 #### Web API
 
 | Variable | Default | Description |
@@ -377,9 +387,11 @@ solis/
 ├── packages/
 │   ├── agent/              # Data pipeline + analysis engine
 │   │   ├── src/
+│   │   │   ├── index.ts         # Pipeline entry point (9 phases), exports runPipeline()
+│   │   │   ├── heartbeat.ts     # Persistent daemon: lock file, state, scheduling, git ops
 │   │   │   ├── tools/           # Data collectors (GitHub, DeFi Llama, CoinGecko, Helius, LunarCrush, X/Twitter)
 │   │   │   ├── analysis/        # Anomaly detection, LLM clustering, scoring, ideas
-│   │   │   ├── repos/           # Curated repo list (64) + dynamic discovery
+│   │   │   ├── repos/           # Curated repo list (103) + dynamic discovery
 │   │   │   ├── output/          # JSON + Markdown report writers, alerting
 │   │   │   └── utils/           # Narrative history, matching, diffing
 │   │   └── tests/               # 20 test files (~156 tests)
@@ -391,8 +403,8 @@ solis/
 ├── shared/                 # Shared type contract (Narrative, ReportDiff, SocialSignals)
 ├── reports/                # Git-committed report artifacts (JSON + MD)
 ├── Dockerfile              # Multi-stage build (deps → build → standalone)
-├── docker-compose.yml      # Production deployment (port 8001)
-└── .github/workflows/      # CI, deploy, daily report cron, GitLab mirror
+├── docker-compose.yml      # Production deployment (port 8001, reports volume mount)
+└── .github/workflows/      # CI, deploy, manual report fallback, GitLab mirror
 ```
 
 ---
@@ -402,7 +414,7 @@ solis/
 **~$0.06 per report, ~$2/month** (daily runs):
 
 - **Claude Haiku 4.5** via OpenRouter: ~$0.06/run (2 LLM calls, ~12K tokens each)
-- **Infrastructure**: $0 incremental (GitHub Actions free tier, VPS shared)
+- **Infrastructure**: $0 incremental (VPS shared, heartbeat daemon is a single Node process)
 - **All data APIs**: Free tier sufficient
 
 ---
@@ -413,11 +425,12 @@ solis/
 SOLIS runs on a VPS behind nginx with automated CI/CD:
 
 - **URL:** [solis.rectorspace.com](https://solis.rectorspace.com)
-- **Container:** `ghcr.io/rector-labs/solis:latest`
-- **Port:** 8001
+- **Web container:** `ghcr.io/rector-labs/solis:latest` (port 8001)
+- **Agent daemon:** Persistent heartbeat process on VPS — runs pipeline daily at 08:00 UTC, commits & pushes reports
+- **Reports:** Docker volume mount (`reports/ → /app/reports:ro`) — new reports appear instantly without rebuild
 - **CI/CD:** Push to `main` → GHCR build → VPS auto-deploy
-- **Report generation:** Daily at 08:00 UTC via GitHub Actions
-- **Deploy triggers:** Only `packages/web/**`, `reports/**`, `shared/**`, `Dockerfile`, `docker-compose.yml`
+- **Deploy triggers:** Only `packages/web/**`, `shared/**`, `Dockerfile`, `docker-compose.yml` — agent/report changes don't trigger deploy
+- **Agent deploy:** `pnpm deploy:agent` — esbuild bundle → SCP to VPS
 
 ```yaml
 # docker-compose.yml
@@ -426,7 +439,11 @@ services:
   web:
     image: ghcr.io/rector-labs/solis:latest
     ports:
-      - "8001:3000"
+      - "8001:3001"
+    environment:
+      - REPORTS_DIR=/app/reports
+    volumes:
+      - /home/solis/solis/reports:/app/reports:ro
     restart: unless-stopped
 ```
 
