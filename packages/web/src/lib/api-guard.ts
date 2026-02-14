@@ -5,6 +5,7 @@ export interface GuardConfig {
   limit: number;
   windowMs?: number;
   resource: string;
+  priceCents?: number; // override X402_PRICE_CENTS for this route
 }
 
 const DEFAULT_WINDOW_MS = 3_600_000; // 1 hour
@@ -46,7 +47,7 @@ export async function apiGuard(
 
   // Over limit — return 402 or 429
   if (isX402Enabled()) {
-    const res = buildPaymentRequired(config.resource);
+    const res = buildPaymentRequired(config.resource, config.priceCents);
     // Add rate limit headers to 402 response
     const headers = new Headers(res.headers);
     for (const [k, v] of Object.entries(rateLimitHeaders)) headers.set(k, v);

@@ -28,8 +28,8 @@ export function isX402Enabled(): boolean {
   return process.env.ENABLE_X402 === 'true' && !!process.env.X402_RECEIVER_ADDRESS;
 }
 
-export function buildPaymentRequired(resource: string): Response {
-  const priceCents = Number(process.env.X402_PRICE_CENTS) || 1;
+export function buildPaymentRequired(resource: string, overridePriceCents?: number): Response {
+  const priceCents = overridePriceCents ?? (Number(process.env.X402_PRICE_CENTS) || 1);
   // USDC has 6 decimals — 1 cent = 10000 base units
   const amount = String(priceCents * 10_000);
 
