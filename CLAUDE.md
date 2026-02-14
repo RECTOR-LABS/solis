@@ -87,6 +87,12 @@ Optional config (all have sensible defaults in `config.ts`):
 - `HEARTBEAT_HOUR` (8) — target UTC hour for daily pipeline run (heartbeat daemon only)
 - `GIT_PUSH_ENABLED` (true) — push report commits to remote (heartbeat daemon only)
 - `REPORTS_DIR` — override reports directory path (used by web container for Docker volume mount)
+- `DATA_DIR` (process.cwd()) — directory for subscriber data (web container uses Docker volume mount)
+- `QUERY_API_MODEL` (`anthropic/claude-haiku-4-5-20251001`) — model for custom query API via OpenRouter
+- `RESEND_API_KEY` — Resend email API key (required for email digest)
+- `DIGEST_FROM_EMAIL` (`digest@solis.rectorspace.com`) — from address for digest emails
+- `DIGEST_UNSUBSCRIBE_SECRET` — HMAC key for stateless unsubscribe token verification
+- `DIGEST_API_SECRET` — shared secret for digest trigger API authentication
 
 ## Deployment
 - **VPS**: `solis.rectorspace.com` → `176.222.53.185:8001`
@@ -97,11 +103,12 @@ Optional config (all have sensible defaults in `config.ts`):
 - **Agent deploy**: `pnpm deploy:agent` — esbuild bundle → SCP to VPS, then restart process
 - **Report generation**: VPS heartbeat daemon at 08:00 UTC (GitHub Actions `generate-report.yml` kept as manual emergency fallback)
 - **Reports volume**: Docker volume mount (`/home/solis/solis/reports → /app/reports:ro`) — new reports appear instantly without rebuild
+- **Data volume**: Docker volume mount (`/home/solis/solis/data → /app/data:rw`) — subscriber storage, read-write
 - **Deploy triggers**: Only `packages/web/**`, `shared/**`, `Dockerfile`, `docker-compose.yml` — agent/report changes don't trigger deploy
 - **Cleanup**: Deploy workflow prunes old images aggressively (VPS at 78% disk)
 
 ## Key Files
-- `shared/src/types.ts` — Type contract between agent and web (Narrative, ReportDiff, FortnightlyReport, SocialSignals, XSignals)
+- `shared/src/types.ts` — Type contract between agent and web (Narrative, ReportDiff, FortnightlyReport, SocialSignals, XSignals, QueryRequest/Response, Subscriber)
 - `packages/agent/src/tools/lunarcrush.ts` — LunarCrush v4 API collector (Layer 0 social signals)
 - `packages/agent/src/tools/twitter.ts` — X/Twitter v2 API collector (Layer 0 social signals)
 - `packages/agent/src/config.ts` — Environment validation (envalid, 20+ vars)
@@ -123,7 +130,23 @@ Optional config (all have sensible defaults in `config.ts`):
 - `packages/web/src/components/methodology-trust.tsx` — Server: 2x2 trust/differentiator cards
 - `packages/web/src/app/feed.xml/route.ts` — RSS 2.0 feed route handler (revalidates hourly, XML string templating, no deps)
 - `packages/web/src/app/pricing/page.tsx` — Server: API docs + pricing tiers + x402 integration guide
-- `packages/web/src/components/open-source-cta.tsx` — Server: full-bleed GitHub CTA with trust badges + RSS link
+- `packages/web/src/components/charts/confidence-chart.tsx` — Client: Recharts bar chart — confidence distribution across narratives
+- `packages/web/src/components/charts/timeline-chart.tsx` — Client: Recharts line chart — confidence over time per narrative
+- `packages/web/src/components/charts/signal-radar.tsx` — Client: Recharts radar chart — signal layer coverage per narrative
+- `packages/web/src/components/charts/meta-trends.tsx` — Client: Recharts multi-line chart — pipeline meta trends across reports
+- `packages/web/src/app/trends/page.tsx` — Server: pipeline trends page with MetaTrendsChart + aggregate stats
+- `packages/web/src/lib/openrouter.ts` — Web-side OpenRouter client for custom query API (standalone from agent)
+- `packages/web/src/app/api/query/route.ts` — POST: x402-gated LLM query with report context injection ($0.05/call)
+- `packages/web/src/lib/graph.ts` — Force graph data builder (narratives, repos, tokens, protocols → nodes/links)
+- `packages/web/src/components/knowledge-graph.tsx` — Client: react-force-graph-2d with dynamic import, hover tooltips, click-to-navigate
+- `packages/web/src/app/brain/page.tsx` — Server: knowledge graph page using latest report data
+- `packages/web/src/lib/subscribers.ts` — JSON file subscriber store with atomic writes, HMAC unsubscribe tokens
+- `packages/web/src/app/api/subscribe/route.ts` — POST: subscribe (rate-limited), DELETE: unsubscribe (HMAC-verified)
+- `packages/web/src/components/subscribe-form.tsx` — Client: email subscribe form with loading/success/error states
+- `packages/web/src/lib/digest-template.ts` — HTML email template for daily intelligence digest
+- `packages/web/src/lib/digest.ts` — Resend email sender for digest delivery
+- `packages/web/src/app/api/digest/route.ts` — POST: digest trigger (shared secret protected, called by heartbeat)
+- `packages/web/src/components/open-source-cta.tsx` — Server: full-bleed GitHub CTA with trust badges + RSS link + subscribe form
 - `packages/web/src/components/scroll-indicator.tsx` — Client: bouncing chevron, hides on scroll
 - `packages/web/src/app/report/[date]/page.tsx` — Report page: 8-section intelligence dashboard with section anchors, prev/next nav, stage grouping
 - `packages/web/src/components/report-header.tsx` — Server: glassmorphic header with breadcrumb, prev/next chevron nav, export buttons, timestamp
@@ -141,7 +164,7 @@ Optional config (all have sensible defaults in `config.ts`):
 - `packages/web/src/lib/api-guard.ts` — Composable guard combining rate limiting + x402
 - `packages/web/src/app/layout.tsx` — App shell (shared header/footer, max-w-6xl container)
 - `Dockerfile` — Multi-stage build (deps → build → standalone)
-- `docker-compose.yml` — Production container config (port 8001, reports volume mount)
+- `docker-compose.yml` — Production container config (port 8001, reports volume ro, data volume rw)
 
 ## Conventions
 - 2-space indent, TypeScript strict mode
@@ -154,3 +177,6 @@ Optional config (all have sensible defaults in `config.ts`):
 - Alert errors never crash the pipeline (graceful failure)
 - API routes use route-level `apiGuard()` — not Next.js middleware (routes use Node.js APIs)
 - x402 is fully opt-in — rate limiting is always-on, payment bypass requires `ENABLE_X402=true`
+- apiGuard supports per-route `priceCents` override for different x402 pricing (e.g., query API at $0.05)
+- Subscriber data uses atomic writes (tmp+rename) for crash safety
+- Digest trigger requires `x-digest-secret` header matching `DIGEST_API_SECRET` env var

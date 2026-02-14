@@ -64,13 +64,15 @@
 - [x] GitHub star history tracking (7d/30d deltas, velocity)
 - [x] Confidence calibration analysis (`pnpm eval:calibration`)
 
-## v0.5 — Advanced Features
+## v0.5 — Advanced Features (Complete)
 
-- [ ] Custom LLM query API (x402-gated, $0.05/call)
-- [ ] Email digest (daily newsletter)
+- [x] Interactive charts (Recharts) — confidence distribution, timeline, radar, meta-trends
+- [x] Trends page (/trends) — pipeline stats across all reports
+- [x] Custom LLM query API (x402-gated, $0.05/call)
+- [x] Force-directed knowledge graph (/brain) — replaces static brain.html
+- [x] Email subscriber management (JSON store, HMAC unsubscribe)
+- [x] Email digest via Resend (daily trigger API, HTML template)
 - [x] RSS feed for reports
-- [ ] Interactive charts (D3 or Recharts)
-- [ ] Brain page expansion (knowledge graph visualization)
 
 ## Future
 

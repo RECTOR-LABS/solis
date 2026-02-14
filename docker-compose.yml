@@ -10,8 +10,16 @@ services:
     environment:
       - NODE_ENV=production
       - REPORTS_DIR=/app/reports
+      - DATA_DIR=/app/data
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - QUERY_API_MODEL=${QUERY_API_MODEL}
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - DIGEST_FROM_EMAIL=${DIGEST_FROM_EMAIL}
+      - DIGEST_UNSUBSCRIBE_SECRET=${DIGEST_UNSUBSCRIBE_SECRET}
+      - DIGEST_API_SECRET=${DIGEST_API_SECRET}
     volumes:
       - /home/solis/solis/reports:/app/reports:ro
+      - /home/solis/solis/data:/app/data:rw
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3001/"]
       interval: 30s
