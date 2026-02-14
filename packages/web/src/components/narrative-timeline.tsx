@@ -2,6 +2,7 @@
 
 import type { NarrativeTimeline } from '@/lib/timeline';
 import { StageBadge } from './stage-badge';
+import { TimelineChart } from './charts/timeline-chart';
 import type { SignalStage } from '@solis/shared';
 
 const stageOrder: Record<SignalStage, number> = {
@@ -52,19 +53,8 @@ export function NarrativeTimelineView({ timeline }: { timeline: NarrativeTimelin
       {/* Confidence Trend */}
       <section>
         <h2 className="text-lg font-semibold mb-4">Confidence Trend</h2>
-        <div className="space-y-2">
-          {timeline.points.map(point => (
-            <div key={point.date} className="flex items-center gap-3">
-              <span className="text-xs font-mono text-sol-muted w-24 shrink-0">{point.date}</span>
-              <div className="flex-1 h-6 bg-sol-card rounded overflow-hidden">
-                <div
-                  className={`h-full rounded transition-all ${stageColors[point.stage]}/30`}
-                  style={{ width: `${point.confidence}%` }}
-                />
-              </div>
-              <span className="text-sm font-mono text-white w-10 text-right">{point.confidence}%</span>
-            </div>
-          ))}
+        <div className="border border-sol-border rounded-lg bg-sol-card p-4">
+          <TimelineChart points={timeline.points} />
         </div>
       </section>
 

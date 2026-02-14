@@ -8,6 +8,7 @@ import { ReportDiff } from '@/components/report-diff';
 import { NarrativeStageGroup } from '@/components/narrative-stage-group';
 import { BuildIdeasFilter } from '@/components/build-ideas-filter';
 import { DataSourcesCard } from '@/components/data-sources-card';
+import { ConfidenceChart } from '@/components/charts/confidence-chart';
 
 export const revalidate = 3600;
 
@@ -57,8 +58,9 @@ export default async function ReportPage({ params }: { params: Promise<{ date: s
 
       <ReportNav hasDiff={hasDiff} />
 
-      <section id="summary">
+      <section id="summary" className="space-y-4">
         <ReportMetrics meta={report.meta} />
+        <ConfidenceChart narratives={report.narratives} />
       </section>
 
       {hasDiff && (

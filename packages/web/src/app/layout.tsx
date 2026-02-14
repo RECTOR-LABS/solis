@@ -40,6 +40,9 @@ export default function RootLayout({
               <a href="/methodology" className="text-sol-muted hover:text-white transition-colors">
                 Methodology
               </a>
+              <a href="/trends" className="text-sol-muted hover:text-white transition-colors">
+                Trends
+              </a>
               <a href="/pricing" className="text-sol-muted hover:text-white transition-colors">
                 API
               </a>
