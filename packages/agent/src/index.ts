@@ -33,14 +33,13 @@ import type {
   ReportDiff,
 } from '@solis/shared';
 
-const startTime = Date.now();
-
 interface SourceResult {
   status: DataSourceStatus;
   error?: string;
 }
 
-async function main() {
+export async function runPipeline(): Promise<void> {
+  const startTime = Date.now();
   const periodDays = env.COLLECTION_PERIOD_DAYS;
   const periodWeeks = Math.round(periodDays / 7);
 
@@ -297,10 +296,21 @@ async function main() {
     }, 'SOLIS pipeline complete');
   } catch (error) {
     logger.error({ err: error instanceof Error ? { message: error.message, stack: error.stack, cause: error.cause } : error }, 'Pipeline failed');
+    throw error;
+  }
+}
+
+async function main() {
+  try {
+    await runPipeline();
+  } catch (error) {
     const { sendFailureAlert } = await import('./output/alerts.js');
     await sendFailureAlert(error instanceof Error ? error.message : String(error));
     process.exit(1);
   }
 }
 
-main();
+// Direct execution guard
+const isDirectRun = process.argv[1] &&
+  (process.argv[1].endsWith('index.ts') || process.argv[1].endsWith('index.js'));
+if (isDirectRun) main();

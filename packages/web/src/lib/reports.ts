@@ -2,7 +2,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import type { FortnightlyReport, ReportSummary } from '@solis/shared';
 
-const REPORTS_DIR = join(process.cwd(), '../../reports');
+const REPORTS_DIR = process.env.REPORTS_DIR || join(process.cwd(), '../../reports');
 
 export async function getReport(date: string): Promise<FortnightlyReport | null> {
   try {

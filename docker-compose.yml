@@ -9,6 +9,9 @@ services:
       - "8001:3001"
     environment:
       - NODE_ENV=production
+      - REPORTS_DIR=/app/reports
+    volumes:
+      - /home/solis/solis/reports:/app/reports:ro
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3001/"]
       interval: 30s

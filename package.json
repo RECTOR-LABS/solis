@@ -8,7 +8,9 @@
     "test:run": "pnpm -r test:run",
     "lint": "pnpm -r lint",
     "dev": "pnpm --filter @solis/web dev",
-    "agent": "pnpm --filter @solis/agent start"
+    "agent": "pnpm --filter @solis/agent start",
+    "heartbeat": "pnpm --filter @solis/agent heartbeat",
+    "deploy:agent": "npx esbuild packages/agent/src/heartbeat.ts --bundle --platform=node --format=esm --outfile=/tmp/solis-agent.mjs --external:pino-pretty --target=node22 && scp /tmp/solis-agent.mjs solis:~/solis/"
   },
   "engines": {
     "node": ">=22"

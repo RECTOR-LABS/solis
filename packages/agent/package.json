@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "tsx src/index.ts",
+    "heartbeat": "tsx src/heartbeat.ts",
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "test": "vitest",
