@@ -1,5 +1,7 @@
 import 'dotenv/config';
+import { join } from 'node:path';
 import { logger } from './logger.js';
+import { CacheStore } from './cache/index.js';
 import { collectGitHub } from './tools/github.js';
 import { collectDefiLlama } from './tools/defillama.js';
 import { collectCoinGecko } from './tools/coingecko.js';
@@ -54,6 +56,10 @@ export async function runPipeline(): Promise<void> {
     defillamaMinTvl: env.DEFILLAMA_MIN_TVL,
   }, 'SOLIS pipeline starting');
 
+  const cache = env.CACHE_ENABLED
+    ? new CacheStore(join(env.REPORTS_DIR, '.cache'))
+    : undefined;
+
   try {
     // === Phase 0: Repo discovery (optional) ===
     let repos: string[];
@@ -77,10 +83,10 @@ export async function runPipeline(): Promise<void> {
 
     // Build collector promises — Layer 0 is conditional
     const collectors: Promise<unknown>[] = [
-      collectGitHub(repos, periodWeeks),
-      collectDefiLlama(periodDays),
-      collectHelius(periodDays),
-      collectCoinGecko(env.COINGECKO_MAX_PAGES),
+      collectGitHub(repos, periodWeeks, cache),
+      collectDefiLlama(periodDays, cache),
+      collectHelius(periodDays, undefined, cache),
+      collectCoinGecko(env.COINGECKO_MAX_PAGES, cache),
     ];
 
     let socialCollectorIndex = -1;
