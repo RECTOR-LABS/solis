@@ -18,7 +18,7 @@
 - [x] GitHub Actions cron (fortnightly)
 - [x] GitLab mirror workflow
 
-## v0.2 — First Live Report (Current)
+## v0.2 — First Live Report (Complete)
 
 - [x] GitHub repo (RECTOR-LABS/solis)
 - [x] Configure repository secrets
@@ -26,7 +26,6 @@
 - [x] First real report generated (2026-02-12)
 - [x] Deploy website to VPS (solis.rectorspace.com)
 - [x] Docker + GHCR CI/CD pipeline (auto-deploy on push to main)
-- [x] Daily report generation via GitHub Actions cron (08:00 UTC)
 - [x] Layer 0: X/Twitter KOL timeline signal collection
 - [x] Layer 0: LunarCrush social signal collection
 - [x] Narrative history tracking (fuzzy matching, stage transitions, report diffing)
@@ -40,8 +39,15 @@
 - [x] CSV/JSON export
 - [x] Homepage revamp: 7-section glassmorphic landing page
 - [x] Report page revamp: 8-section intelligence dashboard (header, nav, metrics, diff, stage-grouped narratives, filtered ideas, source cards)
+- [x] Expand curated repo list to 100+ (103 repos)
+- [x] Persistent VPS heartbeat daemon (replaces GitHub Actions cron)
+- [x] Docker volume mount for reports (no rebuild on new reports)
+
+## v0.2.1 — Stabilization (Current)
+
 - [ ] Manual quality review of first 2-3 reports
-- [ ] Expand curated repo list to 100+
+- [ ] Monitor heartbeat daemon reliability (first week)
+- [ ] Set up Telegram alerts for pipeline notifications
 
 ## v0.3 — Monetization
 
