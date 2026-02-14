@@ -7,7 +7,8 @@ Solana Onchain & Landscape Intelligence Signal. Detects emerging Solana ecosyste
 - **Monorepo**: pnpm workspaces — `packages/agent`, `packages/web`, `shared`
 - **Agent**: TypeScript pipeline orchestration, Claude Haiku 4.5 (via OpenRouter) for LLM analysis, GLM fallback chain
 - **Web**: Next.js 15 + Tailwind v4, 7-section landing page (hero → pipeline → report → narratives → ideas → methodology → CTA) + 8-section report dashboard (header → nav → metrics → diff → narratives → ideas → sources) + archive/compare pages
-- **Reports**: Git-committed JSON/MD artifacts in `reports/`
+- **Agent Daemon**: Persistent VPS heartbeat — runs pipeline daily at 08:00 UTC, commits & pushes reports, lock file + state persistence
+- **Reports**: Git-committed JSON/MD artifacts in `reports/`, served to web via Docker volume mount (no rebuild needed)
 - **API Guard**: Route-level rate limiting (in-memory sliding window) + optional x402 micropayments for paid tier bypass
 
 ## Pipeline
@@ -36,10 +37,12 @@ Solana Onchain & Landscape Intelligence Signal. Detects emerging Solana ecosyste
 ## Commands
 ```bash
 pnpm dev          # Start web dev server (port 3001)
-pnpm agent        # Run analysis pipeline
+pnpm agent        # Run analysis pipeline (one-shot)
+pnpm heartbeat    # Start persistent heartbeat daemon (daily at HEARTBEAT_HOUR UTC)
 pnpm test:run     # Run all tests (~245 tests across agent + web)
 pnpm typecheck    # TypeScript check
 pnpm build        # Build all packages
+pnpm deploy:agent # Bundle heartbeat.ts and SCP to VPS
 ```
 
 ## Environment
@@ -77,14 +80,20 @@ Optional config (all have sensible defaults in `config.ts`):
 - `X402_RECEIVER_ADDRESS` — Solana wallet for USDC payments (required when x402 enabled)
 - `X402_PRICE_CENTS` (1) — price per API request in USD cents
 - `X402_FACILITATOR_URL` (https://x402.org/facilitator) — x402 payment verification endpoint
+- `HEARTBEAT_HOUR` (8) — target UTC hour for daily pipeline run (heartbeat daemon only)
+- `GIT_PUSH_ENABLED` (true) — push report commits to remote (heartbeat daemon only)
+- `REPORTS_DIR` — override reports directory path (used by web container for Docker volume mount)
 
 ## Deployment
 - **VPS**: `solis.rectorspace.com` → `176.222.53.185:8001`
 - **User**: `solis` (SSH alias: `ssh solis`)
 - **Docker**: `ghcr.io/rector-labs/solis:latest` via `docker-compose.yml` (`name: solis`)
-- **CI/CD**: Push to `main` (web/reports/shared changes) → GHCR → VPS auto-deploy
-- **Report generation**: Daily at 08:00 UTC via GitHub Actions (`generate-report.yml`)
-- **Deploy triggers**: Only `packages/web/**`, `reports/**`, `shared/**`, `Dockerfile`, `docker-compose.yml` — agent-only changes don't trigger deploy
+- **CI/CD**: Push to `main` (web/shared/Docker changes) → GHCR → VPS auto-deploy
+- **Agent**: Persistent heartbeat daemon on VPS — runs pipeline daily, commits & pushes reports to git
+- **Agent deploy**: `pnpm deploy:agent` — esbuild bundle → SCP to VPS, then restart process
+- **Report generation**: VPS heartbeat daemon at 08:00 UTC (GitHub Actions `generate-report.yml` kept as manual emergency fallback)
+- **Reports volume**: Docker volume mount (`/home/solis/solis/reports → /app/reports:ro`) — new reports appear instantly without rebuild
+- **Deploy triggers**: Only `packages/web/**`, `shared/**`, `Dockerfile`, `docker-compose.yml` — agent/report changes don't trigger deploy
 - **Cleanup**: Deploy workflow prunes old images aggressively (VPS at 78% disk)
 
 ## Key Files
@@ -92,7 +101,8 @@ Optional config (all have sensible defaults in `config.ts`):
 - `packages/agent/src/tools/lunarcrush.ts` — LunarCrush v4 API collector (Layer 0 social signals)
 - `packages/agent/src/tools/twitter.ts` — X/Twitter v2 API collector (Layer 0 social signals)
 - `packages/agent/src/config.ts` — Environment validation (envalid, 20+ vars)
-- `packages/agent/src/index.ts` — Pipeline entry point (9 phases)
+- `packages/agent/src/index.ts` — Pipeline entry point (9 phases), exports `runPipeline()` for heartbeat
+- `packages/agent/src/heartbeat.ts` — Persistent daemon: lock file, state persistence, smart scheduling, git commit/push, graceful shutdown
 - `packages/agent/src/utils/history.ts` — Narrative matching, history population, report diffing
 - `packages/agent/src/output/alerts.ts` — Alert detection, formatting, Telegram/Discord dispatch
 - `packages/agent/src/output/markdown.ts` — Markdown report with "What Changed" diff section
@@ -121,7 +131,7 @@ Optional config (all have sensible defaults in `config.ts`):
 - `packages/web/src/lib/api-guard.ts` — Composable guard combining rate limiting + x402
 - `packages/web/src/app/layout.tsx` — App shell (shared header/footer, max-w-6xl container)
 - `Dockerfile` — Multi-stage build (deps → build → standalone)
-- `docker-compose.yml` — Production container config (port 8001)
+- `docker-compose.yml` — Production container config (port 8001, reports volume mount)
 
 ## Conventions
 - 2-space indent, TypeScript strict mode
