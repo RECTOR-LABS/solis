@@ -114,6 +114,7 @@ Optional config (all have sensible defaults in `config.ts`):
 - `packages/web/src/components/build-ideas-highlight.tsx` — Server: top 3 build ideas
 - `packages/web/src/components/methodology-trust.tsx` — Server: 2x2 trust/differentiator cards
 - `packages/web/src/app/feed.xml/route.ts` — RSS 2.0 feed route handler (revalidates hourly, XML string templating, no deps)
+- `packages/web/src/app/pricing/page.tsx` — Server: API docs + pricing tiers + x402 integration guide
 - `packages/web/src/components/open-source-cta.tsx` — Server: full-bleed GitHub CTA with trust badges + RSS link
 - `packages/web/src/components/scroll-indicator.tsx` — Client: bouncing chevron, hides on scroll
 - `packages/web/src/app/report/[date]/page.tsx` — Report page: 8-section intelligence dashboard with section anchors, prev/next nav, stage grouping

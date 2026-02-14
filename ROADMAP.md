@@ -49,13 +49,13 @@
 - [ ] Monitor heartbeat daemon reliability (first week)
 - [ ] Set up Telegram alerts for pipeline notifications
 
-## v0.3 — Monetization
+## v0.3 — Monetization (Complete)
 
-- [ ] Historical reports API (x402-gated)
-- [ ] Signals API (x402-gated)
-- [ ] Wallet setup (Base USDC + Solana USDC)
+- [x] Historical reports API (x402-gated)
+- [x] Signals API (x402-gated)
+- [x] Wallet setup (Solana USDC)
+- [x] Pricing page / documentation
 - [ ] Payment flow end-to-end testing
-- [ ] Pricing page / documentation
 
 ## v0.4 — Quality Improvements
 
@@ -69,7 +69,7 @@
 
 - [ ] Custom LLM query API (x402-gated, $0.05/call)
 - [ ] Email digest (daily newsletter)
-- [ ] RSS feed for reports
+- [x] RSS feed for reports
 - [ ] Interactive charts (D3 or Recharts)
 - [ ] Brain page expansion (knowledge graph visualization)
 
