@@ -9,7 +9,9 @@
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "eval:llm": "tsx src/eval/llm-compare.ts",
+    "eval:calibration": "tsx src/eval/calibration.ts"
   },
   "dependencies": {
     "@solis/shared": "workspace:*",
