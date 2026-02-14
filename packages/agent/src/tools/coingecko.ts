@@ -1,5 +1,6 @@
 import { env } from '../config.js';
 import { logger } from '../logger.js';
+import type { CacheStore } from '../cache/index.js';
 import type { TokenSignal, ConfirmingSignals } from '@solis/shared';
 
 const CG_API = 'https://api.coingecko.com/api/v3';
@@ -125,8 +126,16 @@ function toTokenSignal(token: CGMarketToken): TokenSignal {
 
 export async function collectCoinGecko(
   maxPages: number = 2,
+  cache?: CacheStore,
 ): Promise<ConfirmingSignals> {
   const log = logger.child({ tool: 'coingecko' });
+
+  const cacheKey = new Date().toISOString().split('T')[0];
+  if (cache) {
+    const cached = await cache.get<ConfirmingSignals>('coingecko', cacheKey);
+    if (cached) return cached;
+  }
+
   log.info({ maxPages }, 'Collecting CoinGecko signals');
 
   const allTokens: CGMarketToken[] = [];
@@ -183,7 +192,7 @@ export async function collectCoinGecko(
     categories: solanaCategories.length,
   }, 'CoinGecko collection complete');
 
-  return {
+  const result: ConfirmingSignals = {
     period: {
       start: periodStart.toISOString(),
       end: now.toISOString(),
@@ -192,4 +201,7 @@ export async function collectCoinGecko(
     trending: trendingSolana,
     categoryPerformance: solanaCategories,
   };
+
+  if (cache) await cache.set('coingecko', cacheKey, result, env.CACHE_TTL_HOURS);
+  return result;
 }
