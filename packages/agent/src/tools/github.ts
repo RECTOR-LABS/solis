@@ -1,5 +1,6 @@
 import { env } from '../config.js';
 import { logger } from '../logger.js';
+import type { CacheStore } from '../cache/index.js';
 import type { GitHubRepoSignal, GitHubSignals } from '@solis/shared';
 
 export const GITHUB_API = 'https://api.github.com';
@@ -121,8 +122,16 @@ async function fetchRepoSignal(
 export async function collectGitHub(
   repos: string[],
   periodWeeks: number = 2,
+  cache?: CacheStore,
 ): Promise<GitHubSignals> {
   const log = logger.child({ tool: 'github' });
+
+  const cacheKey = new Date().toISOString().split('T')[0];
+  if (cache) {
+    const cached = await cache.get<GitHubSignals>('github', cacheKey);
+    if (cached) return cached;
+  }
+
   log.info({ repoCount: repos.length, periodWeeks }, 'Collecting GitHub signals');
 
   const BATCH_SIZE = 10;
@@ -148,7 +157,7 @@ export async function collectGitHub(
   const periodStart = new Date();
   periodStart.setDate(now.getDate() - periodWeeks * 7);
 
-  return {
+  const result: GitHubSignals = {
     period: {
       start: periodStart.toISOString(),
       end: now.toISOString(),
@@ -157,4 +166,7 @@ export async function collectGitHub(
     anomalies: [],
     newRepoClusters: [],
   };
+
+  if (cache) await cache.set('github', cacheKey, result, env.CACHE_TTL_HOURS);
+  return result;
 }
