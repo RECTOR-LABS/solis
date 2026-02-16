@@ -73,6 +73,15 @@ jobs:
               docker inspect --format='{{.State.Health.Status}}' solis-web 2>/dev/null || echo "Health check pending"
             fi
 
+            # === ISR CACHE REVALIDATION ===
+            # Pre-rendered pages are stale from build time (reports in git vs runtime volume).
+            # Trigger on-demand revalidation so pages reflect the live reports directory.
+            REVAL_TOKEN=$(docker exec solis-web cat /app/packages/web/.next/prerender-manifest.json | python3 -c "import sys,json; print(json.load(sys.stdin)['preview']['previewModeId'])")
+            for path in / /archive /trends /brain /feed.xml /compare; do
+              curl -s -o /dev/null -H "x-prerender-revalidate: $REVAL_TOKEN" "http://localhost:8001$path" || true
+            done
+            echo "ISR cache revalidated"
+
             # === AGGRESSIVE CLEANUP ===
             # Remove all images except the one currently in use
             CURRENT_IMAGE=$(docker inspect --format='{{.Image}}' solis-web 2>/dev/null || echo "")
