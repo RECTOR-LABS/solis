@@ -1,9 +1,19 @@
 import { NextResponse } from 'next/server';
+import { timingSafeEqual } from 'node:crypto';
 import { sendDigest } from '@/lib/digest';
+
+function isAuthorized(secret: string | null): boolean {
+  const expected = process.env.DIGEST_API_SECRET;
+  if (!expected || !secret) return false;
+  const a = Buffer.from(expected);
+  const b = Buffer.from(secret);
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(a, b);
+}
 
 export async function POST(request: Request) {
   const secret = request.headers.get('x-digest-secret');
-  if (!process.env.DIGEST_API_SECRET || secret !== process.env.DIGEST_API_SECRET) {
+  if (!isAuthorized(secret)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
