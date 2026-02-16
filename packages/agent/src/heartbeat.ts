@@ -14,7 +14,7 @@ import { runPipeline } from './index.js';
 
 // --- Configuration ---
 
-const LOCK_FILE = '/tmp/solis-heartbeat.lock';
+const LOCK_FILE = process.env.HEARTBEAT_LOCK_PATH || '/tmp/solis-heartbeat.lock';
 const STATE_FILE = '.solis-state.json';
 const HEARTBEAT_HOUR = parseInt(process.env.HEARTBEAT_HOUR || '8', 10);
 const GIT_PUSH_ENABLED = process.env.GIT_PUSH_ENABLED !== 'false';
