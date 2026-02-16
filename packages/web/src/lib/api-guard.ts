@@ -10,6 +10,31 @@ export interface GuardConfig {
 
 const DEFAULT_WINDOW_MS = 3_600_000; // 1 hour
 
+const ALLOWED_ORIGINS = new Set([
+  'https://solis.rectorspace.com',
+  'http://localhost:3001',
+]);
+
+function getCorsHeaders(request: Request): Record<string, string> {
+  const origin = request.headers.get('origin');
+  if (!origin || !ALLOWED_ORIGINS.has(origin)) return {};
+  return {
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, x-payment, x-digest-secret',
+    'Access-Control-Max-Age': '86400',
+  };
+}
+
+export function handleCorsOptions(request: Request): Response | null {
+  if (request.method !== 'OPTIONS') return null;
+  const cors = getCorsHeaders(request);
+  if (!cors['Access-Control-Allow-Origin']) {
+    return new Response(null, { status: 204 });
+  }
+  return new Response(null, { status: 204, headers: cors });
+}
+
 /**
  * API guard — rate limiting + optional x402 micropayments.
  * Returns null to proceed, or a Response to reject (402/429/401).
@@ -60,7 +85,8 @@ export async function apiGuard(
   });
 }
 
-/** Extract stashed rate limit headers from the request (set by apiGuard). */
+/** Extract stashed rate limit headers + CORS from the request (set by apiGuard). */
 export function getGuardHeaders(request: Request): Record<string, string> {
-  return (request as Request & { _rateLimitHeaders?: Record<string, string> })._rateLimitHeaders || {};
+  const rateLimit = (request as Request & { _rateLimitHeaders?: Record<string, string> })._rateLimitHeaders || {};
+  return { ...rateLimit, ...getCorsHeaders(request) };
 }
