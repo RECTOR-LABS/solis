@@ -122,6 +122,28 @@ describe('/api/reports', () => {
     expect(body.error).toContain('not found');
   });
 
+  it('returns paginated results when ?page= present', async () => {
+    const GET = await getHandler();
+    const res = await GET(makeRequest('page=1&limit=1'));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.data).toHaveLength(1);
+    expect(body.pagination).toEqual({
+      page: 1,
+      limit: 1,
+      total: 1,
+      pages: 1,
+    });
+  });
+
+  it('returns raw array when ?page= absent (backward compat)', async () => {
+    const GET = await getHandler();
+    const res = await GET(makeRequest());
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(Array.isArray(body)).toBe(true);
+  });
+
   it('includes rate limit headers on success', async () => {
     const GET = await getHandler();
     const res = await GET(makeRequest());

@@ -44,8 +44,11 @@ const mockNarratives = [
   },
 ];
 
-function makeRequest(headers?: Record<string, string>): Request {
-  return new Request('http://localhost/api/search', {
+function makeRequest(params?: string, headers?: Record<string, string>): Request {
+  const url = params
+    ? `http://localhost/api/search?${params}`
+    : 'http://localhost/api/search';
+  return new Request(url, {
     headers: { 'x-forwarded-for': '10.0.0.3', ...headers },
   });
 }
@@ -76,6 +79,24 @@ describe('/api/search', () => {
     const body = await res.json();
     expect(body).toHaveLength(2);
     expect(body[0].narrative.name).toBe('DeFi Revival');
+  });
+
+  it('returns paginated results when ?page= present', async () => {
+    const GET = await getHandler();
+    const res = await GET(makeRequest('page=1&limit=1'));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.data).toHaveLength(1);
+    expect(body.pagination.total).toBe(2);
+    expect(body.pagination.pages).toBe(2);
+  });
+
+  it('returns raw array when ?page= absent (backward compat)', async () => {
+    const GET = await getHandler();
+    const res = await GET(makeRequest());
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(Array.isArray(body)).toBe(true);
   });
 
   it('includes rate limit headers', async () => {
@@ -130,7 +151,7 @@ describe('/api/search', () => {
       payload: { tx: 'test-tx-sig' },
     }));
 
-    const res = await GET(makeRequest({ 'x-payment': proof }));
+    const res = await GET(makeRequest(undefined, { 'x-payment': proof }));
     expect(res.status).toBe(200);
   });
 
@@ -151,7 +172,7 @@ describe('/api/search', () => {
     }));
 
     const GET = await getHandler();
-    const res = await GET(makeRequest({ 'x-payment': proof }));
+    const res = await GET(makeRequest(undefined, { 'x-payment': proof }));
     expect(res.status).toBe(401);
   });
 });

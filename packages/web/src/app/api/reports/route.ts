@@ -21,5 +21,18 @@ export async function GET(request: Request) {
   }
 
   const summaries = await getReportSummaries();
+
+  const page = searchParams.get('page');
+  if (page) {
+    const pageNum = Math.max(1, parseInt(page, 10) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') ?? '20', 10)));
+    const start = (pageNum - 1) * limit;
+    const data = summaries.slice(start, start + limit);
+    return NextResponse.json({
+      data,
+      pagination: { page: pageNum, limit, total: summaries.length, pages: Math.ceil(summaries.length / limit) },
+    }, { headers });
+  }
+
   return NextResponse.json(summaries, { headers });
 }
