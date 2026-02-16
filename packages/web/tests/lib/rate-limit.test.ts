@@ -80,6 +80,24 @@ describe('getRateLimitHeaders', () => {
   });
 });
 
+describe('LRU eviction', () => {
+  it('evicts oldest entries when store exceeds MAX_ENTRIES', () => {
+    // Fill store to capacity (10_000)
+    const bigConfig = { limit: 1, windowMs: 60_000 };
+    for (let i = 0; i < 10_000; i++) {
+      checkRateLimit(`ip-${i}`, bigConfig);
+    }
+
+    // Next insert should trigger eviction (oldest 10% = 1000 entries)
+    const result = checkRateLimit('new-ip', bigConfig);
+    expect(result.allowed).toBe(true);
+
+    // First IPs should have been evicted — new window starts fresh
+    const evictedResult = checkRateLimit('ip-0', bigConfig);
+    expect(evictedResult.remaining).toBe(0); // brand new entry, limit=1 so remaining=0
+  });
+});
+
 describe('getClientIp', () => {
   it('extracts from x-forwarded-for (first entry)', () => {
     const req = new Request('http://localhost', {

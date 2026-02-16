@@ -15,6 +15,8 @@ interface WindowEntry {
   resetAt: number;
 }
 
+const MAX_ENTRIES = 10_000;
+
 const store = new Map<string, WindowEntry>();
 
 let cleanupTimer: ReturnType<typeof setInterval> | null = null;
@@ -37,11 +39,25 @@ function ensureCleanup(windowMs: number): void {
   }
 }
 
+function evictOldest(): void {
+  // Evict oldest 10% (Map preserves insertion order)
+  const evictCount = Math.ceil(store.size * 0.1);
+  let removed = 0;
+  for (const key of store.keys()) {
+    if (removed >= evictCount) break;
+    store.delete(key);
+    removed++;
+  }
+}
+
 export function checkRateLimit(key: string, config: RateLimitConfig): RateLimitResult {
   const now = Date.now();
   const entry = store.get(key);
 
   if (!entry || now >= entry.resetAt) {
+    if (store.size >= MAX_ENTRIES && !store.has(key)) {
+      evictOldest();
+    }
     const resetAt = now + config.windowMs;
     store.set(key, { count: 1, resetAt });
     ensureCleanup(config.windowMs);
