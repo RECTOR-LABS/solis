@@ -2,14 +2,15 @@ import { Resend } from 'resend';
 import { getReport } from './reports';
 import { loadSubscribers, generateUnsubscribeToken } from './subscribers';
 import { buildDigestHtml } from './digest-template';
+import { webEnv } from './env';
 
 const BASE_URL = 'https://solis.rectorspace.com';
 
 export async function sendDigest(reportDate: string): Promise<{ sent: number; errors: number }> {
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = webEnv.RESEND_API_KEY;
   if (!apiKey) throw new Error('RESEND_API_KEY not configured');
 
-  const fromEmail = process.env.DIGEST_FROM_EMAIL || 'digest@solis.rectorspace.com';
+  const fromEmail = webEnv.DIGEST_FROM_EMAIL;
 
   const report = await getReport(reportDate);
   if (!report) throw new Error(`Report not found for ${reportDate}`);

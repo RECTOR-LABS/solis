@@ -15,6 +15,8 @@ interface WindowEntry {
   resetAt: number;
 }
 
+const MAX_ENTRIES = 10_000;
+
 const store = new Map<string, WindowEntry>();
 
 let cleanupTimer: ReturnType<typeof setInterval> | null = null;
@@ -37,11 +39,25 @@ function ensureCleanup(windowMs: number): void {
   }
 }
 
+function evictOldest(): void {
+  // Evict oldest 10% (Map preserves insertion order)
+  const evictCount = Math.ceil(store.size * 0.1);
+  let removed = 0;
+  for (const key of store.keys()) {
+    if (removed >= evictCount) break;
+    store.delete(key);
+    removed++;
+  }
+}
+
 export function checkRateLimit(key: string, config: RateLimitConfig): RateLimitResult {
   const now = Date.now();
   const entry = store.get(key);
 
   if (!entry || now >= entry.resetAt) {
+    if (store.size >= MAX_ENTRIES && !store.has(key)) {
+      evictOldest();
+    }
     const resetAt = now + config.windowMs;
     store.set(key, { count: 1, resetAt });
     ensureCleanup(config.windowMs);
@@ -63,9 +79,19 @@ export function getRateLimitHeaders(result: RateLimitResult): Record<string, str
   };
 }
 
+const PRIVATE_IP_RE = /^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|127\.|::1|fc|fd|fe80)/;
+
 export function getClientIp(request: Request): string {
   const forwarded = request.headers.get('x-forwarded-for');
-  if (forwarded) return forwarded.split(',')[0].trim();
+  if (forwarded) {
+    // Walk rightmost-first to find the first non-private IP (set by trusted proxy)
+    const parts = forwarded.split(',').map(s => s.trim()).filter(Boolean);
+    for (let i = parts.length - 1; i >= 0; i--) {
+      if (!PRIVATE_IP_RE.test(parts[i])) return parts[i];
+    }
+    // All private — fall through to first entry
+    return parts[0] || '127.0.0.1';
+  }
   const realIp = request.headers.get('x-real-ip');
   if (realIp) return realIp.trim();
   return '127.0.0.1';

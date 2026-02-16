@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from '@solis/shared/fetch';
 import { env } from '../config.js';
 import { logger } from '../logger.js';
 import type { CacheStore } from '../cache/index.js';
@@ -23,7 +24,7 @@ export async function ghFetch<T>(path: string): Promise<T | null> {
   const url = `${GITHUB_API}${path}`;
   const start = Date.now();
   try {
-    const res = await fetch(url, {
+    const res = await fetchWithTimeout(url, {
       headers: {
         Authorization: `Bearer ${env.GITHUB_TOKEN}`,
         Accept: 'application/vnd.github+json',
@@ -54,7 +55,7 @@ async function getCommitActivity(owner: string, name: string): Promise<GitHubApi
 }
 
 async function getContributorCount(owner: string, name: string): Promise<number> {
-  const res = await fetch(`${GITHUB_API}/repos/${owner}/${name}/contributors?per_page=1&anon=true`, {
+  const res = await fetchWithTimeout(`${GITHUB_API}/repos/${owner}/${name}/contributors?per_page=1&anon=true`, {
     headers: {
       Authorization: `Bearer ${env.GITHUB_TOKEN}`,
       Accept: 'application/vnd.github+json',

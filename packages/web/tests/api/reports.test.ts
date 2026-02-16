@@ -98,6 +98,21 @@ describe('/api/reports', () => {
     expect(getReport).toHaveBeenCalledWith('2026-02-14');
   });
 
+  it('rejects path traversal in date param via getReport validation', async () => {
+    // getReport returns null for invalid date formats (regex guard)
+    vi.mocked(getReport).mockResolvedValue(null);
+    const GET = await getHandler();
+    const traversals = [
+      'date=../../etc/passwd',
+      'date=2026-02-14/../../../etc/shadow',
+      'date=foo/bar',
+    ];
+    for (const q of traversals) {
+      const res = await GET(makeRequest(q));
+      expect(res.status).toBe(404);
+    }
+  });
+
   it('returns 404 for unknown date', async () => {
     vi.mocked(getReport).mockResolvedValue(null);
     const GET = await getHandler();
@@ -105,6 +120,28 @@ describe('/api/reports', () => {
     expect(res.status).toBe(404);
     const body = await res.json();
     expect(body.error).toContain('not found');
+  });
+
+  it('returns paginated results when ?page= present', async () => {
+    const GET = await getHandler();
+    const res = await GET(makeRequest('page=1&limit=1'));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.data).toHaveLength(1);
+    expect(body.pagination).toEqual({
+      page: 1,
+      limit: 1,
+      total: 1,
+      pages: 1,
+    });
+  });
+
+  it('returns raw array when ?page= absent (backward compat)', async () => {
+    const GET = await getHandler();
+    const res = await GET(makeRequest());
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(Array.isArray(body)).toBe(true);
   });
 
   it('includes rate limit headers on success', async () => {

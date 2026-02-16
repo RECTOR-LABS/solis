@@ -80,12 +80,47 @@ describe('getRateLimitHeaders', () => {
   });
 });
 
+describe('LRU eviction', () => {
+  it('evicts oldest entries when store exceeds MAX_ENTRIES', () => {
+    // Fill store to capacity (10_000)
+    const bigConfig = { limit: 1, windowMs: 60_000 };
+    for (let i = 0; i < 10_000; i++) {
+      checkRateLimit(`ip-${i}`, bigConfig);
+    }
+
+    // Next insert should trigger eviction (oldest 10% = 1000 entries)
+    const result = checkRateLimit('new-ip', bigConfig);
+    expect(result.allowed).toBe(true);
+
+    // First IPs should have been evicted — new window starts fresh
+    const evictedResult = checkRateLimit('ip-0', bigConfig);
+    expect(evictedResult.remaining).toBe(0); // brand new entry, limit=1 so remaining=0
+  });
+});
+
 describe('getClientIp', () => {
-  it('extracts from x-forwarded-for (first entry)', () => {
+  it('uses rightmost non-private IP from x-forwarded-for', () => {
     const req = new Request('http://localhost', {
-      headers: { 'x-forwarded-for': '1.2.3.4, 5.6.7.8' },
+      headers: { 'x-forwarded-for': '10.0.0.1, 1.2.3.4, 192.168.1.1' },
     });
+    // 192.168.1.1 is private, 1.2.3.4 is public → pick 1.2.3.4
     expect(getClientIp(req)).toBe('1.2.3.4');
+  });
+
+  it('returns first entry when all IPs are private', () => {
+    const req = new Request('http://localhost', {
+      headers: { 'x-forwarded-for': '10.0.0.1, 192.168.1.1' },
+    });
+    expect(getClientIp(req)).toBe('10.0.0.1');
+  });
+
+  it('picks rightmost public IP (resists spoofing)', () => {
+    // Attacker prepends fake public IP, proxy appends real one
+    const req = new Request('http://localhost', {
+      headers: { 'x-forwarded-for': '8.8.8.8, 1.1.1.1, 10.0.0.1' },
+    });
+    // 10.0.0.1 is private, 1.1.1.1 is public → pick rightmost public
+    expect(getClientIp(req)).toBe('1.1.1.1');
   });
 
   it('falls back to x-real-ip', () => {

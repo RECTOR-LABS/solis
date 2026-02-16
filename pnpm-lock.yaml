@@ -50,6 +50,9 @@ importers:
       '@solis/shared':
         specifier: workspace:*
         version: link:../../shared
+      envalid:
+        specifier: ^8.0.0
+        version: 8.1.1
       next:
         specifier: ^15.3.3
         version: 15.5.12(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -96,6 +99,9 @@ importers:
 
   shared:
     devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.19.11
       typescript:
         specifier: ^5.8.3
         version: 5.9.3

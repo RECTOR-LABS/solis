@@ -1,11 +1,15 @@
 import { NextResponse } from 'next/server';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { apiGuard, getGuardHeaders } from '@/lib/api-guard';
+import { apiGuard, getGuardHeaders, handleCorsOptions } from '@/lib/api-guard';
 
 export const revalidate = 3600;
 
 const REPORTS_DIR = join(process.cwd(), '../../reports/signals');
+
+export function OPTIONS(request: Request) {
+  return handleCorsOptions(request) ?? new Response(null, { status: 204 });
+}
 
 export async function GET(request: Request) {
   const guard = await apiGuard(request, { limit: 30, resource: '/api/signals' });
@@ -17,6 +21,10 @@ export async function GET(request: Request) {
 
   if (!date) {
     return NextResponse.json({ error: 'date parameter required' }, { status: 400, headers });
+  }
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return NextResponse.json({ error: 'Invalid date format' }, { status: 400, headers });
   }
 
   try {

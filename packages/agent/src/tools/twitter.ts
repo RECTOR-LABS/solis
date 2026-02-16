@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from '@solis/shared/fetch';
 import { env } from '../config.js';
 import { logger } from '../logger.js';
 import type { XTopicSignal, XSignals } from '@solis/shared';
@@ -69,7 +70,7 @@ async function xFetch<T>(path: string, params: Record<string, string> = {}): Pro
 
   const start = Date.now();
   try {
-    const res = await fetch(url.toString(), { headers });
+    const res = await fetchWithTimeout(url.toString(), { headers });
 
     if (res.status === 429) {
       const resetHeader = res.headers.get('x-rate-limit-reset');
@@ -78,7 +79,7 @@ async function xFetch<T>(path: string, params: Record<string, string> = {}): Pro
         : 15_000;
       logger.warn({ path, waitMs, latency: Date.now() - start }, 'X API rate limited — retrying');
       await new Promise(resolve => setTimeout(resolve, waitMs));
-      const retry = await fetch(url.toString(), { headers });
+      const retry = await fetchWithTimeout(url.toString(), { headers });
       if (!retry.ok) return null;
       return (await retry.json()) as T;
     }
