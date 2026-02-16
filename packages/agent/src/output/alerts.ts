@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from '@solis/shared/fetch';
 import { env } from '../config.js';
 import { logger } from '../logger.js';
 import type { FortnightlyReport } from '@solis/shared';
@@ -160,7 +161,7 @@ async function sendTelegram(text: string): Promise<void> {
   }
 
   const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-  const res = await fetch(url, {
+  const res = await fetchWithTimeout(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -186,7 +187,7 @@ async function sendDiscord(text: string): Promise<void> {
     throw new Error('DISCORD_WEBHOOK_URL is required');
   }
 
-  const res = await fetch(DISCORD_WEBHOOK_URL, {
+  const res = await fetchWithTimeout(DISCORD_WEBHOOK_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ content: text }),

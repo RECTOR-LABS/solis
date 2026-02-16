@@ -1,3 +1,5 @@
+import { fetchWithTimeout } from '@solis/shared/fetch';
+
 // Solana USDC mint address
 const USDC_MINT = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v';
 
@@ -73,7 +75,7 @@ export async function verifyPayment(
   const facilitatorUrl = process.env.X402_FACILITATOR_URL || 'https://x402.org/facilitator';
 
   try {
-    const res = await fetch(`${facilitatorUrl}/verify`, {
+    const res = await fetchWithTimeout(`${facilitatorUrl}/verify`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(proof),

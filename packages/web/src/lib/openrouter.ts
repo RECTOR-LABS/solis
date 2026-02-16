@@ -1,3 +1,5 @@
+import { fetchWithTimeout } from '@solis/shared/fetch';
+
 const DEFAULT_MODEL = 'anthropic/claude-haiku-4-5-20251001';
 
 interface ChatMessage {
@@ -39,7 +41,8 @@ export async function queryLLM(
     { role: 'user', content: userPrompt },
   ];
 
-  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+  const res = await fetchWithTimeout('https://openrouter.ai/api/v1/chat/completions', {
+    timeoutMs: 60_000,
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${apiKey}`,

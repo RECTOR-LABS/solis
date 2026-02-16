@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import { fetchWithTimeout } from '@solis/shared/fetch';
 import { env } from '../config.js';
 import { logger } from '../logger.js';
 import type { CacheStore } from '../cache/index.js';
@@ -11,7 +12,7 @@ async function heliusRpc<T>(method: string, params: unknown): Promise<T | null> 
   const start = Date.now();
 
   try {
-    const res = await fetch(url, {
+    const res = await fetchWithTimeout(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

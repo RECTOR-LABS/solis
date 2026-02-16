@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from '@solis/shared/fetch';
 import { env } from '../config.js';
 import { logger } from '../logger.js';
 import type { CacheStore } from '../cache/index.js';
@@ -8,7 +9,7 @@ const DEFILLAMA_API = 'https://api.llama.fi';
 async function llamaFetch<T>(url: string): Promise<T | null> {
   const start = Date.now();
   try {
-    const res = await fetch(url, {
+    const res = await fetchWithTimeout(url, {
       headers: { Accept: 'application/json' },
     });
 

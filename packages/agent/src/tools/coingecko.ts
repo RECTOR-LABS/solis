@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from '@solis/shared/fetch';
 import { env } from '../config.js';
 import { logger } from '../logger.js';
 import type { CacheStore } from '../cache/index.js';
@@ -23,13 +24,13 @@ async function cgFetch<T>(path: string, params: Record<string, string> = {}): Pr
 
   const start = Date.now();
   try {
-    const res = await fetch(url.toString(), { headers });
+    const res = await fetchWithTimeout(url.toString(), { headers });
 
     if (res.status === 429) {
       const retryAfter = res.headers.get('retry-after');
       logger.warn({ path, retryAfter, latency: Date.now() - start }, 'CoinGecko rate limited');
       await new Promise(resolve => setTimeout(resolve, (parseInt(retryAfter ?? '5', 10) + 1) * 1000));
-      const retry = await fetch(url.toString(), { headers });
+      const retry = await fetchWithTimeout(url.toString(), { headers });
       if (!retry.ok) return null;
       return (await retry.json()) as T;
     }

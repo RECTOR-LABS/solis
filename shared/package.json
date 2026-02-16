@@ -6,12 +6,14 @@
   "main": "./src/types.ts",
   "types": "./src/types.ts",
   "exports": {
-    ".": "./src/types.ts"
+    ".": "./src/types.ts",
+    "./fetch": "./src/fetch.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@types/node": "^22.0.0",
     "typescript": "^5.8.3"
   }
 }
