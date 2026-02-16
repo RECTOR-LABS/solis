@@ -1,0 +1,2328 @@
+{
+  "data": {
+    "period": {
+      "start": "2026-02-02T08:00:17.446Z",
+      "end": "2026-02-16T08:00:17.446Z"
+    },
+    "tvl": {
+      "total": 6585341320,
+      "totalDelta": -808066803,
+      "protocols": [
+        {
+          "protocol": "Binance CEX",
+          "category": "CEX",
+          "tvl": 134323058867.63206,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Lido",
+          "category": "Liquid Staking",
+          "tvl": 18660191373.92151,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "OKX",
+          "category": "CEX",
+          "tvl": 17773245554.01209,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Bitfinex",
+          "category": "CEX",
+          "tvl": 17682958737.451015,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Bybit",
+          "category": "CEX",
+          "tvl": 15172512097.517036,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Bitget",
+          "category": "CEX",
+          "tvl": 6036577283.182189,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "HTX",
+          "category": "CEX",
+          "tvl": 5539965681.336708,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Gate",
+          "category": "CEX",
+          "tvl": 4762683874.692439,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "MEXC",
+          "category": "CEX",
+          "tvl": 4477312591.28488,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Deribit",
+          "category": "CEX",
+          "tvl": 4019090584.5922136,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "KuCoin",
+          "category": "CEX",
+          "tvl": 3066887588.2674527,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "BlackRock BUIDL",
+          "category": "RWA",
+          "tvl": 2362639044.030449,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Maple",
+          "category": "Lending",
+          "tvl": 2073034380.7569938,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Ondo Yield Assets",
+          "category": "RWA",
+          "tvl": 2011268708.2319763,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Kamino Lend",
+          "category": "Lending",
+          "tvl": 1741194767.668445,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "HashKey Exchange",
+          "category": "CEX",
+          "tvl": 1382630082.343181,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Sentora",
+          "category": "Risk Curators",
+          "tvl": 1349582059.19915,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Gauntlet",
+          "category": "Risk Curators",
+          "tvl": 1327960183.4309592,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Portal",
+          "category": "Bridge",
+          "tvl": 1311559350.6247678,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Bitkub",
+          "category": "CEX",
+          "tvl": 1240045383.0452704,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Bitmex",
+          "category": "CEX",
+          "tvl": 1165416948.4164095,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Bitstamp",
+          "category": "CEX",
+          "tvl": 1139025268.482084,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "DoubleZero Staked SOL",
+          "category": "Liquid Staking",
+          "tvl": 1129208072.9893565,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Jito Liquid Staking",
+          "category": "Liquid Staking",
+          "tvl": 1103642240.600604,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Jupiter Lend",
+          "category": "Lending",
+          "tvl": 1080678462.0830476,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Raydium AMM",
+          "category": "Dexs",
+          "tvl": 1023331937.0613915,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Sanctum Validator LSTs",
+          "category": "Liquid Staking",
+          "tvl": 1011457324.2652668,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Jupiter Staked SOL",
+          "category": "Liquid Staking",
+          "tvl": 884462405.9743284,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "SwissBorg",
+          "category": "CEX",
+          "tvl": 877781765.9444885,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Jupiter Perpetual Exchange",
+          "category": "Derivatives",
+          "tvl": 871284108.441208,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Superstate USTB",
+          "category": "RWA",
+          "tvl": 761328584.9927229,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Binance Staked SOL",
+          "category": "Liquid Staking",
+          "tvl": 745157841.5358982,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "SolvBTC",
+          "category": "Bridge",
+          "tvl": 703404353.7314569,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Aster Bridge",
+          "category": "Bridge",
+          "tvl": 663676814.6522502,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "BingX",
+          "category": "CEX",
+          "tvl": 612830033.559417,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Ondo Global Markets",
+          "category": "RWA",
+          "tvl": 612746216.8166795,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "OSL HK",
+          "category": "CEX",
+          "tvl": 606324516.9011376,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Unit",
+          "category": "Bridge",
+          "tvl": 469853600.0269361,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Indodax",
+          "category": "CEX",
+          "tvl": 410230540.34204865,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "PancakeSwap AMM V3",
+          "category": "Dexs",
+          "tvl": 397313288.9416734,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Renzo",
+          "category": "Liquid Restaking",
+          "tvl": 385827711.29513353,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Phemex",
+          "category": "CEX",
+          "tvl": 354786751.5159182,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Drift Trade",
+          "category": "Derivatives",
+          "tvl": 332123302.3863577,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Meteora DLMM",
+          "category": "Dexs",
+          "tvl": 328425911.19945836,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "BounceBit CeDeFi Yield",
+          "category": "Basis Trading",
+          "tvl": 327522120.0809174,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Backpack",
+          "category": "CEX",
+          "tvl": 322536923.83667475,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Solstice USX",
+          "category": "Basis Trading",
+          "tvl": 314688183.4116913,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Hastra",
+          "category": "RWA",
+          "tvl": 296796467.9303625,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Orca DEX",
+          "category": "Dexs",
+          "tvl": 262199294.18776184,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Marinade Liquid Staking",
+          "category": "Liquid Staking",
+          "tvl": 262193154.71928173,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Marinade Native",
+          "category": "Staking Pool",
+          "tvl": 257235201.62803617,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Superstate USCC",
+          "category": "Basis Trading",
+          "tvl": 256635248.20732185,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Kamino Liquidity",
+          "category": "Liquidity manager",
+          "tvl": 223315732.83939376,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Bitrue",
+          "category": "CEX",
+          "tvl": 201486498.35709003,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "VALR",
+          "category": "CEX",
+          "tvl": 199183162.4760098,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Solv Basis Trading",
+          "category": "Basis Trading",
+          "tvl": 184011496.283122,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Sanctum Infinity",
+          "category": "Dexs",
+          "tvl": 180012513.73749688,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "PumpSwap",
+          "category": "Dexs",
+          "tvl": 178905420.50182655,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "xStocks",
+          "category": "RWA",
+          "tvl": 164420415.1085218,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Marinade Select",
+          "category": "Staking Pool",
+          "tvl": 163436225.03201675,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Drift Staked SOL",
+          "category": "Liquid Staking",
+          "tvl": 161309719.08024335,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "CoinDCX",
+          "category": "CEX",
+          "tvl": 142110259.9000279,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Theo Network thBill",
+          "category": "RWA",
+          "tvl": 129267392.90811388,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "BloFin",
+          "category": "CEX",
+          "tvl": 123772514.24409771,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Bybit Staked SOL",
+          "category": "Liquid Staking",
+          "tvl": 113746873.1517107,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Phantom SOL",
+          "category": "Liquid Staking",
+          "tvl": 107129131.79212058,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "The Vault Liquid Staking",
+          "category": "Liquid Staking",
+          "tvl": 106250782.97741666,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "JPool",
+          "category": "Liquid Staking",
+          "tvl": 105533791.25422227,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Exponent",
+          "category": "Yield",
+          "tvl": 99414773.9902335,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "OnRe",
+          "category": "RWA",
+          "tvl": 98065266.80560778,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Lulo",
+          "category": "Yield Aggregator",
+          "tvl": 94790134.81117359,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "OpenEden TBILL",
+          "category": "RWA",
+          "tvl": 94225854.1754858,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Apollo Diversified Credit Securitize Fund",
+          "category": "RWA",
+          "tvl": 93904970.01651208,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "SoSoValue Indexes",
+          "category": "Indexes",
+          "tvl": 91086010.89744687,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "KAIO",
+          "category": "RWA",
+          "tvl": 90418729.17701429,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Project 0",
+          "category": "Lending",
+          "tvl": 88730573.44348785,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "BlazeStake",
+          "category": "Liquid Staking",
+          "tvl": 87303766.12002602,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Ourbit",
+          "category": "CEX",
+          "tvl": 84650227.28983578,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Save",
+          "category": "Lending",
+          "tvl": 82836749.98977932,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "MatrixDock XAUM",
+          "category": "RWA",
+          "tvl": 80034731.47695059,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "VanEck Treasury Fund",
+          "category": "RWA",
+          "tvl": 78389409.44000001,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Loopscale",
+          "category": "Lending",
+          "tvl": 73977444.47968534,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "StandX Bridge",
+          "category": "Canonical Bridge",
+          "tvl": 72136743.7153629,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Edgevana",
+          "category": "Liquid Staking",
+          "tvl": 70197180.4191919,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "marginfi Lending",
+          "category": "Lending",
+          "tvl": 68935771.03832403,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Helius Staked SOL",
+          "category": "Liquid Staking",
+          "tvl": 68731359.14846666,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Unitas",
+          "category": "Basis Trading",
+          "tvl": 66744697.24126346,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "JagPool Staked SOL",
+          "category": "Liquid Staking",
+          "tvl": 63309779.63240099,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "SoDEX Bridge",
+          "category": "Bridge",
+          "tvl": 62490293.90530054,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "STKESOL by SOL Strategies",
+          "category": "Liquid Staking",
+          "tvl": 57032762.74835769,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Sanctum Reserve",
+          "category": "Yield",
+          "tvl": 52556470.13519012,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Meteora vaults",
+          "category": "Yield Aggregator",
+          "tvl": 51101304.851340376,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Coin8",
+          "category": "CEX",
+          "tvl": 49703863.127185546,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "NEAR Intents",
+          "category": "Cross Chain Bridge",
+          "tvl": 48961047.767140605,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Flipster",
+          "category": "CEX",
+          "tvl": 47792319.869386196,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Neutral Trade",
+          "category": "Onchain Capital Allocator",
+          "tvl": 47167345.76046546,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Gate US",
+          "category": "CEX",
+          "tvl": 46405286.371696845,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Meteora DAMM V2",
+          "category": "Dexs",
+          "tvl": 45076636.887151904,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "DFDV Staked SOL",
+          "category": "Liquid Staking",
+          "tvl": 43476822.24134148,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "OSL",
+          "category": "CEX",
+          "tvl": 43388279.9232609,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Realms",
+          "category": "Governance Incentives",
+          "tvl": 42255282.694074295,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "BigONE",
+          "category": "CEX",
+          "tvl": 41528322.71317946,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Pacifica",
+          "category": "Derivatives",
+          "tvl": 35991857.60309866,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Nest Credit",
+          "category": "RWA",
+          "tvl": 35643751.62259555,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Pionex",
+          "category": "CEX",
+          "tvl": 32378660.370558575,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "BitKan",
+          "category": "CEX",
+          "tvl": 31765084.422024176,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Zoomex",
+          "category": "CEX",
+          "tvl": 30224730.85425517,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Hylo Protocol",
+          "category": "Dual-Token Stablecoin",
+          "tvl": 25798319.395648375,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Meteora DAMM V1",
+          "category": "Dexs",
+          "tvl": 25183473.959773034,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Perena Vaults",
+          "category": "Onchain Capital Allocator",
+          "tvl": 24924055.764966402,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Crypto.com Liquid Staking",
+          "category": "Liquid Staking",
+          "tvl": 24856098.716862373,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Vectis Finance",
+          "category": "Yield",
+          "tvl": 24038057.781900205,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Wan Bridge",
+          "category": "Bridge",
+          "tvl": 23446967.034125023,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Allbridge Core",
+          "category": "Bridge",
+          "tvl": 22313075.435234807,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Hylo LSTs",
+          "category": "Liquid Staking",
+          "tvl": 20735202.58124775,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "TruStake",
+          "category": "Liquid Staking",
+          "tvl": 20674215.03618183,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Fragmetric",
+          "category": "Liquid Restaking",
+          "tvl": 20396689.548897184,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Bonk Staked SOL",
+          "category": "Liquid Staking",
+          "tvl": 19186605.16148595,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Etherfuse",
+          "category": "RWA",
+          "tvl": 18136650.919007633,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Wasabi",
+          "category": "Derivatives",
+          "tvl": 17637813.13447624,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Jito Restaking",
+          "category": "Restaking",
+          "tvl": 17631707.964444496,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Bitlo",
+          "category": "CEX",
+          "tvl": 17056259.45259998,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "WEEX",
+          "category": "CEX",
+          "tvl": 17006706.889064576,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Templar Protocol",
+          "category": "Lending",
+          "tvl": 16805998.065394994,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Carrot Liquidity",
+          "category": "Yield Aggregator",
+          "tvl": 16774942.398789493,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Solayer Restaking",
+          "category": "Restaking",
+          "tvl": 16563130.474101864,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Orderly Bridge",
+          "category": "Bridge",
+          "tvl": 16508997.630493443,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "BitMart",
+          "category": "CEX",
+          "tvl": 16313139.444062347,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Serum",
+          "category": "Dexs",
+          "tvl": 15334737.579753323,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Adrastea Validator",
+          "category": "Staking Pool",
+          "tvl": 15255166.564303491,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Coinsquare",
+          "category": "CEX",
+          "tvl": 14915735.92698303,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Arkham Exchange",
+          "category": "CEX",
+          "tvl": 14622675.313474227,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Byreal",
+          "category": "Dexs",
+          "tvl": 14505271.32409509,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "GMTrade",
+          "category": "Derivatives",
+          "tvl": 14252229.003286539,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Futarchy AMM",
+          "category": "Dexs",
+          "tvl": 13229311.729466742,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "HashKey Global",
+          "category": "CEX",
+          "tvl": 12910770.237367982,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Pico Staked SOL",
+          "category": "Liquid Staking",
+          "tvl": 11639732.200629506,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "FlashTrade",
+          "category": "Derivatives",
+          "tvl": 11054024.79438884,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Manifest Trade",
+          "category": "Dexs",
+          "tvl": 10585318.44585276,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "DefiTuna AMM",
+          "category": "Dexs",
+          "tvl": 10396992.738620358,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Knightrade",
+          "category": "Onchain Capital Allocator",
+          "tvl": 10224004.58719008,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "RateX DEX",
+          "category": "Yield",
+          "tvl": 10200305.92127247,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Carrot Lend",
+          "category": "Lending",
+          "tvl": 10120819.086679023,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "CEX.IO",
+          "category": "CEX",
+          "tvl": 10058281.586012311,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "marginfi LST",
+          "category": "Liquid Staking",
+          "tvl": 9818880.635190697,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "LeveX",
+          "category": "CEX",
+          "tvl": 9543220.619800871,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Tothemoon",
+          "category": "CEX",
+          "tvl": 9509676.639302049,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "JupUSD",
+          "category": "Basis Trading",
+          "tvl": 9421160.703191195,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Stronghold Staked SOL",
+          "category": "Liquid Staking",
+          "tvl": 9026362.920700366,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "VNX",
+          "category": "RWA",
+          "tvl": 8748983.49089271,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Mansory",
+          "category": "RWA",
+          "tvl": 8376418.885999354,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Fastex",
+          "category": "CEX",
+          "tvl": 8345383.125416193,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Lantern Staked SOL",
+          "category": "Liquid Staking",
+          "tvl": 8105750.996718377,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "HawkFi",
+          "category": "Liquidity manager",
+          "tvl": 8059794.380289676,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Laine SOL",
+          "category": "Liquid Staking",
+          "tvl": 7255074.947394331,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Hotcoin",
+          "category": "CEX",
+          "tvl": 7069298.558434898,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "ProBit Global",
+          "category": "CEX",
+          "tvl": 7043595.42526531,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Kyros",
+          "category": "Liquid Restaking",
+          "tvl": 6811950.918018084,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Allbridge Classic",
+          "category": "Bridge",
+          "tvl": 6639630.293495992,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Balanced Exchange",
+          "category": "Dexs",
+          "tvl": 6540695.707455661,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Starke Staked SOL",
+          "category": "Liquid Staking",
+          "tvl": 6304083.367491363,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Francium",
+          "category": "Yield",
+          "tvl": 6144136,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Quarry",
+          "category": "Yield",
+          "tvl": 5998486.757228438,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Sablier Lockup",
+          "category": "Payments",
+          "tvl": 5586860.637617216,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Saber",
+          "category": "Dexs",
+          "tvl": 5294229.695320124,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Parcl V3",
+          "category": "Derivatives",
+          "tvl": 5193956.885144038,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "DOOAR",
+          "category": "Dexs",
+          "tvl": 5095020.225002829,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Save SOL",
+          "category": "Liquid Staking",
+          "tvl": 4946500.7423008,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Stafi",
+          "category": "Liquid Staking",
+          "tvl": 4910697.858662262,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Adrastea LST",
+          "category": "Liquid Staking",
+          "tvl": 4670322.489061235,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "DefiTuna Lending",
+          "category": "Lending",
+          "tvl": 4335468.625839632,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Remora Markets",
+          "category": "RWA",
+          "tvl": 4024127.705267445,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Bumpin Trade",
+          "category": "Derivatives",
+          "tvl": 4013624.8444696437,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Ribbon",
+          "category": "Options Vault",
+          "tvl": 3691774.9242798844,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Synatra",
+          "category": "Yield Aggregator",
+          "tvl": 3259007.6720423126,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Solomon USDv",
+          "category": "Basis Trading",
+          "tvl": 3013030.336502868,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "LuckyFuture",
+          "category": "Derivatives",
+          "tvl": 2977773.3947161036,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Nirvana V2",
+          "category": "Reserve Currency",
+          "tvl": 2842361.309188736,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Phoenix",
+          "category": "Dexs",
+          "tvl": 2508745.3337108754,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Sunny",
+          "category": "Yield",
+          "tvl": 2488842.7580377096,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "International Stable Currency",
+          "category": "RWA",
+          "tvl": 2442314.6403115005,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Bridgers",
+          "category": "Dexs",
+          "tvl": 2322047.8133778195,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "FluxBeam",
+          "category": "Dexs",
+          "tvl": 2094698.123755143,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "NX Finance",
+          "category": "Yield Aggregator",
+          "tvl": 2022837.983593378,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Mooncake",
+          "category": "Derivatives",
+          "tvl": 1833365.439917787,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Symmetry",
+          "category": "Indexes",
+          "tvl": 1785887.2435510503,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Port Finance",
+          "category": "Lending",
+          "tvl": 1673586.1503015682,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Privacy Cash",
+          "category": "Privacy",
+          "tvl": 1610116.5141362394,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Katana",
+          "category": "Options Vault",
+          "tvl": 1605408.8701378026,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "DFlow Prediction Market",
+          "category": "Interface",
+          "tvl": 1604442.4365611474,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Hubble",
+          "category": "CDP",
+          "tvl": 1535608.0207217385,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "stabble Stableswap",
+          "category": "Dexs",
+          "tvl": 1354720.0855393757,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Chest Finance",
+          "category": "Options Vault",
+          "tvl": 1242678.4128094134,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Adrastea Restaking Operator",
+          "category": "Staking Pool",
+          "tvl": 1197152.0000568281,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "WavesBridge",
+          "category": "Bridge",
+          "tvl": 1135601.7954077977,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Krystal",
+          "category": "Liquidity manager",
+          "tvl": 1115057.0352662879,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "OpenBook",
+          "category": "Dexs",
+          "tvl": 1098753.7040823638,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "DefiTuna Liquidity",
+          "category": "Liquidity manager",
+          "tvl": 1095043.1589867927,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Defx",
+          "category": "Derivatives",
+          "tvl": 1043437.0762520446,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Larix",
+          "category": "Lending",
+          "tvl": 1002367.2225849341,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Perena Dex",
+          "category": "Dexs",
+          "tvl": 989382.9093568813,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Atrix",
+          "category": "Dexs",
+          "tvl": 950441.6927908702,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Adrastea LRT",
+          "category": "Liquid Restaking",
+          "tvl": 915515.8906504535,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Whales Market",
+          "category": "OTC Marketplace",
+          "tvl": 867061.1090974916,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Bonkswap",
+          "category": "Dexs",
+          "tvl": 842040.8916163662,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Zeus btcSOL",
+          "category": "Liquid Restaking",
+          "tvl": 793912.1243995477,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Apricot Finance",
+          "category": "Lending",
+          "tvl": 744478.7816978579,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "SolanaHub Staked SOL",
+          "category": "Liquid Staking",
+          "tvl": 739256.3174819736,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "BabyDoge Bridge",
+          "category": "Bridge",
+          "tvl": 639503.1660936608,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Lavarage",
+          "category": "Derivatives",
+          "tvl": 592148.993511847,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Adrena Protocol",
+          "category": "Derivatives",
+          "tvl": 538573.7215983253,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "PsyOptions",
+          "category": "Options",
+          "tvl": 524166.8067263287,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Allstake",
+          "category": "Restaking",
+          "tvl": 519898.8988692403,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Armada",
+          "category": "Liquidity manager",
+          "tvl": 490965.46256257617,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Cytonic Airdrop Campaign",
+          "category": "Farm",
+          "tvl": 466675.7852934889,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Aldrin",
+          "category": "Dexs",
+          "tvl": 464478.8298751897,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Streamflow",
+          "category": "Payments",
+          "tvl": 457514.474655891,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Dual Finance",
+          "category": "Options",
+          "tvl": 452193.12886163505,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "PRDT",
+          "category": "Prediction Market",
+          "tvl": 438096.9878018649,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Amun",
+          "category": "Indexes",
+          "tvl": 379345.2414981505,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "The Vault Unstake Pool",
+          "category": "Yield",
+          "tvl": 366616.97963562724,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Kvants",
+          "category": "Onchain Capital Allocator",
+          "tvl": 360078.85679403425,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "AggreLend",
+          "category": "Yield Aggregator",
+          "tvl": 353107.7319343725,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Latoken",
+          "category": "CEX",
+          "tvl": 331947.42791649833,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "UXD",
+          "category": "Partially Algorithmic Stablecoin",
+          "tvl": 308717.2649196116,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Cega V1",
+          "category": "Options",
+          "tvl": 308244.110208014,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Vaultka",
+          "category": "Yield",
+          "tvl": 298894.01053936954,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "JPOW AI",
+          "category": "CDP",
+          "tvl": 291802.8418798851,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "PowerFlow",
+          "category": "Bridge",
+          "tvl": 284560.96753794915,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Invariant",
+          "category": "Dexs",
+          "tvl": 279440.27710236475,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Amulet Liquidity Staking",
+          "category": "Liquid Staking",
+          "tvl": 253835.8118766634,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Saros AMM",
+          "category": "Dexs",
+          "tvl": 249021.89262864305,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Skate AMM",
+          "category": "Dexs",
+          "tvl": 228477.55268478201,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Serum Swap",
+          "category": "Dexs",
+          "tvl": 216749.40339907966,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Jet Margin",
+          "category": "Lending",
+          "tvl": 198985.3242920945,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Tribe.run",
+          "category": "SoFi",
+          "tvl": 196360.77469905387,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Sharky",
+          "category": "NFT Lending",
+          "tvl": 181034.03986861586,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "01",
+          "category": "Derivatives",
+          "tvl": 176327.50524901075,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Rain.fi",
+          "category": "Lending",
+          "tvl": 175777.14419978007,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Meta Pool mpSOL",
+          "category": "Liquid Restaking",
+          "tvl": 172756.5853493401,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Sendit",
+          "category": "Lending",
+          "tvl": 172053.82370777248,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Bitget SOL",
+          "category": "Liquid Staking",
+          "tvl": 166158.00683093452,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Divvy.Bet",
+          "category": "Prediction Market",
+          "tvl": 145633.78830210184,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "StakeNova",
+          "category": "Yield",
+          "tvl": 135698.4370546229,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Citrus",
+          "category": "NFT Lending",
+          "tvl": 129521.81056746957,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Jet V1",
+          "category": "Lending",
+          "tvl": 127259.22400141023,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Crema Finance",
+          "category": "Dexs",
+          "tvl": 126231.0942696528,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Saros DLMM",
+          "category": "Dexs",
+          "tvl": 121108.47188477706,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Cropper AMM",
+          "category": "Dexs",
+          "tvl": 118620.22059023098,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "21.co",
+          "category": "Bridge",
+          "tvl": 117944.36231687287,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Magic Eden",
+          "category": "NFT Marketplace",
+          "tvl": 117560.71518264299,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Pluto",
+          "category": "Yield",
+          "tvl": 113350.49740410488,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        },
+        {
+          "protocol": "Swim Protocol",
+          "category": "Cross Chain Bridge",
+          "tvl": 102478.622482103,
+          "tvlDelta": null,
+          "tvlDeltaPercent": 0,
+          "tvlZScore": 0
+        }
+      ],
+      "anomalies": []
+    },
+    "dexVolumes": {
+      "total": 3132434533,
+      "protocols": [
+        {
+          "protocol": "BisonFi",
+          "volume24h": 775246080,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "HumidiFi",
+          "volume24h": 581978362,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "PumpSwap",
+          "volume24h": 373996562,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Orca DEX",
+          "volume24h": 264460051,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "AlphaQ",
+          "volume24h": 218362361,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Raydium AMM",
+          "volume24h": 159879526,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Tessera V",
+          "volume24h": 154717561,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Manifest Trade",
+          "volume24h": 136115582,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Meteora DLMM",
+          "volume24h": 133108131,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "SolFi V2",
+          "volume24h": 64444636,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "pump.fun",
+          "volume24h": 55357352,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Aquifer",
+          "volume24h": 52567395,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "PancakeSwap AMM V3",
+          "volume24h": 46097900,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "stabble Stableswap",
+          "volume24h": 20495820,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Meteora DAMM V1",
+          "volume24h": 17941006,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "SolFi V1",
+          "volume24h": 11200055,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "ZeroFi",
+          "volume24h": 10985983,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Meteora DAMM V2",
+          "volume24h": 7625267,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Obric",
+          "volume24h": 7436467,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Byreal",
+          "volume24h": 7082127,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Phoenix",
+          "volume24h": 5375133,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Meteora Dynamic Bonding Curve",
+          "volume24h": 4413659,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "DefiTuna AMM",
+          "volume24h": 1523905,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "FluxBeam",
+          "volume24h": 1220716,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Sanctum Infinity",
+          "volume24h": 645165,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Futarchy AMM",
+          "volume24h": 557141,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "RateX DEX",
+          "volume24h": 323905,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Saber",
+          "volume24h": 318149,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "LaunchLab",
+          "volume24h": 299931,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "DFlow Prediction Market",
+          "volume24h": 196902,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Skate AMM",
+          "volume24h": 109511,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Saros AMM",
+          "volume24h": 54334,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "MetaMask Card",
+          "volume24h": 44134,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "WOOFi Swap",
+          "volume24h": 44085,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Jupiter Prediction",
+          "volume24h": 30233,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Drift AMM",
+          "volume24h": 28990,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Fwog.fun",
+          "volume24h": 25843,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Solayer Card",
+          "volume24h": 23679,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Sanctum Reserve",
+          "volume24h": 15693,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "o1.exchange",
+          "volume24h": 8164,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Allbridge Classic",
+          "volume24h": 883,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "DeltaTrade",
+          "volume24h": 40,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "boop.fun",
+          "volume24h": 19,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Hashflow",
+          "volume24h": 11,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Cropper CLMM",
+          "volume24h": 1,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        },
+        {
+          "protocol": "Heaven",
+          "volume24h": 1,
+          "volumeDelta": 0,
+          "volumeZScore": 0
+        }
+      ]
+    },
+    "stablecoinFlows": {
+      "netFlow": 457426102.87585545,
+      "inflows": 516887092.5937736,
+      "outflows": 59460989.71791816
+    }
+  },
+  "fetchedAt": "2026-02-16T08:00:17.482Z",
+  "expiresAt": "2026-02-17T04:00:17.482Z",
+  "source": "defillama"
+}

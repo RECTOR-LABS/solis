@@ -1,0 +1,151 @@
+{
+  "data": [
+    {
+      "programId": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+      "programName": "Jupiter v6",
+      "txCount": 1000,
+      "txDelta": 0,
+      "txZScore": 0,
+      "uniqueSigners": 0
+    },
+    {
+      "programId": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "programName": "Orca Whirlpool",
+      "txCount": 1000,
+      "txDelta": 0,
+      "txZScore": 0,
+      "uniqueSigners": 0
+    },
+    {
+      "programId": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+      "programName": "Raydium CLMM",
+      "txCount": 1000,
+      "txDelta": 0,
+      "txZScore": 0,
+      "uniqueSigners": 0
+    },
+    {
+      "programId": "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8",
+      "programName": "Raydium AMM",
+      "txCount": 1000,
+      "txDelta": 0,
+      "txZScore": 0,
+      "uniqueSigners": 0
+    },
+    {
+      "programId": "MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA",
+      "programName": "Marginfi",
+      "txCount": 1000,
+      "txDelta": 0,
+      "txZScore": 0,
+      "uniqueSigners": 0
+    },
+    {
+      "programId": "So1endDq2YkqhipRh3WViPa8hdiSpxWy6z3Z6tMCpAo",
+      "programName": "Solend",
+      "txCount": 1000,
+      "txDelta": 0,
+      "txZScore": 0,
+      "uniqueSigners": 0
+    },
+    {
+      "programId": "PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY",
+      "programName": "Phoenix",
+      "txCount": 1000,
+      "txDelta": 0,
+      "txZScore": 0,
+      "uniqueSigners": 0
+    },
+    {
+      "programId": "HeLp6NuQkmYB4pYWo2zYs22mESHXPQYzXbB8n4V98jwC",
+      "programName": "Helium",
+      "txCount": 1000,
+      "txDelta": 0,
+      "txZScore": 0,
+      "uniqueSigners": 0
+    },
+    {
+      "programId": "pytd2yc6ho2pVBMkAHnf5UM4pCmMA5tg7wHKGNbqJUj",
+      "programName": "Pyth Network",
+      "txCount": 0,
+      "txDelta": 0,
+      "txZScore": 0,
+      "uniqueSigners": 0
+    },
+    {
+      "programId": "TCMPhJdwDryooaGtiocG1u3xcYbRpiJzb283XfCZsDp",
+      "programName": "Tensor",
+      "txCount": 1000,
+      "txDelta": 0,
+      "txZScore": 0,
+      "uniqueSigners": 0
+    },
+    {
+      "programId": "M2mx93ekt1fmXSVkTrUL9xVFHkmME8HTUi5Cyc5aF7K",
+      "programName": "Magic Eden v2",
+      "txCount": 1000,
+      "txDelta": 0,
+      "txZScore": 0,
+      "uniqueSigners": 0
+    },
+    {
+      "programId": "TSWAPaqyCSx2KABk68Shruf4rp7CxcNi8hAsbdwmHbN",
+      "programName": "Tensor Swap",
+      "txCount": 1000,
+      "txDelta": 0,
+      "txZScore": 0,
+      "uniqueSigners": 0
+    },
+    {
+      "programId": "DRiFtyicJBZYRXMwiiAGrSqQoXk4UHyn228cqKaS8hTg",
+      "programName": "Drift Protocol",
+      "txCount": 0,
+      "txDelta": 0,
+      "txZScore": 0,
+      "uniqueSigners": 0
+    },
+    {
+      "programId": "FsJ3A3u2vn5cTVofAjvy6y5kwABJAqYWpe4975bi2epH",
+      "programName": "Pyth Pull Oracle",
+      "txCount": 0,
+      "txDelta": 0,
+      "txZScore": 0,
+      "uniqueSigners": 0
+    },
+    {
+      "programId": "SSwpkEEcbUqx4vtoEByFjSkhKdCT862DNVb52nZg1UZ",
+      "programName": "Sanctum",
+      "txCount": 1000,
+      "txDelta": 0,
+      "txZScore": 0,
+      "uniqueSigners": 0
+    },
+    {
+      "programId": "jCebN34bUfdeUYJT13J1yG16XWQpt5PDx6Mse9GUqhR",
+      "programName": "Jito Tip Router",
+      "txCount": 1000,
+      "txDelta": 0,
+      "txZScore": 0,
+      "uniqueSigners": 0
+    },
+    {
+      "programId": "stkitrT1Uoy18Dk1fTrgPw8W6MVzoCfYoAFT4MLsmhq",
+      "programName": "Jito Stake Pool",
+      "txCount": 1000,
+      "txDelta": 0,
+      "txZScore": 0,
+      "uniqueSigners": 0
+    },
+    {
+      "programId": "wns1t5RUSbGMDFBjkDJankyyyPkT8J2HaLLanWvk9Kz",
+      "programName": "WNS (Wen New Standard)",
+      "txCount": 0,
+      "txDelta": 0,
+      "txZScore": 0,
+      "uniqueSigners": 0
+    }
+  ],
+  "fetchedAt": "2026-02-16T08:00:19.370Z",
+  "expiresAt": "2026-02-17T04:00:19.370Z",
+  "source": "helius"
+}
