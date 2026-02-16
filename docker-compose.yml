@@ -20,6 +20,14 @@ services:
     volumes:
       - /home/solis/solis/reports:/app/reports:ro
       - /home/solis/solis/data:/app/data:rw
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.5'
+        reservations:
+          memory: 256M
+          cpus: '0.5'
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3001/"]
       interval: 30s
