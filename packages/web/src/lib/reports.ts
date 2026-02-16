@@ -41,40 +41,26 @@ export async function getReportDates(): Promise<string[]> {
 
 export async function getAllNarrativesFlat(): Promise<Array<{ date: string; narrative: import('@solis/shared').Narrative }>> {
   const dates = await getReportDates();
-  const result: Array<{ date: string; narrative: import('@solis/shared').Narrative }> = [];
+  const reports = await Promise.all(dates.map(async date => ({ date, report: await getReport(date) })));
 
-  for (const date of dates) {
-    const report = await getReport(date);
-    if (!report) continue;
-    for (const narrative of report.narratives) {
-      result.push({ date, narrative });
-    }
-  }
-
-  return result;
+  return reports.flatMap(({ date, report }) =>
+    report ? report.narratives.map(narrative => ({ date, narrative })) : [],
+  );
 }
 
 export async function getAllReports(): Promise<Array<{ date: string; report: FortnightlyReport }>> {
   const dates = await getReportDates();
-  const result: Array<{ date: string; report: FortnightlyReport }> = [];
-
-  for (const date of dates) {
-    const report = await getReport(date);
-    if (report) result.push({ date, report });
-  }
-
-  return result;
+  const results = await Promise.all(dates.map(async date => ({ date, report: await getReport(date) })));
+  return results.filter((r): r is { date: string; report: FortnightlyReport } => r.report !== null);
 }
 
 export async function getReportSummaries(): Promise<ReportSummary[]> {
   const dates = await getReportDates();
-  const summaries: ReportSummary[] = [];
+  const reports = await Promise.all(dates.map(async date => ({ date, report: await getReport(date) })));
 
-  for (const date of dates) {
-    const report = await getReport(date);
-    if (!report) continue;
-
-    summaries.push({
+  return reports
+    .filter((r): r is { date: string; report: FortnightlyReport } => r.report !== null)
+    .map(({ date, report }) => ({
       date,
       generatedAt: report.generatedAt,
       period: report.period,
@@ -85,8 +71,5 @@ export async function getReportSummaries(): Promise<ReportSummary[]> {
         momentum: n.momentum,
       })),
       buildIdeaCount: report.buildIdeas.length,
-    });
-  }
-
-  return summaries;
+    }));
 }
