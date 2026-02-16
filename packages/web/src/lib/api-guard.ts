@@ -91,6 +91,7 @@ export async function checkBodySize(
   request: Request,
   maxBytes: number = DEFAULT_MAX_BODY_BYTES,
 ): Promise<Response | null> {
+  // Fast path: reject immediately if Content-Length declares oversized body
   const contentLength = request.headers.get('content-length');
   if (contentLength && parseInt(contentLength, 10) > maxBytes) {
     return new Response(
@@ -98,6 +99,19 @@ export async function checkBodySize(
       { status: 413, headers: { 'Content-Type': 'application/json' } },
     );
   }
+
+  // When Content-Length is absent (chunked encoding), verify actual body size
+  if (!contentLength && request.body) {
+    const clone = request.clone();
+    const buf = await clone.arrayBuffer();
+    if (buf.byteLength > maxBytes) {
+      return new Response(
+        JSON.stringify({ error: `Request body too large (max ${maxBytes} bytes)` }),
+        { status: 413, headers: { 'Content-Type': 'application/json' } },
+      );
+    }
+  }
+
   return null;
 }
 
