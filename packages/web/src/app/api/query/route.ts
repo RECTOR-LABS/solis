@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { apiGuard, getGuardHeaders } from '@/lib/api-guard';
+import { apiGuard, getGuardHeaders, checkBodySize } from '@/lib/api-guard';
 import { getLatestReport, getReport } from '@/lib/reports';
 import { queryLLM } from '@/lib/openrouter';
 import type { QueryRequest, QueryResponse } from '@solis/shared';
@@ -25,6 +25,9 @@ function buildContext(report: import('@solis/shared').FortnightlyReport): string
 }
 
 export async function POST(request: Request) {
+  const bodyCheck = await checkBodySize(request, 1024);
+  if (bodyCheck) return bodyCheck;
+
   const guard = await apiGuard(request, {
     limit: 5,
     resource: '/api/query',

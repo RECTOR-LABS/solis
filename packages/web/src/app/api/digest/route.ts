@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { timingSafeEqual } from 'node:crypto';
 import { sendDigest } from '@/lib/digest';
+import { checkBodySize } from '@/lib/api-guard';
 
 function isAuthorized(secret: string | null): boolean {
   const expected = process.env.DIGEST_API_SECRET;
@@ -12,6 +13,9 @@ function isAuthorized(secret: string | null): boolean {
 }
 
 export async function POST(request: Request) {
+  const bodyCheck = await checkBodySize(request, 1024);
+  if (bodyCheck) return bodyCheck;
+
   const secret = request.headers.get('x-digest-secret');
   if (!isAuthorized(secret)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

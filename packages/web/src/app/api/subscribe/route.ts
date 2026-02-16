@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { apiGuard, getGuardHeaders } from '@/lib/api-guard';
+import { apiGuard, getGuardHeaders, checkBodySize } from '@/lib/api-guard';
 import {
   addSubscriber,
   removeSubscriber,
@@ -8,6 +8,9 @@ import {
 } from '@/lib/subscribers';
 
 export async function POST(request: Request) {
+  const bodyCheck = await checkBodySize(request, 1024);
+  if (bodyCheck) return bodyCheck;
+
   const guard = await apiGuard(request, { limit: 10, resource: '/api/subscribe' });
   if (guard) return guard;
 

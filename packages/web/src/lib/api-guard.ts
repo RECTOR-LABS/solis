@@ -85,6 +85,22 @@ export async function apiGuard(
   });
 }
 
+const DEFAULT_MAX_BODY_BYTES = 102_400; // 100KB
+
+export async function checkBodySize(
+  request: Request,
+  maxBytes: number = DEFAULT_MAX_BODY_BYTES,
+): Promise<Response | null> {
+  const contentLength = request.headers.get('content-length');
+  if (contentLength && parseInt(contentLength, 10) > maxBytes) {
+    return new Response(
+      JSON.stringify({ error: `Request body too large (max ${maxBytes} bytes)` }),
+      { status: 413, headers: { 'Content-Type': 'application/json' } },
+    );
+  }
+  return null;
+}
+
 /** Extract stashed rate limit headers + CORS from the request (set by apiGuard). */
 export function getGuardHeaders(request: Request): Record<string, string> {
   const rateLimit = (request as Request & { _rateLimitHeaders?: Record<string, string> })._rateLimitHeaders || {};
