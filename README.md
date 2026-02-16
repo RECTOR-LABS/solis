@@ -409,11 +409,14 @@ solis/
 
 ## Cost
 
-**~$0.06 per report, ~$2/month** (daily runs):
+**~$0.26 per report, ~$7.80/month** (daily runs with X signals enabled):
 
-- **Claude Haiku 4.5** via OpenRouter: ~$0.06/run (2 LLM calls, ~12K tokens each)
-- **Infrastructure**: $0 incremental (VPS shared, heartbeat daemon is a single Node process)
-- **All data APIs**: Free tier sufficient
+| Service | Cost | Notes |
+|---------|------|-------|
+| **Claude Haiku 4.5** (OpenRouter) | ~$0.05/run | 2 LLM calls, ~12K tokens each |
+| **X/Twitter API** | ~$0.21/run | 6 user reads ($0.06) + 30 post reads ($0.15), pay-as-you-go |
+| **GitHub, Helius, DeFi Llama, CoinGecko** | $0 | Free tier sufficient |
+| **Infrastructure** | $0 incremental | VPS shared, heartbeat daemon is a single Node process |
 
 ---
 
