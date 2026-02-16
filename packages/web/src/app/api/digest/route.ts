@@ -37,9 +37,9 @@ export async function POST(request: Request) {
     const result = await sendDigest(body.date);
     return NextResponse.json(result);
   } catch (err) {
-    return NextResponse.json(
-      { error: `Digest failed: ${(err as Error).message}` },
-      { status: 500 },
-    );
+    const message = process.env.NODE_ENV === 'production'
+      ? 'Digest failed'
+      : `Digest failed: ${(err as Error).message}`;
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

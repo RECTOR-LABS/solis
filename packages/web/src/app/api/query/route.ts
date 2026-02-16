@@ -82,9 +82,9 @@ export async function POST(request: Request) {
     const headers = getGuardHeaders(request);
     return NextResponse.json(response, { headers });
   } catch (err) {
-    return NextResponse.json(
-      { error: `LLM query failed: ${(err as Error).message}` },
-      { status: 502 },
-    );
+    const message = process.env.NODE_ENV === 'production'
+      ? 'LLM query failed'
+      : `LLM query failed: ${(err as Error).message}`;
+    return NextResponse.json({ error: message }, { status: 502 });
   }
 }
