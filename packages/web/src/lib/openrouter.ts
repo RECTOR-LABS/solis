@@ -1,6 +1,5 @@
 import { fetchWithTimeout } from '@solis/shared/fetch';
-
-const DEFAULT_MODEL = 'anthropic/claude-haiku-4-5-20251001';
+import { webEnv } from './env';
 
 interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
@@ -31,10 +30,10 @@ export async function queryLLM(
   userPrompt: string,
   model?: string,
 ): Promise<QueryResult> {
-  const apiKey = process.env.OPENROUTER_API_KEY;
+  const apiKey = webEnv.OPENROUTER_API_KEY;
   if (!apiKey) throw new Error('OPENROUTER_API_KEY not configured');
 
-  const selectedModel = model || process.env.QUERY_API_MODEL || DEFAULT_MODEL;
+  const selectedModel = model || webEnv.QUERY_API_MODEL;
 
   const messages: ChatMessage[] = [
     { role: 'system', content: systemPrompt },

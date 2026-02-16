@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server';
 import { timingSafeEqual } from 'node:crypto';
 import { sendDigest } from '@/lib/digest';
 import { checkBodySize } from '@/lib/api-guard';
+import { webEnv } from '@/lib/env';
 
 function isAuthorized(secret: string | null): boolean {
-  const expected = process.env.DIGEST_API_SECRET;
+  const expected = webEnv.DIGEST_API_SECRET;
   if (!expected || !secret) return false;
   const a = Buffer.from(expected);
   const b = Buffer.from(secret);
