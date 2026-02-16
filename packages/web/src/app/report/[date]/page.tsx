@@ -9,6 +9,7 @@ import { NarrativeStageGroup } from '@/components/narrative-stage-group';
 import { BuildIdeasFilter } from '@/components/build-ideas-filter';
 import { DataSourcesCard } from '@/components/data-sources-card';
 import { ConfidenceChart } from '@/components/charts/confidence-chart';
+import { ChartErrorBoundary } from '@/components/chart-error-boundary';
 
 export const revalidate = 3600;
 
@@ -60,7 +61,9 @@ export default async function ReportPage({ params }: { params: Promise<{ date: s
 
       <section id="summary" className="space-y-4">
         <ReportMetrics meta={report.meta} />
-        <ConfidenceChart narratives={report.narratives} />
+        <ChartErrorBoundary fallbackLabel="Confidence chart unavailable">
+          <ConfidenceChart narratives={report.narratives} />
+        </ChartErrorBoundary>
       </section>
 
       {hasDiff && (

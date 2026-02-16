@@ -3,6 +3,7 @@
 import type { NarrativeTimeline } from '@/lib/timeline';
 import { StageBadge } from './stage-badge';
 import { TimelineChart } from './charts/timeline-chart';
+import { ChartErrorBoundary } from './chart-error-boundary';
 import type { SignalStage } from '@solis/shared';
 
 const stageOrder: Record<SignalStage, number> = {
@@ -54,7 +55,9 @@ export function NarrativeTimelineView({ timeline }: { timeline: NarrativeTimelin
       <section>
         <h2 className="text-lg font-semibold mb-4">Confidence Trend</h2>
         <div className="border border-sol-border rounded-lg bg-sol-card p-4">
-          <TimelineChart points={timeline.points} />
+          <ChartErrorBoundary fallbackLabel="Timeline chart unavailable">
+            <TimelineChart points={timeline.points} />
+          </ChartErrorBoundary>
         </div>
       </section>
 

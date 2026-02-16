@@ -1,5 +1,6 @@
 import { getAllReports } from '@/lib/reports';
 import { MetaTrendsChart } from '@/components/charts/meta-trends';
+import { ChartErrorBoundary } from '@/components/chart-error-boundary';
 
 export const revalidate = 3600;
 
@@ -29,7 +30,9 @@ export default async function TrendsPage() {
           No reports available yet
         </div>
       ) : (
-        <MetaTrendsChart data={data} />
+        <ChartErrorBoundary fallbackLabel="Trends chart unavailable">
+          <MetaTrendsChart data={data} />
+        </ChartErrorBoundary>
       )}
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
