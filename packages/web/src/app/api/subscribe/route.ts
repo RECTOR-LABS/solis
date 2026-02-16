@@ -1,11 +1,15 @@
 import { NextResponse } from 'next/server';
-import { apiGuard, getGuardHeaders, checkBodySize } from '@/lib/api-guard';
+import { apiGuard, getGuardHeaders, checkBodySize, handleCorsOptions } from '@/lib/api-guard';
 import {
   addSubscriber,
   removeSubscriber,
   isValidEmail,
   verifyUnsubscribeToken,
 } from '@/lib/subscribers';
+
+export function OPTIONS(request: Request) {
+  return handleCorsOptions(request) ?? new Response(null, { status: 204 });
+}
 
 export async function POST(request: Request) {
   const bodyCheck = await checkBodySize(request, 1024);

@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
 import { getReportSummaries, getReport } from '@/lib/reports';
-import { apiGuard, getGuardHeaders } from '@/lib/api-guard';
+import { apiGuard, getGuardHeaders, handleCorsOptions } from '@/lib/api-guard';
 
 export const revalidate = 3600;
+
+export function OPTIONS(request: Request) {
+  return handleCorsOptions(request) ?? new Response(null, { status: 204 });
+}
 
 export async function GET(request: Request) {
   const guard = await apiGuard(request, { limit: 30, resource: '/api/reports' });

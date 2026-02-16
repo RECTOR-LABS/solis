@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { apiGuard, getGuardHeaders, checkBodySize } from '@/lib/api-guard';
+import { apiGuard, getGuardHeaders, checkBodySize, handleCorsOptions } from '@/lib/api-guard';
 import { getLatestReport, getReport } from '@/lib/reports';
 import { queryLLM } from '@/lib/openrouter';
 import type { QueryRequest, QueryResponse } from '@solis/shared';
@@ -22,6 +22,10 @@ function buildContext(report: import('@solis/shared').FortnightlyReport): string
     .join('\n');
 
   return `Report Date: ${report.generatedAt}\nPeriod: ${report.period.start} to ${report.period.end}\n\nNarratives:\n${narrativeSummary}\n\nTop Repos:\n${topRepos}\n\nTop Tokens:\n${topTokens}\n\nMeta: ${report.meta.narrativesIdentified} narratives, ${report.meta.anomaliesDetected} anomalies, ${report.meta.totalReposAnalyzed} repos analyzed`;
+}
+
+export function OPTIONS(request: Request) {
+  return handleCorsOptions(request) ?? new Response(null, { status: 204 });
 }
 
 export async function POST(request: Request) {
