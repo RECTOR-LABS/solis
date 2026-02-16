@@ -4,7 +4,14 @@ import type { FortnightlyReport, ReportSummary } from '@solis/shared';
 
 const REPORTS_DIR = process.env.REPORTS_DIR || join(process.cwd(), '../../reports');
 
+const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+
+export function isValidDateParam(date: string): boolean {
+  return DATE_REGEX.test(date);
+}
+
 export async function getReport(date: string): Promise<FortnightlyReport | null> {
+  if (!isValidDateParam(date)) return null;
   try {
     const content = await readFile(join(REPORTS_DIR, `${date}.json`), 'utf-8');
     return JSON.parse(content) as FortnightlyReport;

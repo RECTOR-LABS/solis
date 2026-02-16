@@ -98,6 +98,21 @@ describe('/api/reports', () => {
     expect(getReport).toHaveBeenCalledWith('2026-02-14');
   });
 
+  it('rejects path traversal in date param via getReport validation', async () => {
+    // getReport returns null for invalid date formats (regex guard)
+    vi.mocked(getReport).mockResolvedValue(null);
+    const GET = await getHandler();
+    const traversals = [
+      'date=../../etc/passwd',
+      'date=2026-02-14/../../../etc/shadow',
+      'date=foo/bar',
+    ];
+    for (const q of traversals) {
+      const res = await GET(makeRequest(q));
+      expect(res.status).toBe(404);
+    }
+  });
+
   it('returns 404 for unknown date', async () => {
     vi.mocked(getReport).mockResolvedValue(null);
     const GET = await getHandler();

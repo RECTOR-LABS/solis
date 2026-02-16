@@ -59,6 +59,24 @@ describe('/api/signals', () => {
     expect(body.leading.repos).toHaveLength(1);
   });
 
+  it('rejects path traversal in date param', async () => {
+    const GET = await getHandler();
+    const traversals = [
+      'date=../../etc/passwd',
+      'date=2026-02-14/../../../etc/shadow',
+      'date=..%2F..%2Fetc%2Fpasswd',
+      'date=foo/bar',
+    ];
+    for (const q of traversals) {
+      const res = await GET(makeRequest(q));
+      expect(res.status).toBe(400);
+      const body = await res.json();
+      expect(body.error).toContain('Invalid date');
+      expect(readFile).not.toHaveBeenCalled();
+      vi.mocked(readFile).mockClear();
+    }
+  });
+
   it('returns 404 for unknown date', async () => {
     vi.mocked(readFile).mockRejectedValue(new Error('ENOENT'));
     const GET = await getHandler();

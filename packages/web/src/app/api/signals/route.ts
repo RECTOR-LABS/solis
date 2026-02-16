@@ -19,6 +19,10 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'date parameter required' }, { status: 400, headers });
   }
 
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return NextResponse.json({ error: 'Invalid date format' }, { status: 400, headers });
+  }
+
   try {
     const content = await readFile(join(REPORTS_DIR, `${date}.json`), 'utf-8');
     return NextResponse.json(JSON.parse(content), { headers });
