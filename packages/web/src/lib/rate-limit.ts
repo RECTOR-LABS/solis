@@ -79,9 +79,19 @@ export function getRateLimitHeaders(result: RateLimitResult): Record<string, str
   };
 }
 
+const PRIVATE_IP_RE = /^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|127\.|::1|fc|fd|fe80)/;
+
 export function getClientIp(request: Request): string {
   const forwarded = request.headers.get('x-forwarded-for');
-  if (forwarded) return forwarded.split(',')[0].trim();
+  if (forwarded) {
+    // Walk rightmost-first to find the first non-private IP (set by trusted proxy)
+    const parts = forwarded.split(',').map(s => s.trim()).filter(Boolean);
+    for (let i = parts.length - 1; i >= 0; i--) {
+      if (!PRIVATE_IP_RE.test(parts[i])) return parts[i];
+    }
+    // All private — fall through to first entry
+    return parts[0] || '127.0.0.1';
+  }
   const realIp = request.headers.get('x-real-ip');
   if (realIp) return realIp.trim();
   return '127.0.0.1';

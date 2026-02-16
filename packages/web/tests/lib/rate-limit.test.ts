@@ -99,11 +99,28 @@ describe('LRU eviction', () => {
 });
 
 describe('getClientIp', () => {
-  it('extracts from x-forwarded-for (first entry)', () => {
+  it('uses rightmost non-private IP from x-forwarded-for', () => {
     const req = new Request('http://localhost', {
-      headers: { 'x-forwarded-for': '1.2.3.4, 5.6.7.8' },
+      headers: { 'x-forwarded-for': '10.0.0.1, 1.2.3.4, 192.168.1.1' },
     });
+    // 192.168.1.1 is private, 1.2.3.4 is public → pick 1.2.3.4
     expect(getClientIp(req)).toBe('1.2.3.4');
+  });
+
+  it('returns first entry when all IPs are private', () => {
+    const req = new Request('http://localhost', {
+      headers: { 'x-forwarded-for': '10.0.0.1, 192.168.1.1' },
+    });
+    expect(getClientIp(req)).toBe('10.0.0.1');
+  });
+
+  it('picks rightmost public IP (resists spoofing)', () => {
+    // Attacker prepends fake public IP, proxy appends real one
+    const req = new Request('http://localhost', {
+      headers: { 'x-forwarded-for': '8.8.8.8, 1.1.1.1, 10.0.0.1' },
+    });
+    // 10.0.0.1 is private, 1.1.1.1 is public → pick rightmost public
+    expect(getClientIp(req)).toBe('1.1.1.1');
   });
 
   it('falls back to x-real-ip', () => {
