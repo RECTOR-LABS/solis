@@ -25,13 +25,13 @@
 
 ---
 
-## Latest Report — February 13, 2026
+## Latest Report — February 15, 2026
 
 | Narratives | Anomalies | Repos Analyzed | Build Ideas | LLM Cost |
 |:----------:|:---------:|:--------------:|:-----------:|:--------:|
-| **10** | **38** | **354** | **15** | **$0.06** |
+| **10** | **33** | **385** | **10** | **$0.05** |
 
-**[Live Dashboard](https://solis.rectorspace.com)** · **[Latest Report](reports/2026-02-13.md)**
+**[Live Dashboard](https://solis.rectorspace.com)** · **[Latest Report](reports/2026-02-15.md)**
 
 ---
 
@@ -85,48 +85,48 @@ SOLIS fuses signals from four independent layers to detect narratives at differe
 
 ## Detected Narratives
 
-> From the [February 13, 2026 report](reports/2026-02-13.md) — 10 narratives identified across all stages.
+> From the [February 15, 2026 report](reports/2026-02-15.md) — 10 narratives identified across all stages.
 
 <details open>
-<summary><strong>Memecoin Tooling & Infrastructure Explosion</strong> — GROWING (92%)</summary>
+<summary><strong>MEV Infrastructure Maturation & Validator Optimization</strong> — EMERGING (72%)</summary>
 
-Massive developer activity around memecoin creation, trading, and analysis tools on Solana. The fdv.lol repo shows 335 commits (15.6 z-score), indicating intense development velocity. Multiple trading bots, copy-trading tools, and launchpad integrations are being actively built.
+Jito MEV infrastructure continues accelerating with significant developer activity around validator optimization, tip distribution, and bundle strategies. The ecosystem is building sophisticated tooling for MEV extraction and redistribution.
 
 | Layer | Key Signals |
 |-------|-------------|
-| **Leading** (GitHub) | fdv.lol: 335 commits (z-score 15.6), multiple sniper/copy-trading bot repos gaining stars |
-| **Coincident** (Onchain) | PumpSwap: $968M 24h volume (z-score 5.04), BisonFi: $575M (+55% delta) |
-| **Confirming** (Market) | BUTTCOIN: +143% 14d, PIPPIN: +77% 14d, Meme category: $4.15B mcap |
+| **Leading** (GitHub) | jito-solana: 1,929 stars, jito-labs repos with active commit velocity |
+| **Coincident** (Onchain) | Jito (Re)staking: $2.2B TVL, significant validator participation |
+| **Confirming** (Market) | JTO token tracking validator adoption metrics |
 
 </details>
 
 <details open>
-<summary><strong>AI Agent Integration for Solana DeFi</strong> — EMERGING (85%)</summary>
+<summary><strong>Pump.fun Ecosystem Tooling Proliferation</strong> — GROWING (68%)</summary>
 
-Growing developer focus on AI agents that autonomously interact with Solana DeFi protocols. New repos like solana-agent-kit, CloddsBot, and OctoBot show integration of LangChain/Claude with Solana trading operations.
+Explosion of developer tooling around Pump.fun's token launch platform. Trading bots, snipers, copy-trading tools, and analytics dashboards being built at high velocity as the platform dominates Solana DEX volume.
 
 | Layer | Key Signals |
 |-------|-------------|
-| **Leading** (GitHub) | solana-agent-kit (LangChain integration), CloddsBot (Claude-powered arbitrage), solana-mcp-server |
-| **Coincident** (Onchain) | $538M stablecoin inflows supporting bot operations, concentrated DEX volume |
-| **Confirming** (Market) | C98: +67%, POKT: +57%, SOL trending |
+| **Leading** (GitHub) | Multiple pump-related repos with high commit velocity, fdv.lol analytics |
+| **Coincident** (Onchain) | PumpSwap dominating DEX volume, concentrated trading activity |
+| **Confirming** (Market) | Meme category maintaining multi-billion market cap |
 
 </details>
 
 <details open>
-<summary><strong>Solana Data Infrastructure & Indexing</strong> — EARLY (65%)</summary>
+<summary><strong>Multi-Chain Wallet Standardization & Solana Integration</strong> — MAINSTREAM (65%)</summary>
 
-Growing focus on data infrastructure and transaction parsing for Solana. gRPC-based DEX parsing, data scraping tools, and RPC infrastructure indicate data indexing is becoming a critical bottleneck being addressed by infrastructure teams.
+Wallet infrastructure converging on cross-chain standards with Solana as a primary target chain. Wallet-standard, wallet-adapter, and Solana Mobile Stack driving mainstream-ready UX.
 
 | Layer | Key Signals |
 |-------|-------------|
-| **Leading** (GitHub) | dexscraper: 41 commits, helius-sdk: 3 commits, solana-defi (gRPC DEX parsing) |
-| **Coincident** (Onchain) | $968M PumpSwap volume creating demand for real-time data |
-| **Confirming** (Market) | Foundational layer — no direct price signals yet |
+| **Leading** (GitHub) | wallet-adapter: 1,797 stars, wallet-standard active development |
+| **Coincident** (Onchain) | Broad wallet integration across DeFi protocols |
+| **Confirming** (Market) | SOL ecosystem tokens reflecting wallet infrastructure maturity |
 
 </details>
 
-**[View all 10 narratives in the full report →](reports/2026-02-13.md)**
+**[View all 10 narratives in the full report →](reports/2026-02-15.md)**
 
 ---
 
@@ -136,26 +136,24 @@ Growing focus on data infrastructure and transaction parsing for Solana. gRPC-ba
 
 | # | Idea | Difficulty | Timeframe |
 |---|------|-----------|-----------|
-| 1 | Memecoin Safety Score API | Intermediate | 2-4 weeks |
-| 2 | Memecoin Launch Analytics Dashboard | Beginner | 2-3 days |
-| 3 | AI Agent Portfolio Rebalancer | Intermediate | 3-4 weeks |
-| 4 | Multi-Chain Memecoin Arbitrage Bot | Advanced | 6-8 weeks |
-| 5 | Zero-Slot Sandwich Detection Tool | Advanced | 4-6 weeks |
+| 1 | Jito MEV Dashboard & Validator Performance Analytics | Intermediate | 2-4 weeks |
+| 2 | Pump.fun Liquidity Automation & Position Manager | Intermediate | 3-4 weeks |
+| 3 | SNS Identity Layer for DeFi Protocols | Beginner | 2-3 days |
+| 4 | MEV Extraction Simulator & Backtest Engine | Advanced | 6-8 weeks |
+| 5 | Prediction Market Oracle & Settlement Layer | Advanced | 8-12 weeks |
 
 <details>
-<summary><strong>Example: Memecoin Safety Score API</strong></summary>
+<summary><strong>Example: Jito MEV Dashboard & Validator Performance Analytics</strong></summary>
 
-Build a real-time API that analyzes memecoin contracts for rug-pull indicators, liquidity lock status, and holder distribution patterns. Integrate with fdv.lol data to provide risk scores that trading bots and launchpads can query before execution.
+Build a real-time dashboard that aggregates MEV extraction metrics, validator tip router performance, and stake pool yields across Jito infrastructure. This fills the gap between raw MEV data and actionable validator optimization insights, enabling operators to benchmark performance and optimize configurations.
 
-**Why now:** Memecoin trading volume is at all-time highs with 335 commits to fdv.lol (15.6 z-score), but there's no standardized safety layer. Traders are losing millions to rugs weekly — a safety API would be immediately adopted by launchpads and bots.
+**Why now:** Jito's active infrastructure commits signal hardening. Validators adopting Jito need visibility into optimization ROI — no standardized analytics exist yet. This captures the transition from experimental MEV to operational validator management.
 
-**Tech stack:** Rust, Solana Web3.js, PostgreSQL, FastAPI, Anchor IDL parsing
-
-**Reference projects:** fdv.lol, PumpSwap, solana-sniper-copy-mev-trading-bot
+**Tech stack:** Rust (Solana client), Next.js/React, PostgreSQL, Jito SDK, WebSocket for real-time updates
 
 </details>
 
-**[View all 15 build ideas in the full report →](reports/2026-02-13.md#build-ideas)**
+**[View all 10 build ideas in the full report →](reports/2026-02-15.md#build-ideas)**
 
 ---
 
@@ -229,14 +227,14 @@ pnpm agent
 **Expected output:**
 ```
 [INFO] Pipeline starting...
-[INFO] Collecting GitHub signals (64 curated + discovery)...
+[INFO] Collecting GitHub signals (103 curated + discovery)...
 [INFO] Collecting DeFi Llama signals...
 [INFO] Collecting Helius signals...
 [INFO] Collecting CoinGecko signals...
-[INFO] Z-score anomaly detection: 38 anomalies found
+[INFO] Z-score anomaly detection: 33 anomalies found
 [INFO] LLM clustering: 10 narratives identified
-[INFO] Report written: reports/2026-02-13.json + .md
-[INFO] Pipeline complete (134s, $0.06)
+[INFO] Report written: reports/2026-02-15.json + .md
+[INFO] Pipeline complete (127s, $0.05)
 ```
 
 ### Commands
@@ -246,7 +244,7 @@ pnpm agent
 | `pnpm agent` | Run the analysis pipeline (one-shot) |
 | `pnpm heartbeat` | Start persistent heartbeat daemon (daily at 08:00 UTC) |
 | `pnpm dev` | Start web dashboard (port 3001) |
-| `pnpm test:run` | Run all tests (353 tests) |
+| `pnpm test:run` | Run all tests (392 tests) |
 | `pnpm typecheck` | TypeScript strict mode check |
 | `pnpm build` | Build all packages |
 | `pnpm deploy:agent` | Bundle heartbeat daemon and SCP to VPS |
@@ -394,7 +392,7 @@ solis/
 │   │   │   ├── repos/           # Curated repo list (103) + dynamic discovery
 │   │   │   ├── output/          # JSON + Markdown report writers, alerting
 │   │   │   └── utils/           # Narrative history, matching, diffing
-│   │   └── tests/               # 24 test files (~197 tests)
+│   │   └── tests/               # 26 test files (~212 tests)
 │   └── web/                # Next.js 15 dashboard
 │       └── src/
 │           ├── app/             # Pages (home, report, archive, compare, methodology)
@@ -440,7 +438,7 @@ The SOLIS heartbeat daemon runs continuously on a VPS, executing the full intell
 The entire SOLIS codebase was designed and implemented by CIPHER, a Claude Code (Claude Opus) agent operating as a senior development partner:
 
 - **Full-stack architecture** — monorepo structure, 9-phase pipeline orchestration, Next.js 15 dashboard, Docker deployment
-- **353 tests** across agent (197) and web (156) packages — TypeScript strict mode, CI/CD pipeline
+- **392 tests** across agent (212) and web (180) packages — TypeScript strict mode, CI/CD pipeline
 - **Advanced features** — Recharts visualizations, knowledge graph, x402 micropayments, email digest system, RSS feed
 - **Infrastructure** — GitHub Actions CI/CD, Docker multi-stage builds, VPS deployment automation, nginx reverse proxy
 
