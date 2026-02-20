@@ -41,7 +41,12 @@ interface SourceResult {
   error?: string;
 }
 
-export async function runPipeline(): Promise<void> {
+export interface PipelineResult {
+  narratives: number;
+  anomalies: number;
+}
+
+export async function runPipeline(): Promise<PipelineResult> {
   const startTime = Date.now();
   const periodDays = env.COLLECTION_PERIOD_DAYS;
   const periodWeeks = Math.round(periodDays / 7);
@@ -315,6 +320,11 @@ export async function runPipeline(): Promise<void> {
       llmCostUsd: (clusterCost + ideaCost).toFixed(4),
       ...(failedSources.length > 0 ? { failedSources } : {}),
     }, 'SOLIS pipeline complete');
+
+    return {
+      narratives: narratives.length,
+      anomalies: scored.summary.totalAnomalies,
+    };
   } catch (error) {
     logger.error({ err: error instanceof Error ? { message: error.message, stack: error.stack, cause: error.cause } : error }, 'Pipeline failed');
     throw error;

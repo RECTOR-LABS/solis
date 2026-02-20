@@ -154,7 +154,7 @@ describe('runPipeline', () => {
   });
 
   it('completes pipeline and writes output', async () => {
-    await runPipeline();
+    const result = await runPipeline();
 
     expect(mockCollectGitHub).toHaveBeenCalled();
     expect(mockCollectDefiLlama).toHaveBeenCalled();
@@ -164,6 +164,27 @@ describe('runPipeline', () => {
     expect(mockGenerateBuildIdeas).toHaveBeenCalled();
     expect(mockWriteJsonReport).toHaveBeenCalled();
     expect(mockWriteMarkdownReport).toHaveBeenCalled();
+    expect(result).toEqual({ narratives: 0, anomalies: 0 });
+  });
+
+  it('returns narrative and anomaly counts', async () => {
+    mockClusterNarratives.mockResolvedValue({
+      narratives: [
+        { id: 'n-1', name: 'Test', slug: 'test', description: '', stage: 'EARLY', momentum: 'stable', confidence: 80, signals: { leading: [], coincident: [], confirming: [], social: [] }, relatedRepos: [], relatedTokens: [], relatedProtocols: [] },
+      ],
+      tokensUsed: 100,
+      costUsd: 0.001,
+    });
+    mockGenerateBuildIdeas.mockResolvedValue({
+      ideas: [{ id: 'idea-1', title: 'Test Idea', narrative: 'n-1', description: '', difficulty: 'beginner', timeframe: '2-3 days', techStack: [], existingProjects: [], whyNow: '' }],
+      tokensUsed: 50,
+      costUsd: 0.0005,
+    });
+
+    const result = await runPipeline();
+
+    expect(result.narratives).toBe(1);
+    expect(result.anomalies).toBe(0);
   });
 
   it('sends alerts after output phase', async () => {
@@ -174,11 +195,12 @@ describe('runPipeline', () => {
   it('completes when a collector fails (graceful degradation)', async () => {
     mockCollectGitHub.mockRejectedValue(new Error('GitHub API down'));
 
-    await runPipeline();
+    const result = await runPipeline();
 
     // Pipeline still completes with empty fallback for GitHub
     expect(mockClusterNarratives).toHaveBeenCalled();
     expect(mockWriteJsonReport).toHaveBeenCalled();
+    expect(result).toEqual({ narratives: 0, anomalies: 0 });
   });
 
   it('completes when multiple collectors fail', async () => {

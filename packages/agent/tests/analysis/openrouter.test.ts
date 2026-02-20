@@ -120,6 +120,39 @@ describe('isServerError', () => {
   });
 });
 
+describe('isTransientError', () => {
+  it('should return true for 401', async () => {
+    const { isTransientError } = await import('../../src/analysis/openrouter.js');
+    expect(isTransientError({ status: 401 })).toBe(true);
+  });
+
+  it('should return true for 408', async () => {
+    const { isTransientError } = await import('../../src/analysis/openrouter.js');
+    expect(isTransientError({ status: 408 })).toBe(true);
+  });
+
+  it('should return true for 429', async () => {
+    const { isTransientError } = await import('../../src/analysis/openrouter.js');
+    expect(isTransientError({ status: 429 })).toBe(true);
+  });
+
+  it('should return false for 500', async () => {
+    const { isTransientError } = await import('../../src/analysis/openrouter.js');
+    expect(isTransientError({ status: 500 })).toBe(false);
+  });
+
+  it('should return false for 400', async () => {
+    const { isTransientError } = await import('../../src/analysis/openrouter.js');
+    expect(isTransientError({ status: 400 })).toBe(false);
+  });
+
+  it('should return false for non-object errors', async () => {
+    const { isTransientError } = await import('../../src/analysis/openrouter.js');
+    expect(isTransientError(new Error('network'))).toBe(false);
+    expect(isTransientError(null)).toBe(false);
+  });
+});
+
 describe('analyzeWithLLM — model fallback', () => {
   beforeEach(() => {
     mockCreate.mockReset();
@@ -179,19 +212,81 @@ describe('analyzeWithLLM — model fallback', () => {
     expect(mockCreate).toHaveBeenCalledTimes(3);
   });
 
-  it('should throw immediately on 401 without fallback', async () => {
-    mockCreate.mockRejectedValueOnce(makeClientError(401));
+  it('should retry same model on transient 401 then succeed', async () => {
+    mockCreate
+      .mockRejectedValueOnce(makeClientError(401))
+      .mockResolvedValueOnce(makeSuccessResponse('{"recovered":true}'));
+
+    const { analyzeWithLLM } = await import('../../src/analysis/openrouter.js');
+    const result = await analyzeWithLLM('system', 'user');
+
+    expect(result.content).toBe('{"recovered":true}');
+    expect(result.model).toBe('anthropic/claude-haiku-4.5');
+    // 1st call = fail, 2nd call = retry on same model
+    expect(mockCreate).toHaveBeenCalledTimes(2);
+    expect(mockCreate).toHaveBeenNthCalledWith(1, expect.objectContaining({ model: 'anthropic/claude-haiku-4.5' }));
+    expect(mockCreate).toHaveBeenNthCalledWith(2, expect.objectContaining({ model: 'anthropic/claude-haiku-4.5' }));
+  });
+
+  it('should retry same model on 429 then succeed', async () => {
+    const err429 = new Error('429 Rate Limited');
+    (err429 as any).status = 429;
+
+    mockCreate
+      .mockRejectedValueOnce(err429)
+      .mockResolvedValueOnce(makeSuccessResponse('{"ok":true}'));
+
+    const { analyzeWithLLM } = await import('../../src/analysis/openrouter.js');
+    const result = await analyzeWithLLM('system', 'user');
+
+    expect(result.content).toBe('{"ok":true}');
+    expect(mockCreate).toHaveBeenCalledTimes(2);
+  });
+
+  it('should fallback to next model after exhausting transient retries', async () => {
+    // 3 retries on primary (1 initial + 2 retries), then succeed on fallback
+    mockCreate
+      .mockRejectedValueOnce(makeClientError(401))
+      .mockRejectedValueOnce(makeClientError(401))
+      .mockRejectedValueOnce(makeClientError(401))
+      .mockResolvedValueOnce(makeSuccessResponse('{"fallback":true}'));
+
+    const { analyzeWithLLM } = await import('../../src/analysis/openrouter.js');
+    const result = await analyzeWithLLM('system', 'user');
+
+    expect(result.model).toBe('z-ai/glm-4.7');
+    expect(result.content).toBe('{"fallback":true}');
+    // 3 attempts on primary + 1 on fallback
+    expect(mockCreate).toHaveBeenCalledTimes(4);
+  });
+
+  it('should throw after all models exhaust transient retries', async () => {
+    // 3 models × 3 attempts each = 9 calls
+    mockCreate.mockRejectedValue(makeClientError(401));
 
     const { analyzeWithLLM } = await import('../../src/analysis/openrouter.js');
     await expect(analyzeWithLLM('system', 'user')).rejects.toThrow('401 Unauthorized');
+    // 3 models × (1 initial + 2 retries) = 9
+    expect(mockCreate).toHaveBeenCalledTimes(9);
+  });
+
+  it('should throw immediately on 400 without retry or fallback', async () => {
+    const err400 = new Error('400 Bad Request');
+    (err400 as any).status = 400;
+    mockCreate.mockRejectedValueOnce(err400);
+
+    const { analyzeWithLLM } = await import('../../src/analysis/openrouter.js');
+    await expect(analyzeWithLLM('system', 'user')).rejects.toThrow('400 Bad Request');
     expect(mockCreate).toHaveBeenCalledTimes(1);
   });
 
-  it('should throw immediately on 429 without fallback', async () => {
-    mockCreate.mockRejectedValueOnce(makeClientError(429));
+  it('should throw immediately on 403 without retry or fallback', async () => {
+    const err403 = new Error('403 Forbidden');
+    (err403 as any).status = 403;
+    mockCreate.mockRejectedValueOnce(err403);
 
     const { analyzeWithLLM } = await import('../../src/analysis/openrouter.js');
-    await expect(analyzeWithLLM('system', 'user')).rejects.toThrow();
+    await expect(analyzeWithLLM('system', 'user')).rejects.toThrow('403 Forbidden');
     expect(mockCreate).toHaveBeenCalledTimes(1);
   });
 
