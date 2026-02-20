@@ -25,13 +25,13 @@
 
 ---
 
-## Latest Report — February 15, 2026
+## Latest Report — February 19, 2026
 
 | Narratives | Anomalies | Repos Analyzed | Build Ideas | LLM Cost |
 |:----------:|:---------:|:--------------:|:-----------:|:--------:|
-| **10** | **33** | **385** | **10** | **$0.05** |
+| **11** | **15** | **101** | **14** | **$0.05** |
 
-**[Live Dashboard](https://solis.rectorspace.com)** · **[Latest Report](reports/2026-02-15.md)**
+**[Live Dashboard](https://solis.rectorspace.com)** · **[Latest Report](reports/2026-02-19.md)** · 8 daily reports and counting
 
 ---
 
@@ -85,48 +85,48 @@ SOLIS fuses signals from four independent layers to detect narratives at differe
 
 ## Detected Narratives
 
-> From the [February 15, 2026 report](reports/2026-02-15.md) — 10 narratives identified across all stages.
+> From the [February 19, 2026 report](reports/2026-02-19.md) — 11 narratives identified across all stages.
 
 <details open>
-<summary><strong>MEV Infrastructure Maturation & Validator Optimization</strong> — EMERGING (72%)</summary>
+<summary><strong>Raydium AMM Dominance & DEX Volume Concentration</strong> — GROWING (82%)</summary>
 
-Jito MEV infrastructure continues accelerating with significant developer activity around validator optimization, tip distribution, and bundle strategies. The ecosystem is building sophisticated tooling for MEV extraction and redistribution.
+Raydium AMM is commanding exceptional DEX volume with $749M in 24h volume (z-score: 5.29, +392% delta) — the highest anomaly in DeFi. Significant capital concentration in a single AMM with emerging competitors like BisonFi trailing.
 
 | Layer | Key Signals |
 |-------|-------------|
-| **Leading** (GitHub) | jito-solana: 1,929 stars, jito-labs repos with active commit velocity |
-| **Coincident** (Onchain) | Jito (Re)staking: $2.2B TVL, significant validator participation |
-| **Confirming** (Market) | JTO token tracking validator adoption metrics |
+| **Leading** (GitHub) | orca-so/whirlpools: 4 commits — competing AMM maintaining development pace |
+| **Coincident** (Onchain) | Raydium AMM: $749M volume (z-score: 5.29, +392% delta), BisonFi: $382M (z-score: 2.49) |
+| **Confirming** (Market) | Meme token volume driving concentrated DEX activity |
 
 </details>
 
 <details open>
-<summary><strong>Pump.fun Ecosystem Tooling Proliferation</strong> — GROWING (68%)</summary>
+<summary><strong>Anchor Framework & Developer Tooling Standardization</strong> — MAINSTREAM (78%)</summary>
 
-Explosion of developer tooling around Pump.fun's token launch platform. Trading bots, snipers, copy-trading tools, and analytics dashboards being built at high velocity as the platform dominates Solana DEX volume.
+Anchor continues as the dominant smart contract framework with active development (4 commits, +4 stars, z-score: 2.92). Paired with Anza's SDK improvements (anza-xyz/kit), the ecosystem is converging on standardized developer tooling.
 
 | Layer | Key Signals |
 |-------|-------------|
-| **Leading** (GitHub) | Multiple pump-related repos with high commit velocity, fdv.lol analytics |
-| **Coincident** (Onchain) | PumpSwap dominating DEX volume, concentrated trading activity |
-| **Confirming** (Market) | Meme category maintaining multi-billion market cap |
+| **Leading** (GitHub) | solana-foundation/anchor: z-score 2.92, anza-xyz/kit: z-score 2.92 |
+| **Coincident** (Onchain) | Anchor-based protocols (Orca Whirlpool, Raydium CLMM) maintaining 1000 tx baseline |
+| **Confirming** (Market) | Ecosystem tokens reflecting tooling maturity |
 
 </details>
 
 <details open>
-<summary><strong>Multi-Chain Wallet Standardization & Solana Integration</strong> — MAINSTREAM (65%)</summary>
+<summary><strong>MEV Infrastructure Maturation & Validator Optimization</strong> — EMERGING (76%)</summary>
 
-Wallet infrastructure converging on cross-chain standards with Solana as a primary target chain. Wallet-standard, wallet-adapter, and Solana Mobile Stack driving mainstream-ready UX.
+Jito's MEV infrastructure continues to mature with active development on jito-solana (7 commits, highest in period). Validator optimization and MEV-Burn mechanisms are being refined as core infrastructure.
 
 | Layer | Key Signals |
 |-------|-------------|
-| **Leading** (GitHub) | wallet-adapter: 1,797 stars, wallet-standard active development |
-| **Coincident** (Onchain) | Broad wallet integration across DeFi protocols |
-| **Confirming** (Market) | SOL ecosystem tokens reflecting wallet infrastructure maturity |
+| **Leading** (GitHub) | jito-foundation/jito-solana: 7 commits (leading velocity) |
+| **Coincident** (Onchain) | Jito Tip Router + Stake Pool: 1000 tx baseline each |
+| **Confirming** (Market) | JTO tracking validator adoption metrics |
 
 </details>
 
-**[View all 10 narratives in the full report →](reports/2026-02-15.md)**
+**[View all 11 narratives in the full report →](reports/2026-02-19.md)**
 
 ---
 
@@ -136,24 +136,24 @@ Wallet infrastructure converging on cross-chain standards with Solana as a prima
 
 | # | Idea | Difficulty | Timeframe |
 |---|------|-----------|-----------|
-| 1 | Jito MEV Dashboard & Validator Performance Analytics | Intermediate | 2-4 weeks |
-| 2 | Pump.fun Liquidity Automation & Position Manager | Intermediate | 3-4 weeks |
-| 3 | SNS Identity Layer for DeFi Protocols | Beginner | 2-3 days |
-| 4 | MEV Extraction Simulator & Backtest Engine | Advanced | 6-8 weeks |
-| 5 | Prediction Market Oracle & Settlement Layer | Advanced | 8-12 weeks |
+| 1 | MEV Transparency Dashboard for Validators | Intermediate | 2-4 weeks |
+| 2 | Solana Read Layer Query Optimizer | Intermediate | 3-4 weeks |
+| 3 | Anchor IDL Code Generator for Multiple Languages | Intermediate | 2-3 weeks |
+| 4 | DEX Liquidity Aggregator with MEV Protection | Advanced | 4-6 weeks |
+| 5 | SNS-Integrated Payment Protocol for E-commerce | Beginner | 2-3 days |
 
 <details>
-<summary><strong>Example: Jito MEV Dashboard & Validator Performance Analytics</strong></summary>
+<summary><strong>Example: MEV Transparency Dashboard for Validators</strong></summary>
 
-Build a real-time dashboard that aggregates MEV extraction metrics, validator tip router performance, and stake pool yields across Jito infrastructure. This fills the gap between raw MEV data and actionable validator optimization insights, enabling operators to benchmark performance and optimize configurations.
+Build a real-time dashboard that aggregates MEV extraction metrics, validator tip router performance, and stake pool yields across Jito infrastructure. Jito-solana leads commit velocity (7 commits) — validators adopting Jito need visibility into optimization ROI, but no standardized analytics exist yet.
 
-**Why now:** Jito's active infrastructure commits signal hardening. Validators adopting Jito need visibility into optimization ROI — no standardized analytics exist yet. This captures the transition from experimental MEV to operational validator management.
+**Why now:** Jito's active infrastructure commits signal hardening. The transition from experimental MEV to operational validator management creates a window for tooling that helps operators benchmark and optimize configurations.
 
 **Tech stack:** Rust (Solana client), Next.js/React, PostgreSQL, Jito SDK, WebSocket for real-time updates
 
 </details>
 
-**[View all 10 build ideas in the full report →](reports/2026-02-15.md#build-ideas)**
+**[View all 14 build ideas in the full report →](reports/2026-02-19.md#build-ideas)**
 
 ---
 
@@ -231,9 +231,9 @@ pnpm agent
 [INFO] Collecting DeFi Llama signals...
 [INFO] Collecting Helius signals...
 [INFO] Collecting CoinGecko signals...
-[INFO] Z-score anomaly detection: 33 anomalies found
-[INFO] LLM clustering: 10 narratives identified
-[INFO] Report written: reports/2026-02-15.json + .md
+[INFO] Z-score anomaly detection: 15 anomalies found
+[INFO] LLM clustering: 11 narratives identified
+[INFO] Report written: reports/2026-02-19.json + .md
 [INFO] Pipeline complete (127s, $0.05)
 ```
 
@@ -244,7 +244,7 @@ pnpm agent
 | `pnpm agent` | Run the analysis pipeline (one-shot) |
 | `pnpm heartbeat` | Start persistent heartbeat daemon (daily at 08:00 UTC) |
 | `pnpm dev` | Start web dashboard (port 3001) |
-| `pnpm test:run` | Run all tests (392 tests) |
+| `pnpm test:run` | Run all tests (403 tests) |
 | `pnpm typecheck` | TypeScript strict mode check |
 | `pnpm build` | Build all packages |
 | `pnpm deploy:agent` | Bundle heartbeat daemon and SCP to VPS |
@@ -392,7 +392,7 @@ solis/
 │   │   │   ├── repos/           # Curated repo list (103) + dynamic discovery
 │   │   │   ├── output/          # JSON + Markdown report writers, alerting
 │   │   │   └── utils/           # Narrative history, matching, diffing
-│   │   └── tests/               # 26 test files (~212 tests)
+│   │   └── tests/               # 26 test files (~223 tests)
 │   └── web/                # Next.js 15 dashboard
 │       └── src/
 │           ├── app/             # Pages (home, report, archive, compare, methodology)
@@ -434,15 +434,15 @@ The SOLIS heartbeat daemon runs continuously on a VPS, executing the full intell
 - **Build idea generation** — actionable project ideas grounded in detected signals with difficulty ratings and tech stacks
 - **Autonomous git operations** — commits and pushes reports to the repository, Docker volume mount makes them instantly live
 - **Post-pipeline alerting** — Telegram/Discord notifications for stage transitions, new narratives, and anomaly spikes
-- **Self-healing** — lock file management, state persistence across restarts, graceful shutdown on SIGTERM/SIGINT
+- **Self-healing** — transient error retry with backoff, empty report detection, lock file management, state persistence across restarts, graceful shutdown on SIGTERM/SIGINT
 
 ### CIPHER — The Builder Agent
 
 The entire SOLIS codebase was designed and implemented by CIPHER, a Claude Code (Claude Opus) agent operating as a senior development partner:
 
 - **Full-stack architecture** — monorepo structure, 9-phase pipeline orchestration, Next.js 15 dashboard, Docker deployment
-- **392 tests** across agent (212) and web (180) packages — TypeScript strict mode, CI/CD pipeline
-- **Advanced features** — Recharts visualizations, knowledge graph, x402 micropayments, email digest system, RSS feed
+- **403 tests** across agent (223) and web (180) packages — TypeScript strict mode, CI/CD pipeline
+- **Advanced features** — Recharts visualizations, knowledge graph, x402 Solana USDC micropayments, email digest system, RSS feed
 - **Infrastructure** — GitHub Actions CI/CD, Docker multi-stage builds, VPS deployment automation, nginx reverse proxy
 
 ---
