@@ -88,7 +88,7 @@ Optional config (all have sensible defaults in `config.ts`):
 - `GIT_PUSH_ENABLED` (true) — push report commits to remote (heartbeat daemon only)
 - `REPORTS_DIR` — override reports directory path (used by web container for Docker volume mount)
 - `DATA_DIR` (process.cwd()) — directory for subscriber data (web container uses Docker volume mount)
-- `QUERY_API_MODEL` (`anthropic/claude-haiku-4-5-20251001`) — model for custom query API via OpenRouter
+- `QUERY_API_MODEL` (`anthropic/claude-haiku-4.5`) — model for custom query API via OpenRouter
 - `RESEND_API_KEY` — Resend email API key (required for email digest)
 - `DIGEST_FROM_EMAIL` (`digest@solis.rectorspace.com`) — from address for digest emails
 - `DIGEST_UNSUBSCRIBE_SECRET` — HMAC key for stateless unsubscribe token verification

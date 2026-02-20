@@ -8,7 +8,7 @@ export const webEnv = cleanEnv(process.env, {
 
   // OpenRouter — custom query API
   OPENROUTER_API_KEY: str({ default: '' }),
-  QUERY_API_MODEL: str({ default: 'anthropic/claude-haiku-4-5-20251001' }),
+  QUERY_API_MODEL: str({ default: 'anthropic/claude-haiku-4.5' }),
 
   // API rate limiting
   API_RATE_LIMIT: num({ default: 30 }),

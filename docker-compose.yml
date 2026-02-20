@@ -17,6 +17,9 @@ services:
       - DIGEST_FROM_EMAIL=${DIGEST_FROM_EMAIL}
       - DIGEST_UNSUBSCRIBE_SECRET=${DIGEST_UNSUBSCRIBE_SECRET}
       - DIGEST_API_SECRET=${DIGEST_API_SECRET}
+      - ENABLE_X402=${ENABLE_X402}
+      - X402_RECEIVER_ADDRESS=${X402_RECEIVER_ADDRESS}
+      - X402_PRICE_CENTS=${X402_PRICE_CENTS}
     volumes:
       - /home/solis/solis/reports:/app/reports:ro
       - /home/solis/solis/data:/app/data:rw
