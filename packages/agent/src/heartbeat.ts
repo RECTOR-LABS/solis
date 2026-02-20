@@ -17,6 +17,8 @@ const LOCK_FILE = process.env.HEARTBEAT_LOCK_PATH || '/tmp/solis-heartbeat.lock'
 const STATE_FILE = '.solis-state.json';
 const HEARTBEAT_HOUR = parseInt(process.env.HEARTBEAT_HOUR || '8', 10);
 const GIT_PUSH_ENABLED = process.env.GIT_PUSH_ENABLED !== 'false';
+const RETRY_DELAY_MS = 30 * 60_000; // 30 minutes
+const MAX_RETRIES_PER_DAY = 2;
 
 function formatUptime(startTime: number): string {
   return formatDuration(Date.now() - startTime);
@@ -93,11 +95,20 @@ async function heartbeat(): Promise<void> {
     pid: process.pid,
   }, 'SOLIS heartbeat daemon started');
 
-  while (!stopping) {
-    const sleepMs = msUntilNextRun(HEARTBEAT_HOUR);
-    logger.info({ nextRunIn: formatDuration(sleepMs) }, `Sleeping until ${HEARTBEAT_HOUR}:00 UTC`);
+  let retryAt: number | null = null;
 
-    await sleep(sleepMs, ac.signal);
+  while (!stopping) {
+    // Sleep until next scheduled run or retry
+    if (retryAt) {
+      const waitMs = Math.max(0, retryAt - Date.now());
+      logger.info({ retryIn: formatDuration(waitMs) }, 'Sleeping until scheduled retry');
+      await sleep(waitMs, ac.signal);
+      retryAt = null;
+    } else {
+      const sleepMs = msUntilNextRun(HEARTBEAT_HOUR);
+      logger.info({ nextRunIn: formatDuration(sleepMs) }, `Sleeping until ${HEARTBEAT_HOUR}:00 UTC`);
+      await sleep(sleepMs, ac.signal);
+    }
     if (stopping) break;
 
     // Duplicate run protection (restart safety)
@@ -112,23 +123,34 @@ async function heartbeat(): Promise<void> {
     logger.info({ cycle: state.cycleCount + 1, date: today }, 'Starting pipeline cycle');
 
     try {
-      await runPipeline();
+      const result = await runPipeline();
+
+      // Empty report safety net: data was collected but LLM produced nothing.
+      // Don't commit empty reports — schedule a retry instead.
+      if (result.narratives === 0 && result.anomalies > 0 && state.consecutiveFailures < MAX_RETRIES_PER_DAY) {
+        state.consecutiveFailures++;
+        state.cycleCount++;
+        saveState(state, STATE_FILE);
+
+        logger.warn({
+          anomalies: result.anomalies,
+          attempt: state.consecutiveFailures,
+          maxRetries: MAX_RETRIES_PER_DAY,
+          retryIn: formatDuration(RETRY_DELAY_MS),
+        }, 'Empty report despite anomalies — scheduling retry');
+
+        retryAt = Date.now() + RETRY_DELAY_MS;
+        continue;
+      }
+
       commitAndPushReports(today);
 
       state.lastRunTime = Date.now();
       state.lastRunDate = today;
       state.consecutiveFailures = 0;
       state.totalReports++;
-      saveState(state, STATE_FILE);
-
-      logger.info({
-        date: today,
-        totalReports: state.totalReports,
-        uptime: formatUptime(daemonStart),
-      }, 'Pipeline cycle complete');
     } catch (err) {
       state.consecutiveFailures++;
-      saveState(state, STATE_FILE);
 
       logger.error({
         consecutiveFailures: state.consecutiveFailures,
@@ -140,6 +162,15 @@ async function heartbeat(): Promise<void> {
         const { sendFailureAlert } = await import('./output/alerts.js');
         await sendFailureAlert(err instanceof Error ? err.message : String(err));
       } catch { /* alert failure is non-fatal */ }
+
+      // Retry after delay instead of waiting 24h
+      if (state.consecutiveFailures <= MAX_RETRIES_PER_DAY) {
+        logger.warn({
+          retryIn: formatDuration(RETRY_DELAY_MS),
+          attempt: state.consecutiveFailures,
+        }, 'Scheduling retry after failure');
+        retryAt = Date.now() + RETRY_DELAY_MS;
+      }
     }
 
     state.cycleCount++;
