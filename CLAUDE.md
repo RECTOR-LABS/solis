@@ -95,17 +95,20 @@ Optional config (all have sensible defaults in `config.ts`):
 - `DIGEST_API_SECRET` — shared secret for digest trigger API authentication
 
 ## Deployment
-- **VPS**: `solis.rectorspace.com` → `176.222.53.185:8001`
+- **VPS**: `solis.rectorspace.com` → `151.245.137.75:8001` (reclabs3, migrated Feb 28 2026)
 - **User**: `solis` (SSH alias: `ssh solis`)
 - **Docker**: `ghcr.io/rector-labs/solis:latest` via `docker-compose.yml` (`name: solis`)
 - **CI/CD**: Push to `main` (web/shared/Docker changes) → GHCR → VPS auto-deploy
-- **Agent**: Persistent heartbeat daemon on VPS — runs pipeline daily, commits & pushes reports to git
-- **Agent deploy**: `pnpm deploy:agent` — esbuild bundle → SCP to VPS, then restart process
+- **Agent**: systemd service `solis-heartbeat.service` — auto-restart, survives reboots, runs pipeline daily, commits & pushes reports to git
+- **Agent deploy**: `pnpm deploy:agent` — esbuild bundle → SCP to VPS, then `ssh reclabs3 'systemctl restart solis-heartbeat'`
+- **Agent env**: `/home/solis/solis/.agent-env` — OPENROUTER_API_KEY, GITHUB_TOKEN, HELIUS_API_KEY, NODE_ENV=production, GIT_PUSH_ENABLED=true, HEARTBEAT_HOUR=8
+- **Agent logs**: `ssh solis 'journalctl -u solis-heartbeat -f'`
 - **Report generation**: VPS heartbeat daemon at 08:00 UTC (GitHub Actions `generate-report.yml` kept as manual emergency fallback)
 - **Reports volume**: Docker volume mount (`/home/solis/solis/reports → /app/reports:ro`) — new reports appear instantly without rebuild
 - **Data volume**: Docker volume mount (`/home/solis/solis/data → /app/data:rw`) — subscriber storage, read-write
 - **Deploy triggers**: Only `packages/web/**`, `shared/**`, `Dockerfile`, `docker-compose.yml` — agent/report changes don't trigger deploy
-- **Cleanup**: Deploy workflow prunes old images aggressively (VPS at 78% disk)
+- **Cleanup**: Deploy workflow prunes old images aggressively
+- **SSH aliases**: `solis` (solis user), `reclabs3` (root) — both at `151.245.137.75`
 
 ## Key Files
 - `shared/src/types.ts` — Type contract between agent and web (Narrative, ReportDiff, FortnightlyReport, SocialSignals, XSignals, QueryRequest/Response, Subscriber)

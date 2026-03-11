@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SOLIS VPS Setup — Run as root on VPS (176.222.53.185)
+# SOLIS VPS Setup — Run as root on VPS (151.245.137.75 / reclabs3)
 # Creates solis user, sets up Docker access, nginx, and certbot
 set -euo pipefail
 
