@@ -86,7 +86,7 @@ Optional config (all have sensible defaults in `config.ts`):
 - `X402_FACILITATOR_URL` (https://x402.org/facilitator) — x402 payment verification endpoint
 - `HEARTBEAT_HOUR` (8) — target UTC hour for daily pipeline run (heartbeat daemon only)
 - `GIT_PUSH_ENABLED` (true) — push report commits to remote (heartbeat daemon only)
-- `REPORTS_DIR` — override reports directory path (used by web container for Docker volume mount)
+- `REPORTS_DIR` — reports directory path. **Required on VPS** — esbuild bundle resolves `import.meta.dirname` to bundle location, causing default path to resolve to `/reports` (root). Set to `/home/solis/solis/reports` in `.agent-env`
 - `DATA_DIR` (process.cwd()) — directory for subscriber data (web container uses Docker volume mount)
 - `QUERY_API_MODEL` (`anthropic/claude-haiku-4.5`) — model for custom query API via OpenRouter
 - `RESEND_API_KEY` — Resend email API key (required for email digest)
@@ -101,7 +101,7 @@ Optional config (all have sensible defaults in `config.ts`):
 - **CI/CD**: Push to `main` (web/shared/Docker changes) → GHCR → VPS auto-deploy
 - **Agent**: systemd service `solis-heartbeat.service` — auto-restart, survives reboots, runs pipeline daily, commits & pushes reports to git
 - **Agent deploy**: `pnpm deploy:agent` — esbuild bundle → SCP to VPS, then `ssh reclabs3 'systemctl restart solis-heartbeat'`
-- **Agent env**: `/home/solis/solis/.agent-env` — OPENROUTER_API_KEY, GITHUB_TOKEN, HELIUS_API_KEY, NODE_ENV=production, GIT_PUSH_ENABLED=true, HEARTBEAT_HOUR=8
+- **Agent env**: `/home/solis/solis/.agent-env` — OPENROUTER_API_KEY, GITHUB_TOKEN, HELIUS_API_KEY, NODE_ENV=production, GIT_PUSH_ENABLED=true, HEARTBEAT_HOUR=8, REPORTS_DIR=/home/solis/solis/reports
 - **Agent logs**: `ssh solis 'journalctl -u solis-heartbeat -f'`
 - **Report generation**: VPS heartbeat daemon at 08:00 UTC (GitHub Actions `generate-report.yml` kept as manual emergency fallback)
 - **Reports volume**: Docker volume mount (`/home/solis/solis/reports → /app/reports:ro`) — new reports appear instantly without rebuild
@@ -109,6 +109,8 @@ Optional config (all have sensible defaults in `config.ts`):
 - **Deploy triggers**: Only `packages/web/**`, `shared/**`, `Dockerfile`, `docker-compose.yml` — agent/report changes don't trigger deploy
 - **Cleanup**: Deploy workflow prunes old images aggressively
 - **SSH aliases**: `solis` (solis user), `reclabs3` (root) — both at `151.245.137.75`
+- **DNS**: Cloudflare (rectorspace.com zone). All A records **Proxied** (orange cloud). SSH uses IP directly, unaffected by proxy setting
+- **ISP note**: Biznet (home ISP) blocks VPS IP — use iPhone tethering or VPN for SSH access
 
 ## Key Files
 - `shared/src/types.ts` — Type contract between agent and web (Narrative, ReportDiff, FortnightlyReport, SocialSignals, XSignals, QueryRequest/Response, Subscriber)

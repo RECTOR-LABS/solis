@@ -74,6 +74,11 @@
 - [x] Email digest via Resend (daily trigger API, HTML template)
 - [x] RSS feed for reports
 
+## Milestones
+
+- **2026-03**: 1st Place — Superteam Earn "Narrative Detection & Idea Generation" bounty ($2,000 USDG, 117 submissions)
+- **2026-02**: First live report generated, VPS deployment, heartbeat daemon operational
+
 ## Future
 
 - [ ] Community-contributed repo tracking

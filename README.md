@@ -20,18 +20,19 @@
 [![Solana](https://img.shields.io/badge/Solana-ecosystem-9945FF.svg)](https://solana.com)
 [![Node](https://img.shields.io/badge/Node-22%2B-339933.svg)](https://nodejs.org)
 [![Live Reports](https://img.shields.io/badge/Live-solis.rectorspace.com-00D084.svg)](https://solis.rectorspace.com)
+[![Superteam Earn](https://img.shields.io/badge/🏆_1st_Place-Superteam_Earn-f7931a.svg)](https://superteam.fun/earn/listing/develop-a-narrative-detection-and-idea-generation-tool)
 
 </div>
 
 ---
 
-## Latest Report — February 19, 2026
+## Latest Report — February 27, 2026
 
 | Narratives | Anomalies | Repos Analyzed | Build Ideas | LLM Cost |
 |:----------:|:---------:|:--------------:|:-----------:|:--------:|
-| **11** | **15** | **101** | **14** | **$0.05** |
+| **11** | **6** | **385** | **14** | **$0.05** |
 
-**[Live Dashboard](https://solis.rectorspace.com)** · **[Latest Report](reports/2026-02-19.md)** · 8 daily reports and counting
+**[Live Dashboard](https://solis.rectorspace.com)** · **[Latest Report](reports/2026-02-27.md)** · 16 daily reports and counting
 
 ---
 
