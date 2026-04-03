@@ -121,12 +121,9 @@ export const env = cleanEnv(process.env, {
     desc: 'Z-score threshold to trigger anomaly spike alerts',
   }),
 
-  // Output — resolve to monorepo root (packages/agent/ → ../../reports)
-  // import.meta.dirname is undefined on Node <20.11 and in esbuild bundles
+  // Output — cwd-relative so it works both in monorepo (pnpm agent) and esbuild bundle (VPS)
   REPORTS_DIR: str({
-    default: import.meta.dirname
-      ? resolve(import.meta.dirname, '..', '..', '..', 'reports')
-      : resolve(process.cwd(), 'reports'),
+    default: resolve(process.cwd(), 'reports'),
     desc: 'Directory for report output',
   }),
 
