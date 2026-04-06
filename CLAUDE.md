@@ -110,7 +110,7 @@ Optional config (all have sensible defaults in `config.ts`):
 - **Cleanup**: Deploy workflow prunes old images aggressively
 - **SSH aliases**: `solis` (solis user), `reclabs3` (root) — both at `151.245.137.75`
 - **DNS**: Cloudflare (rectorspace.com zone). All A records **Proxied** (orange cloud). SSH uses IP directly, unaffected by proxy setting
-- **ISP note**: Biznet (home ISP) blocks VPS IP — use iPhone tethering or VPN for SSH access
+- **ISP note**: Biznet (home ISP) no longer blocks VPS IP (confirmed Apr 2026) — direct SSH works
 
 ## Key Files
 - `shared/src/types.ts` — Type contract between agent and web (Narrative, ReportDiff, FortnightlyReport, SocialSignals, XSignals, QueryRequest/Response, Subscriber)
