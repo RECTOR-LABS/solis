@@ -18,7 +18,7 @@ export const env = cleanEnv(process.env, {
   }),
 
   // Helius — Layer 2 (Coincident / Onchain)
-  HELIUS_API_KEY: str({
+  SOLIS_HELIUS_API_KEY: str({
     desc: 'Helius API key (1M credits/mo free)',
   }),
 

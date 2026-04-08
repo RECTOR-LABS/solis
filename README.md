@@ -218,7 +218,7 @@ pnpm install
 cat >> ~/.env << 'EOF'
 OPENROUTER_API_KEY=your_key_here
 GITHUB_TOKEN=ghp_your_token_here
-HELIUS_API_KEY=your_key_here
+SOLIS_HELIUS_API_KEY=your_key_here
 EOF
 
 # 3. Run the pipeline
@@ -260,7 +260,7 @@ pnpm agent
 |----------|-------------|
 | `OPENROUTER_API_KEY` | LLM analysis via OpenRouter (narrative clustering + idea generation) |
 | `GITHUB_TOKEN` | GitHub API access (5K requests/hr with token) |
-| `HELIUS_API_KEY` | Solana onchain data (1M credits/mo free tier) |
+| `SOLIS_HELIUS_API_KEY` | Solana onchain data (1M credits/mo free tier) |
 
 ### Optional
 

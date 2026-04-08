@@ -51,7 +51,7 @@ pnpm eval:calibration # Confidence calibration analysis
 All secrets in `~/Documents/secret/.env`. Required:
 - `OPENROUTER_API_KEY` — LLM analysis via OpenRouter (narrative clustering + idea generation)
 - `GITHUB_TOKEN` — GitHub API
-- `HELIUS_API_KEY` — Onchain data
+- `SOLIS_HELIUS_API_KEY` — Onchain data
 
 Optional config (all have sensible defaults in `config.ts`):
 - `COLLECTION_PERIOD_DAYS` (14) — lookback period for signal collection
@@ -101,7 +101,7 @@ Optional config (all have sensible defaults in `config.ts`):
 - **CI/CD**: Push to `main` (web/shared/Docker changes) → GHCR → VPS auto-deploy
 - **Agent**: systemd service `solis-heartbeat.service` — auto-restart, survives reboots, runs pipeline daily, commits & pushes reports to git
 - **Agent deploy**: `pnpm deploy:agent` — esbuild bundle → SCP to VPS, then `ssh reclabs3 'systemctl restart solis-heartbeat'`
-- **Agent env**: `/home/solis/solis/.agent-env` — OPENROUTER_API_KEY, GITHUB_TOKEN, HELIUS_API_KEY, NODE_ENV=production, GIT_PUSH_ENABLED=true, HEARTBEAT_HOUR=8, REPORTS_DIR=/home/solis/solis/reports
+- **Agent env**: `/home/solis/solis/.agent-env` — OPENROUTER_API_KEY, GITHUB_TOKEN, SOLIS_HELIUS_API_KEY, NODE_ENV=production, GIT_PUSH_ENABLED=true, HEARTBEAT_HOUR=8, REPORTS_DIR=/home/solis/solis/reports
 - **Agent logs**: `ssh solis 'journalctl -u solis-heartbeat -f'`
 - **Report generation**: VPS heartbeat daemon at 08:00 UTC (GitHub Actions `generate-report.yml` kept as manual emergency fallback)
 - **Reports volume**: Docker volume mount (`/home/solis/solis/reports → /app/reports:ro`) — new reports appear instantly without rebuild

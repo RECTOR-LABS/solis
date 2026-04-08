@@ -34,7 +34,7 @@ jobs:
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-          HELIUS_API_KEY: ${{ secrets.HELIUS_API_KEY }}
+          SOLIS_HELIUS_API_KEY: ${{ secrets.SOLIS_HELIUS_API_KEY }}
           COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
           ENABLE_REPO_DISCOVERY: 'true'
         run: pnpm agent

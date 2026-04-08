@@ -8,7 +8,7 @@ import type { OnchainSignal } from '@solis/shared';
 const HELIUS_RPC = 'https://mainnet.helius-rpc.com';
 
 async function heliusRpc<T>(method: string, params: unknown): Promise<T | null> {
-  const url = `${HELIUS_RPC}/?api-key=${env.HELIUS_API_KEY}`;
+  const url = `${HELIUS_RPC}/?api-key=${env.SOLIS_HELIUS_API_KEY}`;
   const start = Date.now();
 
   try {

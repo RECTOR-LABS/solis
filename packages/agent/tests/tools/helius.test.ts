@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 
 vi.mock('../../src/config.js', () => ({
   env: {
-    HELIUS_API_KEY: 'test-key',
+    SOLIS_HELIUS_API_KEY: 'test-key',
     LOG_LEVEL: 'error',
     isDevelopment: false,
   },
