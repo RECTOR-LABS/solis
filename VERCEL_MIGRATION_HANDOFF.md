@@ -4,7 +4,7 @@
 >
 > **Origin session**: `[vercel_migration_1]` on 2026-05-26 (audit + plan).
 > **Migration session**: `[solis_vercel_1]` on 2026-05-27 (executed plan).
-> **Status**: MIGRATED on 2026-05-27 — VPS decom pending (no earlier than 2026-06-03). See `packages/web/VPS_DECOM.md`.
+> **Status**: COMPLETE on 2026-05-27 — migration shipped + VPS fully decommissioned same day (no rollback buffer kept).
 
 ## Scope
 
