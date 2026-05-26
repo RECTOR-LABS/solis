@@ -1,11 +1,13 @@
-import { cp, mkdir, access, rm } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
+import { cp, access, rm } from 'node:fs/promises';
+import { dirname, resolve, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = resolve(SCRIPT_DIR, '..');
 const SOURCE = resolve(WEB_ROOT, '..', '..', 'reports');
 const TARGET = resolve(WEB_ROOT, 'reports');
+
+const EXCLUDED = new Set(['.cache', '.gitkeep']);
 
 async function exists(path) {
   try {
@@ -26,9 +28,11 @@ async function main() {
     await rm(TARGET, { recursive: true, force: true });
   }
 
-  await mkdir(dirname(TARGET), { recursive: true });
-  await cp(SOURCE, TARGET, { recursive: true });
-  console.log(`[copy-reports] Copied ${SOURCE} -> ${TARGET}`);
+  await cp(SOURCE, TARGET, {
+    recursive: true,
+    filter: src => !EXCLUDED.has(basename(src)),
+  });
+  console.log(`[copy-reports] Copied ${SOURCE} -> ${TARGET} (excluding ${[...EXCLUDED].join(', ')})`);
 }
 
 main().catch(err => {
