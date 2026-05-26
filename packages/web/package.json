@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "node scripts/copy-reports.mjs",
     "dev": "next dev --port 3001",
+    "prebuild": "node scripts/copy-reports.mjs",
     "build": "next build",
     "start": "next start --port 3001",
     "typecheck": "tsc --noEmit",

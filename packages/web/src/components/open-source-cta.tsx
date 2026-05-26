@@ -45,9 +45,8 @@ export function OpenSourceCTA() {
           </a>
         </div>
 
-        {/* Email Digest */}
+        {/* Subscription notice (paused — see SubscribeForm) */}
         <div className="relative mb-8">
-          <p className="text-sol-muted text-sm mb-3">Get daily intelligence delivered to your inbox</p>
           <SubscribeForm />
         </div>
 

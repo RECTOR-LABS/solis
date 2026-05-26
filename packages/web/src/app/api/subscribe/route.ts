@@ -1,57 +1,18 @@
 import { NextResponse } from 'next/server';
-import { apiGuard, getGuardHeaders, checkBodySize, handleCorsOptions } from '@/lib/api-guard';
-import {
-  addSubscriber,
-  removeSubscriber,
-  isValidEmail,
-  verifyUnsubscribeToken,
-} from '@/lib/subscribers';
+import { handleCorsOptions } from '@/lib/api-guard';
+
+const DISABLED_BODY = {
+  error: 'Subscriptions are paused (maintenance mode). Follow updates via RSS or the GitHub repo.',
+};
 
 export function OPTIONS(request: Request) {
   return handleCorsOptions(request) ?? new Response(null, { status: 204 });
 }
 
-export async function POST(request: Request) {
-  const bodyCheck = await checkBodySize(request, 1024);
-  if (bodyCheck) return bodyCheck;
-
-  const guard = await apiGuard(request, { limit: 10, resource: '/api/subscribe' });
-  if (guard) return guard;
-
-  let body: { email?: string };
-  try {
-    body = (await request.json()) as { email?: string };
-  } catch {
-    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
-  }
-
-  if (!body.email || typeof body.email !== 'string') {
-    return NextResponse.json({ error: 'Email is required' }, { status: 400 });
-  }
-
-  if (!isValidEmail(body.email)) {
-    return NextResponse.json({ error: 'Invalid email format' }, { status: 400 });
-  }
-
-  await addSubscriber(body.email);
-
-  const headers = getGuardHeaders(request);
-  return NextResponse.json({ ok: true }, { headers });
+export async function POST(_request: Request) {
+  return NextResponse.json(DISABLED_BODY, { status: 503 });
 }
 
-export async function DELETE(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const email = searchParams.get('email');
-  const token = searchParams.get('token');
-
-  if (!email || !token) {
-    return NextResponse.json({ error: 'Email and token required' }, { status: 400 });
-  }
-
-  if (!verifyUnsubscribeToken(email, token)) {
-    return NextResponse.json({ error: 'Invalid unsubscribe token' }, { status: 401 });
-  }
-
-  await removeSubscriber(email);
-  return NextResponse.json({ ok: true });
+export async function DELETE(_request: Request) {
+  return NextResponse.json(DISABLED_BODY, { status: 503 });
 }

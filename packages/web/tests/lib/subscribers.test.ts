@@ -1,126 +1,74 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { join } from 'node:path';
-import { mkdtemp, rm, readFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { describe, it, expect } from 'vitest';
+import {
+  addSubscriber,
+  removeSubscriber,
+  loadSubscribers,
+  isValidEmail,
+  generateUnsubscribeToken,
+  verifyUnsubscribeToken,
+  SubscriptionsDisabledError,
+} from '@/lib/subscribers';
 
-const ORIGINAL_ENV = { ...process.env };
-
-let tmpDir: string;
-
-beforeEach(async () => {
-  tmpDir = await mkdtemp(join(tmpdir(), 'solis-subs-'));
-  process.env = { ...ORIGINAL_ENV };
-  process.env.DATA_DIR = tmpDir;
-  process.env.DIGEST_UNSUBSCRIBE_SECRET = 'test-secret-key-123';
-  // Reset module cache to pick up new DATA_DIR
-  vi.resetModules();
-});
-
-afterEach(async () => {
-  process.env = ORIGINAL_ENV;
-  await rm(tmpDir, { recursive: true, force: true });
-});
-
-async function getSubs() {
-  return import('@/lib/subscribers');
-}
-
-describe('subscribers', () => {
-  it('returns empty array when no file exists', async () => {
-    const { loadSubscribers } = await getSubs();
+describe('subscribers (disabled — maintenance mode)', () => {
+  it('loadSubscribers returns empty array', async () => {
     const subs = await loadSubscribers();
     expect(subs).toEqual([]);
   });
 
-  it('adds a subscriber', async () => {
-    const { addSubscriber, loadSubscribers } = await getSubs();
-    await addSubscriber('test@example.com');
-    const subs = await loadSubscribers();
-    expect(subs).toHaveLength(1);
-    expect(subs[0].email).toBe('test@example.com');
-    expect(subs[0].verified).toBe(true);
-    expect(subs[0].subscribedAt).toBeTruthy();
+  it('addSubscriber throws SubscriptionsDisabledError', async () => {
+    await expect(addSubscriber('test@example.com')).rejects.toBeInstanceOf(
+      SubscriptionsDisabledError,
+    );
   });
 
-  it('deduplicates subscribers (case-insensitive)', async () => {
-    const { addSubscriber, loadSubscribers } = await getSubs();
-    await addSubscriber('Test@Example.com');
-    await addSubscriber('test@example.com');
-    const subs = await loadSubscribers();
-    expect(subs).toHaveLength(1);
-  });
-
-  it('removes a subscriber', async () => {
-    const { addSubscriber, removeSubscriber, loadSubscribers } = await getSubs();
-    await addSubscriber('a@test.com');
-    await addSubscriber('b@test.com');
-    await removeSubscriber('a@test.com');
-    const subs = await loadSubscribers();
-    expect(subs).toHaveLength(1);
-    expect(subs[0].email).toBe('b@test.com');
-  });
-
-  it('removing nonexistent subscriber is a no-op', async () => {
-    const { addSubscriber, removeSubscriber, loadSubscribers } = await getSubs();
-    await addSubscriber('a@test.com');
-    await removeSubscriber('z@test.com');
-    const subs = await loadSubscribers();
-    expect(subs).toHaveLength(1);
-  });
-
-  it('writes atomic file (tmp + rename)', async () => {
-    const { addSubscriber } = await getSubs();
-    await addSubscriber('test@example.com');
-    const content = await readFile(join(tmpDir, 'subscribers.json'), 'utf-8');
-    const parsed = JSON.parse(content);
-    expect(parsed).toHaveLength(1);
+  it('removeSubscriber throws SubscriptionsDisabledError', async () => {
+    await expect(removeSubscriber('test@example.com')).rejects.toBeInstanceOf(
+      SubscriptionsDisabledError,
+    );
   });
 });
 
-describe('unsubscribe tokens', () => {
-  it('generates and verifies tokens', async () => {
-    const { generateUnsubscribeToken, verifyUnsubscribeToken } = await getSubs();
+describe('unsubscribe tokens (preserved — used by historical email links)', () => {
+  it('generates and verifies tokens', () => {
+    process.env.DIGEST_UNSUBSCRIBE_SECRET = 'test-secret-key-123';
     const token = generateUnsubscribeToken('test@example.com');
     expect(typeof token).toBe('string');
-    expect(token.length).toBe(64); // sha256 hex
+    expect(token.length).toBe(64);
     expect(verifyUnsubscribeToken('test@example.com', token)).toBe(true);
   });
 
-  it('rejects invalid tokens', async () => {
-    const { verifyUnsubscribeToken } = await getSubs();
+  it('rejects invalid tokens', () => {
+    process.env.DIGEST_UNSUBSCRIBE_SECRET = 'test-secret-key-123';
     expect(verifyUnsubscribeToken('test@example.com', 'deadbeef'.repeat(8))).toBe(false);
   });
 
-  it('rejects tokens for different email', async () => {
-    const { generateUnsubscribeToken, verifyUnsubscribeToken } = await getSubs();
+  it('rejects tokens for different email (HMAC scoped to email)', () => {
+    process.env.DIGEST_UNSUBSCRIBE_SECRET = 'test-secret-key-123';
     const token = generateUnsubscribeToken('a@test.com');
     expect(verifyUnsubscribeToken('b@test.com', token)).toBe(false);
   });
 
-  it('is case-insensitive', async () => {
-    const { generateUnsubscribeToken, verifyUnsubscribeToken } = await getSubs();
+  it('is case-insensitive', () => {
+    process.env.DIGEST_UNSUBSCRIBE_SECRET = 'test-secret-key-123';
     const token = generateUnsubscribeToken('Test@Example.com');
     expect(verifyUnsubscribeToken('test@example.com', token)).toBe(true);
   });
 });
 
 describe('email validation', () => {
-  it('accepts valid emails', async () => {
-    const { isValidEmail } = await getSubs();
+  it('accepts valid emails', () => {
     expect(isValidEmail('user@example.com')).toBe(true);
     expect(isValidEmail('a.b+c@sub.domain.co')).toBe(true);
   });
 
-  it('rejects invalid emails', async () => {
-    const { isValidEmail } = await getSubs();
+  it('rejects invalid emails', () => {
     expect(isValidEmail('')).toBe(false);
     expect(isValidEmail('not-an-email')).toBe(false);
     expect(isValidEmail('@no-user.com')).toBe(false);
     expect(isValidEmail('user@')).toBe(false);
   });
 
-  it('rejects overly long emails', async () => {
-    const { isValidEmail } = await getSubs();
+  it('rejects overly long emails', () => {
     expect(isValidEmail(`${'a'.repeat(312)}@test.com`)).toBe(false);
   });
 });
