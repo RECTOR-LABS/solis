@@ -42,6 +42,12 @@ describe('unsubscribe tokens (preserved — used by historical email links)', ()
     expect(verifyUnsubscribeToken('test@example.com', 'deadbeef'.repeat(8))).toBe(false);
   });
 
+  it('rejects tokens for different email (HMAC scoped to email)', () => {
+    process.env.DIGEST_UNSUBSCRIBE_SECRET = 'test-secret-key-123';
+    const token = generateUnsubscribeToken('a@test.com');
+    expect(verifyUnsubscribeToken('b@test.com', token)).toBe(false);
+  });
+
   it('is case-insensitive', () => {
     process.env.DIGEST_UNSUBSCRIBE_SECRET = 'test-secret-key-123';
     const token = generateUnsubscribeToken('Test@Example.com');
