@@ -5,7 +5,9 @@ import { apiGuard, getGuardHeaders, handleCorsOptions } from '@/lib/api-guard';
 
 export const revalidate = 3600;
 
-const REPORTS_DIR = join(process.cwd(), '../../reports/signals');
+const REPORTS_DIR = process.env.REPORTS_DIR
+  ? join(process.env.REPORTS_DIR, 'signals')
+  : join(process.cwd(), 'reports', 'signals');
 
 export function OPTIONS(request: Request) {
   return handleCorsOptions(request) ?? new Response(null, { status: 204 });
