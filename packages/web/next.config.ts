@@ -1,5 +1,4 @@
 import type { NextConfig } from 'next';
-import { resolve } from 'node:path';
 
 const securityHeaders = [
   { key: 'X-Frame-Options', value: 'DENY' },
@@ -11,7 +10,7 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'", // unsafe-inline required by Next.js runtime scripts
+      "script-src 'self' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: https:",
       "font-src 'self' data:",
@@ -22,9 +21,10 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
-  outputFileTracingRoot: resolve(import.meta.dirname, '..', '..'),
   transpilePackages: ['@solis/shared'],
+  outputFileTracingIncludes: {
+    '/**/*': ['./reports/**/*.{json,md}'],
+  },
   async headers() {
     return [{ source: '/(.*)', headers: securityHeaders }];
   },
