@@ -14,7 +14,7 @@
 **Detect emerging Solana narratives before they're priced in.**
 *4-layer signal fusion · Z-score anomaly detection · LLM narrative clustering · Autonomous daily reports*
 
-[![Deploy](https://github.com/RECTOR-LABS/solis/actions/workflows/deploy.yml/badge.svg)](https://github.com/RECTOR-LABS/solis/actions/workflows/deploy.yml)
+[![CI](https://github.com/RECTOR-LABS/solis/actions/workflows/ci.yml/badge.svg)](https://github.com/RECTOR-LABS/solis/actions/workflows/ci.yml)
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6.svg)](https://www.typescriptlang.org/)
 [![Solana](https://img.shields.io/badge/Solana-ecosystem-9945FF.svg)](https://solana.com)
@@ -26,13 +26,13 @@
 
 ---
 
-## Latest Report — February 27, 2026
+## Latest Report — April 6, 2026
 
 | Narratives | Anomalies | Repos Analyzed | Build Ideas | LLM Cost |
 |:----------:|:---------:|:--------------:|:-----------:|:--------:|
-| **11** | **6** | **385** | **14** | **$0.05** |
+| **12** | **8** | **100** | **14** | **$0.05** |
 
-**[Live Dashboard](https://solis.rectorspace.com)** · **[Latest Report](reports/2026-02-27.md)** · 16 daily reports and counting
+**[Live Dashboard](https://solis.rectorspace.com)** · **[Latest Report](reports/2026-04-06.md)** · 29-report archive (Feb–Apr 2026)
 
 ---
 
@@ -242,13 +242,12 @@ pnpm agent
 
 | Command | Description |
 |---------|-------------|
-| `pnpm agent` | Run the analysis pipeline (one-shot) |
-| `pnpm heartbeat` | Start persistent heartbeat daemon (daily at 08:00 UTC) |
+| `pnpm agent` | Run the analysis pipeline (one-shot, local) |
+| `pnpm heartbeat` | Start persistent heartbeat daemon (daily at 08:00 UTC, local) |
 | `pnpm dev` | Start web dashboard (port 3001) |
-| `pnpm test:run` | Run all tests (403 tests) |
+| `pnpm test:run` | Run all tests (394 tests) |
 | `pnpm typecheck` | TypeScript strict mode check |
 | `pnpm build` | Build all packages |
-| `pnpm deploy:agent` | Bundle heartbeat daemon and SCP to VPS |
 
 ---
 
@@ -326,13 +325,13 @@ pnpm agent
 | `DISCORD_WEBHOOK_URL` | — | Discord webhook URL |
 | `ALERT_ANOMALY_THRESHOLD` | `3.0` | Z-score threshold for anomaly spike alerts |
 
-#### Heartbeat Daemon
+#### Heartbeat Daemon (local-only — not currently deployed)
 
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `HEARTBEAT_HOUR` | `8` | Target UTC hour for daily pipeline run |
 | `GIT_PUSH_ENABLED` | `true` | Push report commits to remote |
-| `REPORTS_DIR` | — | Override reports directory path (Docker volume mount) |
+| `REPORTS_DIR` | — | Override reports directory path (defaults to `reports/` at repo root) |
 
 #### Web API
 
@@ -401,10 +400,11 @@ solis/
 │           └── lib/             # Report loading, rate limiting, x402, temporal utils
 ├── shared/                 # Shared type contract (Narrative, ReportDiff, SocialSignals)
 ├── reports/                # Git-committed report artifacts (JSON + MD)
-├── Dockerfile              # Multi-stage build (deps → build → standalone)
-├── docker-compose.yml      # Production deployment (port 8001, reports volume mount)
-└── .github/workflows/      # CI, deploy, manual report fallback, GitLab mirror
+└── .github/workflows/      # CI, manual report fallback, GitLab mirror
 ```
+
+> Web deploys to Vercel (Root Directory `packages/web`). A prebuild script bundles
+> `reports/` into the build, and `next.config.ts` ships them with each serverless function.
 
 ---
 
@@ -417,7 +417,7 @@ solis/
 | **Claude Haiku 4.5** (OpenRouter) | ~$0.05/run | 2 LLM calls, ~12K tokens each |
 | **X/Twitter API** | ~$0.21/run | 6 user reads ($0.06) + 30 post reads ($0.15), pay-as-you-go |
 | **GitHub, Helius, DeFi Llama, CoinGecko** | $0 | Free tier sufficient |
-| **Infrastructure** | $0 incremental | VPS shared, heartbeat daemon is a single Node process |
+| **Infrastructure** | $0 | Web hosted on Vercel (Hobby); pipeline runs on demand |
 
 ---
 
@@ -427,13 +427,13 @@ SOLIS is designed, built, and operated by AI agents — from architecture to dai
 
 ### SOLIS — The Autonomous Pipeline Agent
 
-The SOLIS heartbeat daemon runs continuously on a VPS, executing the full intelligence pipeline daily at 08:00 UTC without human intervention:
+The SOLIS heartbeat daemon ran autonomously through April 2026, executing the full intelligence pipeline daily at 08:00 UTC and producing the 29-report archive without human intervention. SOLIS is now in maintenance mode — the web archive is hosted on Vercel and the pipeline remains fully runnable on demand via `pnpm heartbeat`:
 
 - **Parallel signal collection** from 6 data sources (GitHub, DeFi Llama, Helius, CoinGecko, LunarCrush, X/Twitter)
 - **Z-score anomaly detection** across all metrics — pure math, no ML
 - **LLM narrative clustering** via Claude Haiku 4.5 — groups anomalous signals into coherent ecosystem narratives
 - **Build idea generation** — actionable project ideas grounded in detected signals with difficulty ratings and tech stacks
-- **Autonomous git operations** — commits and pushes reports to the repository, Docker volume mount makes them instantly live
+- **Autonomous git operations** — commits and pushes reports to the repository
 - **Post-pipeline alerting** — Telegram/Discord notifications for stage transitions, new narratives, and anomaly spikes
 - **Self-healing** — transient error retry with backoff, empty report detection, lock file management, state persistence across restarts, graceful shutdown on SIGTERM/SIGINT
 
@@ -441,40 +441,26 @@ The SOLIS heartbeat daemon runs continuously on a VPS, executing the full intell
 
 The entire SOLIS codebase was designed and implemented by CIPHER, a Claude Code (Claude Opus) agent operating as a senior development partner:
 
-- **Full-stack architecture** — monorepo structure, 9-phase pipeline orchestration, Next.js 15 dashboard, Docker deployment
-- **403 tests** across agent (223) and web (180) packages — TypeScript strict mode, CI/CD pipeline
-- **Advanced features** — Recharts visualizations, knowledge graph, x402 Solana USDC micropayments, email digest system, RSS feed
-- **Infrastructure** — GitHub Actions CI/CD, Docker multi-stage builds, VPS deployment automation, nginx reverse proxy
+- **Full-stack architecture** — monorepo structure, 9-phase pipeline orchestration, Next.js 15 dashboard, Vercel deployment
+- **394 tests** across agent (223) and web (171) packages — TypeScript strict mode, CI pipeline
+- **Advanced features** — Recharts visualizations, knowledge graph, x402 Solana USDC micropayments, RSS feed
+- **Infrastructure** — GitHub Actions CI, Vercel deployment (monorepo, auto-deploy on push), Cloudflare DNS; originally Docker + nginx on a shared VPS before the 2026-05 Vercel migration
 
 ---
 
 <details>
 <summary><h2>Deployment</h2></summary>
 
-SOLIS runs on a VPS behind nginx with automated CI/CD:
+The web app is hosted on **Vercel** (migrated from a self-hosted VPS in May 2026):
 
-- **URL:** [solis.rectorspace.com](https://solis.rectorspace.com)
-- **Web container:** `ghcr.io/rector-labs/solis:latest` (port 8001)
-- **Agent daemon:** Persistent heartbeat process on VPS — runs pipeline daily at 08:00 UTC, commits & pushes reports
-- **Reports:** Docker volume mount (`reports/ → /app/reports:ro`) — new reports appear instantly without rebuild
-- **CI/CD:** Push to `main` → GHCR build → VPS auto-deploy
-- **Deploy triggers:** Only `packages/web/**`, `shared/**`, `Dockerfile`, `docker-compose.yml` — agent/report changes don't trigger deploy
-- **Agent deploy:** `pnpm deploy:agent` — esbuild bundle → SCP to VPS
+- **URL:** [solis.rectorspace.com](https://solis.rectorspace.com) — Cloudflare CNAME → Vercel (DNS-only)
+- **Project:** `solis-web`, Root Directory `packages/web` (pnpm monorepo)
+- **CI/CD:** Vercel Git integration — every push to `main` auto-deploys; preview deploys per PR
+- **Build:** `pnpm build`; a prebuild script copies `reports/` into the build and `next.config.ts` bundles them with each serverless function via `outputFileTracingIncludes`
+- **Reports:** static archive of 29 reports (Feb–Apr 2026); the pipeline is not currently scheduled
+- **Subscribe/digest:** paused (Vercel's filesystem is ephemeral; the JSON subscriber store needs a hosted DB to re-enable)
 
-```yaml
-# docker-compose.yml
-name: solis
-services:
-  web:
-    image: ghcr.io/rector-labs/solis:latest
-    ports:
-      - "8001:3001"
-    environment:
-      - REPORTS_DIR=/app/reports
-    volumes:
-      - /home/solis/solis/reports:/app/reports:ro
-    restart: unless-stopped
-```
+Earlier versions ran as a Docker container behind nginx on a shared VPS with GHCR-based CI/CD; that infrastructure was retired during the Vercel migration.
 
 </details>
 

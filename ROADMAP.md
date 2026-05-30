@@ -43,11 +43,11 @@
 - [x] Persistent VPS heartbeat daemon (replaces GitHub Actions cron)
 - [x] Docker volume mount for reports (no rebuild on new reports)
 
-## v0.2.1 — Stabilization (Current)
+## v0.2.1 — Stabilization (Complete)
 
-- [ ] Manual quality review of first 2-3 reports
-- [ ] Monitor heartbeat daemon reliability (first week)
-- [ ] ~~Set up Telegram alerts for pipeline notifications~~ (deferred — low priority, daemon logs suffice for now)
+- [x] Manual quality review of first reports
+- [x] Heartbeat daemon ran Feb–Apr 2026 (29-report archive)
+- [ ] ~~Set up Telegram alerts for pipeline notifications~~ (deferred — low priority, daemon logs suffice)
 
 ## v0.3 — Monetization (Complete)
 
@@ -74,13 +74,26 @@
 - [x] Email digest via Resend (daily trigger API, HTML template)
 - [x] RSS feed for reports
 
+## v0.6 — Vercel Migration (Complete)
+
+- [x] Migrate web from VPS (Docker + nginx) to Vercel
+- [x] Bundle reports into the build (prebuild copy + `outputFileTracingIncludes`)
+- [x] Vercel Git integration — auto-deploy on push to `main`, preview deploys per PR
+- [x] DNS cutover (Cloudflare CNAME → Vercel, DNS-only)
+- [x] Rescue 13 orphan reports + 21 signals snapshots from VPS before cutover
+- [x] Decommission VPS (containers, nginx, cert, systemd, user)
+- [x] Pause subscribe/digest (filesystem-bound — needs a hosted DB on serverless)
+
 ## Milestones
 
+- **2026-05**: Migrated to Vercel; VPS fully decommissioned. SOLIS now a static archive.
 - **2026-03**: 1st Place — Superteam Earn "Narrative Detection & Idea Generation" bounty ($2,000 USDG, 117 submissions)
 - **2026-02**: First live report generated, VPS deployment, heartbeat daemon operational
 
 ## Future
 
+- [ ] Re-host the pipeline (Vercel Cron / GitHub Actions) to resume daily reports
+- [ ] Migrate subscribers/digest to a hosted store (Upstash Redis / Resend Audiences) to re-enable
 - [ ] Community-contributed repo tracking
 - [ ] Multi-chain expansion (Ethereum L2s, Sui)
 - [ ] Prediction market integration (Polymarket)

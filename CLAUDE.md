@@ -5,10 +5,9 @@ Solana Onchain & Landscape Intelligence Signal. Detects emerging Solana ecosyste
 
 ## Architecture
 - **Monorepo**: pnpm workspaces — `packages/agent`, `packages/web`, `shared`
-- **Agent**: TypeScript pipeline orchestration, Claude Haiku 4.5 (via OpenRouter) for LLM analysis, GLM fallback chain
-- **Web**: Next.js 15 + Tailwind v4, 7-section landing page (hero → pipeline → report → narratives → ideas → methodology → CTA) + 8-section report dashboard (header → nav → metrics → diff → narratives → ideas → sources) + archive/compare pages
-- **Agent Daemon**: Persistent VPS heartbeat — runs pipeline daily at 08:00 UTC, commits & pushes reports, lock file + state persistence
-- **Reports**: Git-committed JSON/MD artifacts in `reports/`, served to web via Docker volume mount (no rebuild needed)
+- **Agent**: TypeScript pipeline orchestration, Claude Haiku 4.5 (via OpenRouter) for LLM analysis, GLM fallback chain. **Not currently running** — SOLIS is in archive/maintenance mode (heartbeat retired 2026-04-07). Runnable on demand via `pnpm heartbeat` or `pnpm agent`; code lives in `packages/agent/`.
+- **Web**: Next.js 15 + Tailwind v4, 7-section landing page (hero → pipeline → report → narratives → ideas → methodology → CTA) + 8-section report dashboard (header → nav → metrics → diff → narratives → ideas → sources) + archive/compare pages. **Deployed on Vercel** (migrated from VPS 2026-05-27).
+- **Reports**: Git-committed JSON/MD artifacts in `reports/` (monorepo root). Bundled into the Next.js build via a prebuild copy script (`packages/web/scripts/copy-reports.mjs` → `packages/web/reports/`) and shipped with each Vercel serverless function via `outputFileTracingIncludes` in `next.config.ts`.
 - **API Guard**: Route-level rate limiting (in-memory sliding window) + optional x402 micropayments for paid tier bypass
 
 ## Pipeline
@@ -37,14 +36,16 @@ Solana Onchain & Landscape Intelligence Signal. Detects emerging Solana ecosyste
 ## Commands
 ```bash
 pnpm dev          # Start web dev server (port 3001)
-pnpm agent        # Run analysis pipeline (one-shot)
-pnpm heartbeat    # Start persistent heartbeat daemon (daily at HEARTBEAT_HOUR UTC)
-pnpm test:run     # Run all tests (~286 tests across agent + web)
+pnpm agent        # Run analysis pipeline (one-shot) — agent not deployed anywhere; local only
+pnpm heartbeat    # Start persistent heartbeat daemon (daily at HEARTBEAT_HOUR UTC) — local only
+pnpm test:run     # Run all tests (394 total: 171 web + 223 agent)
 pnpm typecheck    # TypeScript check
 pnpm build        # Build all packages
-pnpm deploy:agent # Bundle heartbeat.ts and SCP to VPS
 pnpm eval:llm     # LLM side-by-side eval (--date YYYY-MM-DD --models a,b)
 pnpm eval:calibration # Confidence calibration analysis
+# NOTE: `pnpm deploy:agent` still exists in package.json but its target (VPS host
+# `solis`) was decommissioned 2026-05-27 — the SCP step will fail. Dead until a new
+# agent host is provisioned.
 ```
 
 ## Environment
@@ -86,8 +87,8 @@ Optional config (all have sensible defaults in `config.ts`):
 - `X402_FACILITATOR_URL` (https://x402.org/facilitator) — x402 payment verification endpoint
 - `HEARTBEAT_HOUR` (8) — target UTC hour for daily pipeline run (heartbeat daemon only)
 - `GIT_PUSH_ENABLED` (true) — push report commits to remote (heartbeat daemon only)
-- `REPORTS_DIR` — reports directory path. **Required on VPS** — esbuild bundle resolves `import.meta.dirname` to bundle location, causing default path to resolve to `/reports` (root). Set to `/home/solis/solis/reports` in `.agent-env`
-- `DATA_DIR` (process.cwd()) — directory for subscriber data (web container uses Docker volume mount)
+- `REPORTS_DIR` — reports directory path override. Web defaults to `process.cwd()/reports` (the prebuild copy location); agent (`pnpm heartbeat`/`pnpm agent`) defaults to `reports/` at the monorepo root. Set only if reports live elsewhere.
+- `DATA_DIR` (process.cwd()) — **legacy/unused**. Was the subscriber JSON store dir. Subscriber persistence is disabled on Vercel (ephemeral FS); the web app no longer reads this.
 - `QUERY_API_MODEL` (`anthropic/claude-haiku-4.5`) — model for custom query API via OpenRouter
 - `RESEND_API_KEY` — Resend email API key (required for email digest)
 - `DIGEST_FROM_EMAIL` (`digest@solis.rectorspace.com`) — from address for digest emails
@@ -95,22 +96,19 @@ Optional config (all have sensible defaults in `config.ts`):
 - `DIGEST_API_SECRET` — shared secret for digest trigger API authentication
 
 ## Deployment
-- **VPS**: `solis.rectorspace.com` → `151.245.137.75:8001` (reclabs3, migrated Feb 28 2026)
-- **User**: `solis` (SSH alias: `ssh solis`)
-- **Docker**: `ghcr.io/rector-labs/solis:latest` via `docker-compose.yml` (`name: solis`)
-- **CI/CD**: Push to `main` (web/shared/Docker changes) → GHCR → VPS auto-deploy
-- **Agent**: systemd service `solis-heartbeat.service` — auto-restart, survives reboots, runs pipeline daily, commits & pushes reports to git
-- **Agent deploy**: `pnpm deploy:agent` — esbuild bundle → SCP to VPS, then `ssh reclabs3 'systemctl restart solis-heartbeat'`
-- **Agent env**: `/home/solis/solis/.agent-env` — OPENROUTER_API_KEY, GITHUB_TOKEN, SOLIS_HELIUS_API_KEY, NODE_ENV=production, GIT_PUSH_ENABLED=true, HEARTBEAT_HOUR=8, REPORTS_DIR=/home/solis/solis/reports
-- **Agent logs**: `ssh solis 'journalctl -u solis-heartbeat -f'`
-- **Report generation**: VPS heartbeat daemon at 08:00 UTC (GitHub Actions `generate-report.yml` kept as manual emergency fallback)
-- **Reports volume**: Docker volume mount (`/home/solis/solis/reports → /app/reports:ro`) — new reports appear instantly without rebuild
-- **Data volume**: Docker volume mount (`/home/solis/solis/data → /app/data:rw`) — subscriber storage, read-write
-- **Deploy triggers**: Only `packages/web/**`, `shared/**`, `Dockerfile`, `docker-compose.yml` — agent/report changes don't trigger deploy
-- **Cleanup**: Deploy workflow prunes old images aggressively
-- **SSH aliases**: `solis` (solis user), `reclabs3` (root) — both at `151.245.137.75`
-- **DNS**: Cloudflare (rectorspace.com zone). All A records **Proxied** (orange cloud). SSH uses IP directly, unaffected by proxy setting
-- **ISP note**: Biznet (home ISP) no longer blocks VPS IP (confirmed Apr 2026) — direct SSH works
+**Migrated VPS → Vercel on 2026-05-27 (PR #18). VPS fully decommissioned same day.**
+- **Host**: Vercel — project `solis-web` in team `rectors-projects` (`prj_YDbHuii3RiHtuFbwtT4IbSOemVuz`, org `team_ChFWVdEkY44d43iO4jyj1hxD`)
+- **Root Directory**: `packages/web` (monorepo — set via Vercel API, not a `vercel.json` field)
+- **CI/CD**: Vercel Git integration — **every push to `main` auto-deploys**. No GitHub Actions deploy step (`deploy.yml` removed).
+- **Build**: `pnpm build` (runs `prebuild` copy-reports first). Install filtered to `@solis/web...` via `packages/web/vercel.json`.
+- **Env vars on Vercel**: only `OPENROUTER_API_KEY` set (Production + Preview, sensitive). Everything else uses defaults from `packages/web/src/lib/env.ts`.
+- **Production URL**: `https://solis-web-blond.vercel.app` · **Custom domain**: `solis.rectorspace.com`
+- **DNS**: Cloudflare (rectorspace.com zone). `solis` record is a **CNAME → `cname.vercel-dns.com`, DNS-only (grey cloud — NOT proxied)**. Other rectorspace.com A records remain proxied. Zone ID `3a150ea29cd0cd2c07476dd2cc7b0632`.
+- **Reports**: shipped via prebuild copy + `outputFileTracingIncludes` (see Architecture). No volume mount.
+- **Logs / status**: `vercel logs --scope rectors-projects`, `vercel ls --prod`, or the Vercel dashboard.
+- **Agent / report generation**: **not running anywhere**. SOLIS is a static archive (29 reports, 2026-02-12 → 2026-04-06). To resume generation, pick a host (Vercel Cron + serverless function, GitHub Actions cron, or a new VPS) and provide `OPENROUTER_API_KEY` + `GITHUB_TOKEN` + `SOLIS_HELIUS_API_KEY`. `generate-report.yml` workflow remains as a manual fallback but has no scheduled trigger.
+- **Subscribe / digest**: disabled (return 503) — JSON-file storage is incompatible with Vercel's ephemeral FS. Re-enabling needs a real store (Upstash Redis / Resend Audiences / Neon).
+- **Rollback**: redeploy from `main` (Vercel rebuilds in ~1 min). DNS rollback to VPS is no longer possible — VPS is gone.
 
 ## Key Files
 - `shared/src/types.ts` — Type contract between agent and web (Narrative, ReportDiff, FortnightlyReport, SocialSignals, XSignals, QueryRequest/Response, Subscriber)
@@ -145,13 +143,15 @@ Optional config (all have sensible defaults in `config.ts`):
 - `packages/web/src/lib/graph.ts` — Force graph data builder (narratives, repos, tokens, protocols → nodes/links)
 - `packages/web/src/components/knowledge-graph.tsx` — Client: react-force-graph-2d with dynamic import, hover tooltips, click-to-navigate
 - `packages/web/src/app/brain/page.tsx` — Server: knowledge graph page using latest report data
-- `packages/web/src/lib/subscribers.ts` — JSON file subscriber store with atomic writes, HMAC unsubscribe tokens
-- `packages/web/src/app/api/subscribe/route.ts` — POST: subscribe (rate-limited), DELETE: unsubscribe (HMAC-verified)
-- `packages/web/src/components/subscribe-form.tsx` — Client: email subscribe form with loading/success/error states
-- `packages/web/src/lib/digest-template.ts` — HTML email template for daily intelligence digest
-- `packages/web/src/lib/digest.ts` — Resend email sender for digest delivery
-- `packages/web/src/app/api/digest/route.ts` — POST: digest trigger (shared secret protected, called by heartbeat)
-- `packages/web/src/components/open-source-cta.tsx` — Server: full-bleed GitHub CTA with trust badges + RSS link + subscribe form
+- `packages/web/src/lib/subscribers.ts` — **disabled** (maintenance mode): add/remove throw `SubscriptionsDisabledError`, `loadSubscribers` returns `[]`. HMAC unsubscribe-token verify preserved for historical email links.
+- `packages/web/src/app/api/subscribe/route.ts` — POST + DELETE return **503** (paused). OPTIONS/CORS preserved.
+- `packages/web/src/components/subscribe-form.tsx` — Server component: static "subscriptions paused" notice linking to RSS + GitHub (no longer a client form)
+- `packages/web/src/lib/digest-template.ts` — HTML email template for daily intelligence digest (latent — digest disabled)
+- `packages/web/src/lib/digest.ts` — Resend email sender for digest delivery (latent — digest disabled)
+- `packages/web/src/app/api/digest/route.ts` — POST returns **503** (paused)
+- `packages/web/src/components/open-source-cta.tsx` — Server: full-bleed GitHub CTA with trust badges + RSS link + subscribe notice
+- `packages/web/scripts/copy-reports.mjs` — prebuild/predev script: copies `reports/` (monorepo root) → `packages/web/reports/`, excludes `.cache`/`.gitkeep`. Makes reports available to Vercel serverless functions.
+- `packages/web/vercel.json` — Vercel build config: monorepo install filter (`pnpm install --filter @solis/web...`), `framework: nextjs`
 - `packages/web/src/components/scroll-indicator.tsx` — Client: bouncing chevron, hides on scroll
 - `packages/web/src/app/report/[date]/page.tsx` — Report page: 8-section intelligence dashboard with section anchors, prev/next nav, stage grouping
 - `packages/web/src/components/report-header.tsx` — Server: glassmorphic header with breadcrumb, prev/next chevron nav, export buttons, timestamp
@@ -168,8 +168,7 @@ Optional config (all have sensible defaults in `config.ts`):
 - `packages/web/src/lib/x402.ts` — x402 payment protocol (402 responses, proof verification)
 - `packages/web/src/lib/api-guard.ts` — Composable guard combining rate limiting + x402
 - `packages/web/src/app/layout.tsx` — App shell (shared header/footer, max-w-6xl container)
-- `Dockerfile` — Multi-stage build (deps → build → standalone)
-- `docker-compose.yml` — Production container config (port 8001, reports volume ro, data volume rw)
+- `packages/web/next.config.ts` — Next.js config: security headers (CSP/HSTS/etc.), `transpilePackages: ['@solis/shared']`, `outputFileTracingIncludes` for reports
 
 ## Conventions
 - 2-space indent, TypeScript strict mode
@@ -183,5 +182,5 @@ Optional config (all have sensible defaults in `config.ts`):
 - API routes use route-level `apiGuard()` — not Next.js middleware (routes use Node.js APIs)
 - x402 is fully opt-in — rate limiting is always-on, payment bypass requires `ENABLE_X402=true`
 - apiGuard supports per-route `priceCents` override for different x402 pricing (e.g., query API at $0.05)
-- Subscriber data uses atomic writes (tmp+rename) for crash safety
-- Digest trigger requires `x-digest-secret` header matching `DIGEST_API_SECRET` env var
+- Subscribe + digest endpoints are disabled (503) on Vercel — re-enabling requires a non-filesystem subscriber store (the JSON+atomic-write approach assumed a persistent disk)
+- No filesystem writes at runtime on Vercel — serverless FS is ephemeral and read-only except `/tmp`
